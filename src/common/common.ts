@@ -1,40 +1,18 @@
 export interface IDBSettings {
-  host: string
-
-  port: number
-
-  user: string
-
-  password: string
-
-  database: string
+  host: any
+  port: any
+  user: any
+  password: any
+  database: any
 }
 
 export const GetDBSettings = (): IDBSettings => {
-  const env = process.env.NODE_ENV
-
-  if (env == 'development')
     return {
-      host: '127.0.0.1', //'58.84.143.251',
-
-      port: parseInt('3306'),
-
-      user: 'kevin',
-
-      password: 'Squogg27',
-
-      database: 'Checkaroo',
+      host: process.env.DB_HOST,
+      port: process.env.DB_PORT,
+      user: process.env.DB_USER,
+      password : process.env.DB_PASS,
+      database : process.env.DB_DATABASE,
     }
-  else
-    return {
-      host: process.env.host!, //'58.84.143.251',
 
-      port: parseInt(process.env.port!),
-
-      user: process.env.user!,
-
-      password: process.env.password!,
-
-      database: process.env.database!,
-    }
 }
