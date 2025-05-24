@@ -8,6 +8,7 @@ export interface IDBSettings {
   database: any
 }
 
+
 export const GetDBSettings = (): IDBSettings => {
     return {
       host: process.env.DB_HOST,

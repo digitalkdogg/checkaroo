@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server'
-import mysql from 'mysql2/promise'
-import { GetDBSettings, IDBSettings, createConnection } from '@/common/common'
+//import mysql from 'mysql2/promise'
+import { GetDBSettings, createConnection} from '@/common/common'
 
 let connectionParams = GetDBSettings()
 
@@ -20,9 +20,11 @@ export async function GET(request: NextRequest) {
 
     get_exp_query = 'select ' + query.select + ' from ' + query.from + ' where ' + query.where
 
-    const [results, fields] = await connection.connection.query(get_exp_query)
+
+    const [results] = await connection.connection.query(get_exp_query)
+  //  const [results, fields] = await connection.connection.query(get_exp_query)
     connection.connection.end()
-    return NextResponse.json({results})
+    return NextResponse.json({ results})
   } catch (err) {
     console.log('ERROR: API - ', (err as Error).message)
 
