@@ -1,3 +1,5 @@
+import mysql from "mysql2/promise";
+
 export interface IDBSettings {
   host: any
   port: any
@@ -17,10 +19,14 @@ export const GetDBSettings = (): IDBSettings => {
 
 }
 
-export const queryDB = ( get_query: string)  => {
 
+export const createConnection = async () => {
+  let connection;
+  if (!connection ) {
+    connection = await mysql.createConnection(GetDBSettings())
+  }
 
   return {
-    'testing' : get_query
+    connection
   }
 }
