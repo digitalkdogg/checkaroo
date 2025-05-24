@@ -16,3 +16,11 @@ export const GetDBSettings = (): IDBSettings => {
     }
 
 }
+
+export const queryDB = ( get_query: string)  => {
+
+
+  return {
+    'testing' : get_query
+  }
+}
