@@ -1,17 +1,21 @@
-import Dashboard from '@/app/components/Dashboard'
 import Leftside from '@/app/components/Leftside'
-import tail from '@tailwindcss/postcss'
+import Rightside from '@/app/components/Rightside'
+import './globals.css'
+import { Geist } from 'next/font/google'
 
 import { getStaticProps } from 'next/dist/build/templates/pages'
-//import { getPost } from '@/lib/data'
+
+const geist = Geist({
+  subsets: ['latin'],
+})
  
 export default async function Page({ params }: { params: { id: string } }) {
   
   return (
-    <div>
-      <main>
+    <div className = {geist.className}>
+      <main className = "flex">
         <Leftside />
-        <Dashboard />
+        <Rightside />
       </main>
     </div>
   )
