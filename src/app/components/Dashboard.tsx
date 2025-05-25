@@ -15,7 +15,7 @@ export default async function Page() {
 
   return (
     <div className = "bg-gray-200 h-dvh">
-      <div className = "header flex py-2 px-4 border-b-2 border-gray-600 bg-(--color-green) text-white">
+      <div className = "header flex py-2 px-4 border-b-2 border-gray-600 bg-white text-black">
         <div className="flex-1 font-medium">Date</div>
         <div className="flex-1 font-medium">Client</div>
         <div className="flex-1 font-medium">Amount</div>
