@@ -48,10 +48,10 @@ export const convertToNiceDate = (mydate:string) => {
        damonthstr = '0' + damonth
     }
 
-    if (daday > 10) {
-      damonthstr = '0'+ daday
+    if (daday < 10) {
+      dadaystr = '0'+ daday
     }
 
-    datestr = damonthstr  + '-' + dadate.getDate() + '-' + dadate.getFullYear()
+    datestr = damonthstr  + '-' + dadaystr+ '-' + dadate.getFullYear()
     return datestr;
 }
