@@ -11,8 +11,8 @@ export default async function Page() {
     var transdata: Transaction[] = trans.results
 
   return (
-    <ul>
-       {transdata.map(trans => <li key={trans.trans_id} >{trans.amount}</li>)}
-    </ul>
+    <div>
+       {transdata.map(trans => <div key={trans.trans_id} >{trans.amount}</div>)}
+    </div>
   )
 }
