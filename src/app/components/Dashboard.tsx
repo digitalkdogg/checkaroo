@@ -15,14 +15,14 @@ export default async function Page() {
 
   return (
     <div className = "bg-gray-200 h-dvh">
-      <div className = "header flex py-2 px-4 border-b-2 border-gray-600 bg-white text-black">
-        <div className="flex-1 font-medium">Date</div>
-        <div className="flex-1 font-medium">Client</div>
-        <div className="flex-1 font-medium">Amount</div>
-        <div className="flex-1 font-medium">Category</div>
+      <div className = "header flex py-2 px-4 shadow-md shadow-lg shadow-green-light/30 bg-white text-black">
+        <div className="flex-1 font-bold text-green indent-5">Date</div>
+        <div className="flex-1 font-bold text-green indent-10">Client</div>
+        <div className="flex-1 font-bold text-green">Amount</div>
+        <div className="flex-1 font-bold text-green indent-5">Category</div>
       </div>
        {transdata.map(trans => 
-          <div key = {trans.trans_id} className = "flex p-4 border-b-1 border-gray-400">
+          <div key = {trans.trans_id} className = "flex p-4 shadow-sm shadow-stone-400 ">
             <div className = "flex-1">{convertToNiceDate(trans.date)}</div>
             <div className = "flex-1">{trans.company_name}</div>
             <div className = "flex-1">${formatDouble(trans.amount)}</div>
