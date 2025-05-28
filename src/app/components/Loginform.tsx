@@ -1,9 +1,40 @@
-import Form from 'next/form'
+
+import { FormEvent } from 'react'
+import { useRouter } from 'next/router'
+import { setCookie } from "cookies-next";
+import pool from '@/common/db'
+
+
  
-export default function Page() {
+export default function LoginPage() {
+  const router = useRouter()
+  
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    
+    const formData = new FormData(event.currentTarget)
+    const username = formData.get('username')
+    const password = formData.get('password')
+
+    
+    setCookie('sicher', 'user:' + username + '||pass:' + password, {maxAge:512, secure: true, path: '/login', sameSite: 'strict'})
+    const response = await fetch('/api/account', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password}),
+    })
+   // const response = {'ok': 'test'}
+
+    if (response.ok) {
+     // router.push('/')
+    } else {
+      // Handle errors
+    }
+  }
+ 
   return (
-    <Form className = "-translate-y-50" action="/search">
-      <div className = "flex my-5">
+    <form onSubmit={handleSubmit} className = "-translate-y-50" >
+     <div className = "flex my-5">
         <label htmlFor="username">Username : </label>
         <input id = "username" name="username" type = "text"  />
       </div>
@@ -18,6 +49,6 @@ export default function Page() {
       <button className="inset-shadow-indigo-500" type="submit">Submit</button>
       <button type="reset">Reset</button>
       </div>
-    </Form>
+    </form>
   )
 }
