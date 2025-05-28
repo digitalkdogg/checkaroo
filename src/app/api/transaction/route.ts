@@ -1,11 +1,9 @@
 import { NextResponse, NextRequest } from 'next/server'
-import { GetDBSettings, createConnection} from '@/common/common'
-
+import pool from '@/common/db';
 
 export async function GET(request: NextRequest) {
 
     try {
-        const connection = await createConnection()
         let get_query = ''
         let transid = request.nextUrl!.searchParams!.get('transid')!;
 
@@ -27,9 +25,8 @@ export async function GET(request: NextRequest) {
             get_query = get_query + ' where ' +qry.where
         }
 
-        const [results] = await connection.connection.query(get_query)
-
-        connection.connection.end()
+        const [results] = await pool.query(get_query)
+        pool.end
 
         return NextResponse.json({results})
   

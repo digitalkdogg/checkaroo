@@ -1,16 +1,11 @@
 import { NextResponse, NextRequest } from 'next/server'
-//import mysql from 'mysql2/promise'
-import { GetDBSettings, createConnection} from '@/common/common'
-
-let connectionParams = GetDBSettings()
+import pool from '@/common/db';
 
 export async function GET(request: NextRequest) {
   try {
-    const connection = await createConnection()
 
     let get_query = ''
     let accountid = request.nextUrl!.searchParams!.get('accountid')!;
-
 
     accountid='1'
 
@@ -25,8 +20,6 @@ export async function GET(request: NextRequest) {
      where : 'account_id = "' + accountid + '"',
     }
 
-
-
     get_query = 'select ' + query.select + ' from ' + query.from
 
     joinarr.forEach(item => {
@@ -34,12 +27,9 @@ export async function GET(request: NextRequest) {
     });
 
     get_query = get_query + ' where ' + query.where  
+    const [results] = await pool.query(get_query);
+    pool.end
 
-
-
-    const [results] = await connection.connection.query(get_query)
-  //  const [results, fields] = await connection.connection.query(get_exp_query)
-    connection.connection.end()
     return NextResponse.json({ results})
   } catch (err) {
     console.log('ERROR: API - ', (err as Error).message)
