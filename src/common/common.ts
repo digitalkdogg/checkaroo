@@ -1,4 +1,5 @@
 import pool from '@/common/db'
+import crypto from 'crypto';
 
 export const formatDouble = (amount:number) => {
   return amount.toFixed(2)
@@ -61,3 +62,11 @@ export const getDataFromCookie = (cookiestr:any) => {
     return returnobj
 }
 
+export const hashPassword=(password:any) =>{
+  return crypto.createHash('md5').update(password).digest('hex');
+}
+
+export const validatePassword = async (inputPassword:string, storedHash:string) => {
+  const hashedPassword = hashPassword(inputPassword);
+  return hashedPassword === storedHash;
+}

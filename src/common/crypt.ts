@@ -1,9 +1,6 @@
 import CryptoJS from 'crypto-js';
 
-//npm install crypto-js --save
-//npm install @types/crypto-js
-
-const cipherKey = 'dadalkjfasdlkfjasdaladflj' //process.env.NEXT_PUBLIC_CIPHER_KEY;
+const cipherKey:any = process.env.NEXT_PUBLIC_APP_crypt 
 
 export const encrypt = (data:any) => {
   const encrypted = CryptoJS.AES.encrypt(data, cipherKey).toString();
