@@ -1,11 +1,9 @@
-
 import { FormEvent } from 'react'
 import { useRouter } from 'next/router'
-import { setCookie } from "cookies-next";
-import pool from '@/common/db'
+import { setCookie } from 'cookies-next/client';
+import { encrypt, decrypt } from '@/common/crypt';
 
 
- 
 export default function LoginPage() {
   const router = useRouter()
   
@@ -16,10 +14,10 @@ export default function LoginPage() {
     const username = formData.get('username')
     const password = formData.get('password')
 
-    
    // setCookie('sicher', 'user:' + username + '||pass:' + password, {maxAge:512, secure: true, path: '/login', sameSite: 'strict'})
-    setCookie('sicher', 'user:' + username + '||pass:' + password, {maxAge:512}) 
-   const response = await fetch('/api/account', {
+    setCookie('sicher', encrypt('user:' + username + '||pass:' + password), {maxAge:512, secure:true, sameSite: 'strict'})  
+
+   const response = await fetch('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password}),
