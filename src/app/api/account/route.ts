@@ -1,6 +1,7 @@
 'use server'
 import { NextResponse, NextRequest } from 'next/server'
 import pool from '@/common/db'
+import { getDataFromCookie } from '@/common/common'
 
 import {cookies} from 'next/headers'
 
@@ -18,25 +19,22 @@ export async function GET(request: NextRequest) {
 
 export async function POST() {
 
-
  try {
 
-  const cookieStore = cookies()
-  const cdata = (await cookieStore).get('sicher')
-  var split1 = cdata?.value.split('||')
-  var split2:any = []
-  if (split1 != undefined) {
-    split2 = split1[0].split(':')
-  }
+    const cookieStore = cookies()
+    const cdata = (await cookieStore).get('sicher')
+    const data = getDataFromCookie(cdata?.value)
 
-  
+    if (data == '') {
+      return NextResponse.json({'data': ''})
+    }
 
+    const [rows] = await pool.query('SELECT * FROM Account where user_id = "' + data.user +'"');
+    pool.end
 
-  const [rows] = await pool.query('SELECT * FROM Account where user_id = "' + split2[1] +'"');
-
-  return NextResponse.json({ 'data': rows})
+    return NextResponse.json({ 'data': rows, 'split2': {data}})
  } catch(err) {
-  return NextResponse.json({err})
+    return NextResponse.json({err})
  }
 
  return NextResponse.json({})

@@ -9,7 +9,7 @@
       port: process.env.DB_PORT,
       waitForConnections: true,
       connectionLimit: 10,
-      queueLimit: 0,
+      queueLimit: 100,
     });
 
     export default pool;

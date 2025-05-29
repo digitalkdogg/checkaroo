@@ -11,14 +11,15 @@ export default function LoginPage() {
   
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    
+
     const formData = new FormData(event.currentTarget)
     const username = formData.get('username')
     const password = formData.get('password')
 
     
-    setCookie('sicher', 'user:' + username + '||pass:' + password, {maxAge:512, secure: true, path: '/login', sameSite: 'strict'})
-    const response = await fetch('/api/account', {
+   // setCookie('sicher', 'user:' + username + '||pass:' + password, {maxAge:512, secure: true, path: '/login', sameSite: 'strict'})
+    setCookie('sicher', 'user:' + username + '||pass:' + password, {maxAge:512}) 
+   const response = await fetch('/api/account', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password}),

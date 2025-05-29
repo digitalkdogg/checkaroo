@@ -1,3 +1,5 @@
+import pool from '@/common/db'
+
 export const formatDouble = (amount:number) => {
   return amount.toFixed(2)
 }
@@ -21,3 +23,41 @@ export const convertToNiceDate = (mydate:string) => {
     datestr = damonthstr  + '-' + dadaystr+ '-' + dadate.getFullYear()
     return datestr;
 }
+
+
+export const checkbadsqlstr = (str:string) => {
+  const keywords = ['select', 'update', 'insert', 'delete'];
+  const keywords2 = ['from', 'into', 'set']
+
+    for (let x=0; x<keywords.length; x++) {
+      if (str.indexOf(keywords[x])>=0) {
+        for (let y=0; y<keywords2.length; y++) {
+          if (str.indexOf(keywords2[y])>0) {
+            return true;
+          }
+        }
+      }
+    }
+
+    return false;
+} 
+
+export const getDataFromCookie = (cookiestr:any) => {
+    if (checkbadsqlstr(cookiestr)==true) {
+      return '';
+    }
+
+    var fieldnames = cookiestr.split('||')
+    var fieldvals = []
+    var returnobj:any = {}
+    if (fieldnames != undefined) {
+      for (let x =0; x<fieldnames.length; x++) {
+        fieldvals = fieldnames[x].split(':')
+        var indi = fieldvals[0]
+        returnobj[indi] = fieldvals[1]
+      }
+    }
+
+    return returnobj
+}
+
