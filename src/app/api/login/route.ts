@@ -4,7 +4,7 @@ import pool from '@/common/db'
 import { getDataFromCookie, validatePassword, hashPassword } from '@/common/common'
 import {cookies} from 'next/headers'
 import {decrypt} from '@/common/crypt'
-import crypto from 'crypto'
+import crypto from 'crypto-js';
 
 
 export async function POST() {
@@ -21,10 +21,8 @@ export async function POST() {
 
       
         const user = data.user
-        const password = data.password
-        const passwordhash = hashPassword(password)//crypto.hash('md5',data.password)
-
-        const [rows] = await pool.query('SELECT * FROM User where user_id = "' + user +'" and password_hash = "' + passwordhash + '"');
+        const password = crypto.MD5(data.pass).toString()
+        const [rows] = await pool.query('SELECT * FROM User where user_id = "' + user +'" and password_hash = "' + password + '"');
         pool.end
 
         return NextResponse.json({ 'data': rows})
