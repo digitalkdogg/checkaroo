@@ -25,3 +25,31 @@ export const select = async (query:any) => {
     }
     pool.end
 }
+
+export const insert = async (query:any) => {
+        var querystr = ''
+        querystr = querystr + 'insert into '
+        querystr = querystr + query.table + '('
+        
+        for (let x =0; x<query.fields.length; x++) {
+            querystr = querystr + query.fields[x]
+            if (x<query.fields.length-1) {
+                querystr = querystr + ','
+            }
+        }
+
+        querystr = querystr + ')values('
+
+        for (let x=0; x<query.vals.length; x++) {
+            querystr = querystr + '?'
+            if (x<query.vals.length-1) {
+                querystr = querystr + ','
+            } else {
+                querystr = querystr + ')'
+            }
+        }
+
+        const data:any = await pool.execute(querystr, query.vals);
+        return {data} 
+
+}

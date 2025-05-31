@@ -13,6 +13,7 @@
   --color-green : #036803;
   --color-green-light : #297F54;
   --color-green-ultalight: #edfff4;
+  --color-error: #b90707;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -117,3 +118,15 @@ button:hover, input[type = "button"]:hover {
     scale: 110%;
     filter: contrast(0.5);
 }
+
+.error {
+  color: var(--color-error);
+}
+
+.notvisible {
+  visibility:hidden;
+}
+
+/*.animation-iteration-count-3 {
+  animation-iteration-count: 7;
+} */

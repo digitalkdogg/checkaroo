@@ -25,6 +25,10 @@ export const convertToNiceDate = (mydate:string) => {
     return datestr;
 }
 
+export const convertToMySQLDate = (jsdate:Date) => {
+  return jsdate.getFullYear() + '-' + (jsdate.getMonth() + 1) + '-' + jsdate.getDate() + ' ' + jsdate.getHours() + ':' + jsdate.getMinutes() + ':' + jsdate.getSeconds()
+}
+
 
 export const checkbadsqlstr = (str:string) => {
   const keywords = ['select', 'update', 'insert', 'delete'];
@@ -60,13 +64,4 @@ export const getDataFromCookie = (cookiestr:any) => {
     }
 
     return returnobj
-}
-
-export const hashPassword=(password:any) =>{
-  return crypto.createHash('md5').update(password).digest('hex');
-}
-
-export const validatePassword = async (inputPassword:string, storedHash:string) => {
-  const hashedPassword = hashPassword(inputPassword);
-  return hashedPassword === storedHash;
 }
