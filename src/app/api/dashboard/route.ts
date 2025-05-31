@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server'
-import pool from '@/common/db';
+import {select} from '@/common/dbutils'
 
 export async function GET(request: NextRequest) {
   try {
@@ -17,18 +17,11 @@ export async function GET(request: NextRequest) {
     var query = {
       select : '*',
       from : 'Transactions',
-     where : 'account_id = "' + accountid + '"',
+      where : 'account_id = "' + accountid + '"',
+      join: joinarr
     }
 
-    get_query = 'select ' + query.select + ' from ' + query.from
-
-    joinarr.forEach(item => {
-        get_query = get_query + ' ' + item
-    });
-
-    get_query = get_query + ' where ' + query.where  
-    const [results] = await pool.query(get_query);
-    pool.end
+    const results = await select(query)
 
     return NextResponse.json({ results})
   } catch (err) {

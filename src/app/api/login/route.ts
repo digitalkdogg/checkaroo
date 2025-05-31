@@ -1,6 +1,7 @@
 'use server'
 import { NextResponse, NextRequest } from 'next/server'
-import pool from '@/common/db'
+//import pool from '@/common/db'
+import {select} from '@/common/dbutils'
 import { getDataFromCookie, validatePassword, hashPassword } from '@/common/common'
 import {cookies} from 'next/headers'
 import {decrypt} from '@/common/crypt'
@@ -22,8 +23,15 @@ export async function POST() {
       
         const user = data.user
         const password = crypto.MD5(data.pass).toString()
-        const [rows] = await pool.query('SELECT * FROM User where user_id = "' + user +'" and password_hash = "' + password + '"');
-        pool.end
+        const query = {
+            select: '*',
+            from: 'User',
+            where: 'user_id = "' + user + '" and password_hash = "' + password + '"' 
+        }
+
+        const rows = await select(query)
+        // const [rows] = await pool.query('SELECT * FROM User where user_id = "' + user +'" and password_hash = "' + password + '"');
+      //  pool.end
 
         return NextResponse.json({ 'data': rows})
     } catch(err) {

@@ -1,14 +1,20 @@
 'use server'
 import { NextResponse, NextRequest } from 'next/server'
 import pool from '@/common/db'
+import {select} from '@/common/dbutils'
 import { getDataFromCookie } from '@/common/common'
 
 import {cookies} from 'next/headers'
 
 export async function GET(request: NextRequest) {
  try {
+    const query = {
+      select: '*',
+      from: 'User'
+    }
 
-    const [rows] = await pool.query('SELECT * FROM User');
+    const rows = await select(query)
+
     return NextResponse.json({ users: rows });
   } catch (error) {
     console.error('Error fetching users:', error);
