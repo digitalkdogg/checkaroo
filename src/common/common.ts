@@ -1,5 +1,6 @@
-import pool from '@/common/db'
-import crypto from 'crypto';
+import {select} from '@/common/dbutils'
+import moment from 'moment'
+import { NextResponse } from 'next/server'
 
 export const formatDouble = (amount:number) => {
   return amount.toFixed(2)
@@ -64,4 +65,39 @@ export const getDataFromCookie = (cookiestr:any) => {
     }
 
     return returnobj
+}
+
+export const checkActiveSession = async (username:any) => {
+      const query = {
+          select: '*',
+          from: 'User',
+          where: 'User.user_id = "' + username + '"',
+          join: ['inner join Logins on Logins.user_id = User.user_id'],
+          sort: 'Logins.loginDT desc',
+          limit: 1
+      }
+
+      var isActive = false;
+
+      var rowsarr:any = []
+      const rows = await select(query);
+      rowsarr = rows;
+
+      if (rowsarr.length == 1) {
+        for(let x=0; x<rowsarr.length; x++) {
+            if (rowsarr[x].ExpireDT) {
+              let expireDT = moment(rowsarr[x].ExpireDT) 
+              let now = moment()
+              if (expireDT < now.add(12, 'hours') ) {
+                isActive = true;
+              }
+            }
+        }
+      }
+  return isActive
+}
+
+export const setExpireDT = () => {
+  let now = moment()
+  return now.add(12, 'hours')
 }

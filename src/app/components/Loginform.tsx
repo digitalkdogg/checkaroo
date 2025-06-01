@@ -2,11 +2,11 @@ import { FormEvent } from 'react'
 import { useRouter } from 'next/router'
 import { setCookie } from 'cookies-next';
 import { encrypt } from '@/common/crypt';
-import { convertToMySQLDate } from '@/common/common';
-import { insert } from '@/common/dbutils'
-
 
 export default function LoginPage() {
+
+
+
   const router = useRouter()
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -16,7 +16,6 @@ export default function LoginPage() {
     const password = formData.get('password')
 
     if (validateForm(username, password)) {
-
       setCookie('sicher', encrypt('user:' + username + '||pass:' + password), {maxAge:512, secure:true, sameSite: 'strict'})  
 
       const response = await fetch('/api/login/auth', {
@@ -28,8 +27,6 @@ export default function LoginPage() {
         const json = await response.json()
         const loginerror = document.querySelector('.login-error')
       if (json.data.length > 0 ) {
-
-        // const loginerror = document.querySelector('.login-error')
         if (loginerror) {
           loginerror.classList.remove('error')
           loginerror.classList.remove('notvisible')
@@ -43,10 +40,7 @@ export default function LoginPage() {
         }
       } 
     }
-  } else {
-  // Handle errors
-  }
-
+  } 
   function validateForm(username:any, password:any) {
     document.querySelector('.username-error')?.classList.add('notvisible')
     document.querySelector('.password-error')?.classList.add('notvisible')

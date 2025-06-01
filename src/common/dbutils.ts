@@ -16,6 +16,14 @@ export const select = async (query:any) => {
     if (query.where) {
         querystr = querystr + ' where ' + query.where
     }
+
+    if (query.sort) {
+        querystr = querystr + ' order by ' + query.sort
+    }
+
+    if (query.limit) {
+        querystr = querystr + ' limit ' + query.limit
+    }
     
     try {
         const [rows] = await pool.query(querystr);
