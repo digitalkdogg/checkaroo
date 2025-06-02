@@ -6,7 +6,15 @@ export const formatDouble = (amount:number) => {
   return amount.toFixed(2)
 }
 
+export const convertToMySQLDate2 = (mydate:string) => {
+    return moment(mydate).format('Y-MM-DD HH:mm:ss')
+}
+
 export const convertToNiceDate = (mydate:string) => {
+    return moment(mydate).format('MM-DD-YYYY')
+}
+
+/*export const convertToNiceDate2 = (mydate:string) => {
     let dadate = new Date(mydate);
     let datestr = ''
     let damonth = dadate.getMonth() + 1
@@ -25,6 +33,7 @@ export const convertToNiceDate = (mydate:string) => {
     datestr = damonthstr  + '-' + dadaystr+ '-' + dadate.getFullYear()
     return datestr;
 }
+    */
 
 export const convertToMySQLDate = (jsdate:Date) => {
   return jsdate.getFullYear() + '-' + (jsdate.getMonth() + 1) + '-' + jsdate.getDate() + ' ' + jsdate.getHours() + ':' + jsdate.getMinutes() + ':' + jsdate.getSeconds()
