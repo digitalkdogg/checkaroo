@@ -23,7 +23,7 @@ export async function POST() {
         const expire = setExpireDT()
         const activeSession = await checkActiveSession(data.user)
 
-        if (activeSession == false) { 
+     //   if (activeSession == false) { 
     
 
             const user = data.user
@@ -41,32 +41,36 @@ export async function POST() {
             
             if (rowsarr.length>0) {
 
-                const session = encrypt(process.env.NEXT_PUBLIC_APP_crypt + data.user + process.env.NEXT_PUBLIC_App_readable)
-                var expireDT = setExpireDT();
-                const insquery = {
-                    table: 'Logins',
-                    fields: ['session_hash', 'user_id', 'LoginDT', 'ExpireDT'],
-                    vals: [session, data.user, convertToMySQLDate(new Date()), expireDT.format('Y-MM-DD HH:mm:ss')]
+                const crypt = process.env.NEXT_PUBLIC_APP_crypt;
+                if (crypt) {
+                const session = encrypt(crypt?.split('').reverse().join(''))
+                    var expireDT = setExpireDT();
+                    const insquery = {
+                        table: 'Logins',
+                        fields: ['session_hash', 'user_id', 'LoginDT', 'ExpireDT'],
+                        vals: [session, data.user, convertToMySQLDate(new Date()), expireDT.format('Y-MM-DD HH:mm:ss')]
+                    }
+
+                    const login = insert(insquery);
+        
+                    (await cookies()).set('nothinedetrahamte', session, {
+                        secure:true,
+                        //httpOnly: true,
+                        sameSite: true,
+                        maxAge: 60 * 60 * 12,
+                    })
                 }
+         //   }
 
-                const login = insert(insquery);
-    
-                (await cookies()).set('nothinedetrahamte', encrypt(session), {
-                    secure:true,
-                    httpOnly: true,
-                    sameSite: true,
-                    maxAge: 60 * 60 * 12,
-                })
-            }
-
-        } else {
+        }// else {
             //const rows = []
-            rows = ['activeSession'];
-        }
+          //  rows = ['activeSession'];
+         // return NextResponse.json({'rows': ['activeSession']})
+       // }
 
 
-        return NextResponse.json({ 'data': rows})
+        return NextResponse.json({ 'data': rows, 'session': rowsarr})
     } catch(err) {
-        return NextResponse.json({'error': err })
+        return NextResponse.json({'error': err, 'test':'testing' })
     }
 }

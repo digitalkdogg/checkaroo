@@ -1,13 +1,29 @@
 import { FormEvent } from 'react'
 import { useRouter } from 'next/router'
-import { setCookie } from 'cookies-next';
+import { setCookie,getCookie } from 'cookies-next';
 import { encrypt } from '@/common/crypt';
 
 export default function LoginPage() {
 
+  const checkSession = async () => {
+       const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      })
 
+    if (response.ok) {
+      console.log('response good')
+      //router.push('/')
+    }
+}
 
   const router = useRouter()
+
+  const sessionCookie = getCookie('nothinedetrahamte')
+  if (sessionCookie) {
+    checkSession()
+  }
+  
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
@@ -41,6 +57,9 @@ export default function LoginPage() {
       } 
     }
   } 
+
+
+
   function validateForm(username:any, password:any) {
     document.querySelector('.username-error')?.classList.add('notvisible')
     document.querySelector('.password-error')?.classList.add('notvisible')

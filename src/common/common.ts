@@ -6,37 +6,12 @@ export const formatDouble = (amount:number) => {
   return amount.toFixed(2)
 }
 
-export const convertToMySQLDate2 = (mydate:string) => {
-    return moment(mydate).format('Y-MM-DD HH:mm:ss')
+export const convertToMySQLDate = (jsdate:Date) => {
+    return moment(jsdate).format('Y-MM-DD HH:mm:ss')
 }
 
 export const convertToNiceDate = (mydate:string) => {
     return moment(mydate).format('MM-DD-YYYY')
-}
-
-/*export const convertToNiceDate2 = (mydate:string) => {
-    let dadate = new Date(mydate);
-    let datestr = ''
-    let damonth = dadate.getMonth() + 1
-    let damonthstr = damonth.toString()
-    let daday = dadate.getDate();
-    let dadaystr = daday.toString();
-
-    if (damonth < 10) {
-       damonthstr = '0' + damonth
-    }
-
-    if (daday < 10) {
-      dadaystr = '0'+ daday
-    }
-
-    datestr = damonthstr  + '-' + dadaystr+ '-' + dadate.getFullYear()
-    return datestr;
-}
-    */
-
-export const convertToMySQLDate = (jsdate:Date) => {
-  return jsdate.getFullYear() + '-' + (jsdate.getMonth() + 1) + '-' + jsdate.getDate() + ' ' + jsdate.getHours() + ':' + jsdate.getMinutes() + ':' + jsdate.getSeconds()
 }
 
 
@@ -74,6 +49,31 @@ export const getDataFromCookie = (cookiestr:any) => {
     }
 
     return returnobj
+}
+
+export const checkValidSession = async (session:any) => {
+    const query = {
+          select: '*',
+          from: 'Logins',
+          where: 'Logins.session_hash = "' + session + '"',
+          sort: 'Logins.loginDT desc',
+          limit: 1
+      }
+    
+    var isValid = false;
+    
+    var rowsarr:any = []
+    const rows = await select(query);
+    rowsarr = rows;
+    for (let x =0; x<rowsarr.length; x++) {
+      var expireDT = moment(rowsarr[x].ExpireDT)
+      var now = moment()
+      if (expireDT > now) {
+        isValid = true;
+      }
+    }
+
+    return  isValid;
 }
 
 export const checkActiveSession = async (username:any) => {
