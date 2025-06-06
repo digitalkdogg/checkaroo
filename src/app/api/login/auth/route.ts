@@ -1,7 +1,8 @@
 'use server'
 import { NextResponse } from 'next/server'
 import {select, insert} from '@/common/dbutils'
-import { getDataFromCookie, convertToMySQLDate, setExpireDT, doesSessionExists, validateUser, checkUserForActiveSession} from '@/common/common'
+import { getDataFromCookie, convertToMySQLDate, setExpireDT} from '@/common/common'
+import {checkUserForActiveSession, doesSessionExists, validateUser} from '@/common/session'
 import {cookies} from 'next/headers'
 import {decrypt, encrypt} from '@/common/crypt'
 import crypto from 'crypto-js';

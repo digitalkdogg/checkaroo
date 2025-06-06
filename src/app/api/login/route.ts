@@ -1,7 +1,7 @@
 'use server'
 import { NextResponse } from 'next/server'
 import {select, insert} from '@/common/dbutils'
-import { checkValidSession} from '@/common/common'
+import { checkValidSession} from '@/common/session'
 import {cookies} from 'next/headers'
 import {decrypt, encrypt} from '@/common/crypt'
 import crypto from 'crypto-js';
