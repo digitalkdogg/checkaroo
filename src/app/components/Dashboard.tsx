@@ -13,6 +13,10 @@ export default async function Page() {
     var trans = await data.json();
     var transdata: Transaction[] = trans.results
 
+    if (transdata) {
+      transdata = []
+    }
+
   return (
     <div className = "bg-gray-200 h-dvh">
       <div className = "header flex py-2 px-4 shadow-md shadow-lg shadow-green-light/30 bg-white text-black">
