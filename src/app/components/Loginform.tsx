@@ -46,7 +46,12 @@ export default function LoginPage() {
     const password = formData.get('password')
 
     if (validateForm(username, password)) {
-      setCookie('sicher', encrypt('user:' + username + '||pass:' + password), {maxAge:512, secure:true, sameSite: 'strict'})  
+      setCookie('sicher', 
+         encrypt('user:' + username + '||pass:' + password),
+         {maxAge:512, 
+         // secure:true, 
+         // sameSite: 'strict'
+        })  
 
       const response = await fetch('/api/login/auth', {
         method: 'POST',

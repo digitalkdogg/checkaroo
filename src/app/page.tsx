@@ -16,7 +16,7 @@ const checkSession = async () => {
   if (!sessionCookie) {
  
     setTimeout(function () {
-    window.location.href = '/login'
+  //  window.location.href = '/login'
     },1000)
   } 
 }

@@ -20,44 +20,45 @@ export async function POST() {
     const sessionCookie = (await cookieStore).get('nothinedetrahamte')
 
     if (sessionCookie) {
-        return NextResponse.json({'status': 'success', 'msg': 'session already exists'})
+        return NextResponse.json({'status': false, 'msg': 'session already exists'})
     }
 
     const user = data.user
-    const password = crypto.MD5(data.pass).toString()
+    const password =crypto.MD5(data.pass).toString()
     const session = encrypt(uuidv4());
     const sessionArray = await doesSessionExists(session, user)     
 
     if (sessionArray) {
-        return NextResponse.json({'status': 'success', 'msg': 'session id already exists'})
+        return NextResponse.json({'status': false, 'msg': 'session id already exists'})
     }
 
-    if (await checkUserForActiveSession(user) == false) {
+    //const active = await checkUserForActiveSession(user);
 
         if (await validateUser(user, password)) {
             //I am good
+            if (await checkUserForActiveSession(user) == false) {
+                (await cookies()).set('nothinedetrahamte', session, {
+                   // secure:true,
+                   // sameSite: true,
+                    maxAge: 60 * 60 * 12,
+                })
 
-            (await cookies()).set('nothinedetrahamte', session, {
-                secure:true,
-                sameSite: true,
-                maxAge: 60 * 60 * 12,
-            })
+                const insquery = {
+                    table: 'Logins',
+                    fields: ['session_hash', 'user_id', 'LoginDT', 'ExpireDT'],
+                    vals: [session, data.user, convertToMySQLDate(new Date()), setExpireDT()]
+                }
 
-            const insquery = {
-                table: 'Logins',
-                fields: ['session_hash', 'user_id', 'LoginDT', 'ExpireDT'],
-                vals: [session, data.user, convertToMySQLDate(new Date()), setExpireDT()]
+                const login = await insert(insquery);
+                return NextResponse.json({'status': 'success'})
+            } else {
+                return NextResponse.json({'status': false, 'msg': 'User has a active session already', 'data': 'active'}) 
             }
-
-            const login = await insert(insquery);
-            return NextResponse.json({'status': 'success'})
         } else {
             // I am not so good.
-            return NextResponse.json({'status': false, 'msg' : 'The username and password is incorrect'})
+            return NextResponse.json({'status': false, 'msg' : 'The username and password is incorrect', 'data': data})
         }
-    } else {
-        return NextResponse.json({'status': 'success'})
-    }
+   
 
 
     return NextResponse.json({'status': false, 'msg': 'The system can not log in at this time'})

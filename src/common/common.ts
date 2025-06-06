@@ -94,11 +94,13 @@ export const checkUserForActiveSession = async (user:any)=> {
     const sessions = await select(sessionQuery);
     sessionsArray = sessions;
 
+    var testing:any = 'init';
+
     if (sessionsArray.length > 0) {
       for(let x = 0; x< sessionsArray.length; x++) {
-        const expireDT = moment(sessionsArray[x].expireDT);
+        const expireDT = moment(sessionsArray[x].ExpireDT);
         const now = moment();
-
+        testing = expireDT + '::::' + now
         if (expireDT > now) {
           return sessionsArray[x].session_hash;
         }
@@ -108,7 +110,7 @@ export const checkUserForActiveSession = async (user:any)=> {
     }
 
 
-  return 
+  return false
 }
 
 export const doesSessionExists = async (session:string, user:string) => {
