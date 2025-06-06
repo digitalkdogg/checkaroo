@@ -52,6 +52,10 @@ export const getDataFromCookie = (cookiestr:any) => {
 }
 
 export const checkValidSession = async (session:any) => {
+    if (session.length < 96) {
+      return false;
+    }
+
     const query = {
           select: '*',
           from: 'Logins',
