@@ -49,7 +49,7 @@ export default function LoginPage() {
       setCookie('sicher', 
          encrypt('user:' + username + '||pass:' + password),
          {maxAge:512, 
-         // secure:true, 
+          secure:true, 
          // sameSite: 'strict'
         })  
 

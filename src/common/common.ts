@@ -52,8 +52,17 @@ export const getDataFromCookie = (cookiestr:any) => {
 }
 
 export const checkValidSession = async (session:any) => {
-    if (session.length < 96) {
+
+
+    if (session.length < 89) {
       return false;
+    }
+
+    const keywords = ['select', 'update', 'insert', 'delete', 'testing', 'password'];
+    for (let x =0; x<keywords.length; x++) {
+      if (session.indexOf(keywords[x]) >= 0) {
+        return false;
+      }
     }
 
     const query = {

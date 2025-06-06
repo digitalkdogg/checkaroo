@@ -25,39 +25,43 @@ export async function POST() {
 
     const user = data.user
     const password =crypto.MD5(data.pass).toString()
-    const session = encrypt(uuidv4());
+    var session = encrypt(uuidv4().trim() + uuidv4().trim());
+    var active:any = ''
+
+    if (session.length < 90) {
+        session = session + uuidv4().trim();
+    }
+   
     const sessionArray = await doesSessionExists(session, user)     
 
     if (sessionArray) {
         return NextResponse.json({'status': false, 'msg': 'session id already exists'})
     }
 
-    //const active = await checkUserForActiveSession(user);
+    if (await validateUser(user, password)) {
+        //I am good
+        if (await checkUserForActiveSession(user) == false) {
+            (await cookies()).set('nothinedetrahamte', session, {
+                 secure:true,
+                // sameSite: true,
+                maxAge: 60 * 60 * 12,
+            })
 
-        if (await validateUser(user, password)) {
-            //I am good
-            if (await checkUserForActiveSession(user) == false) {
-                (await cookies()).set('nothinedetrahamte', session, {
-                   // secure:true,
-                   // sameSite: true,
-                    maxAge: 60 * 60 * 12,
-                })
-
-                const insquery = {
-                    table: 'Logins',
-                    fields: ['session_hash', 'user_id', 'LoginDT', 'ExpireDT'],
-                    vals: [session, data.user, convertToMySQLDate(new Date()), setExpireDT()]
-                }
-
-                const login = await insert(insquery);
-                return NextResponse.json({'status': 'success'})
-            } else {
-                return NextResponse.json({'status': false, 'msg': 'User has a active session already', 'data': 'active'}) 
+            const insquery = {
+                table: 'Logins',
+                fields: ['session_hash', 'user_id', 'LoginDT', 'ExpireDT'],
+                vals: [session, data.user, convertToMySQLDate(new Date()), setExpireDT()]
             }
+
+            const login = await insert(insquery);
+            return NextResponse.json({'status': 'success'})
         } else {
-            // I am not so good.
-            return NextResponse.json({'status': false, 'msg' : 'The username and password is incorrect', 'data': data})
+            return NextResponse.json({'status': false, 'msg': 'User has a active session already'}) 
         }
+    } else {
+        // I am not so good.
+        return NextResponse.json({'status': false, 'msg' : 'The username and password is incorrect'})
+    }
    
 
 
