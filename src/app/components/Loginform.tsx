@@ -1,3 +1,4 @@
+'use client'
 import { FormEvent } from 'react'
 import { useRouter } from 'next/router'
 import { setCookie,getCookie } from 'cookies-next';
@@ -12,10 +13,14 @@ export default function LoginPage() {
       })
 
     if (response.ok) {
-      console.log('response good')
-      //router.push('/')
+      const json = await response.json()
+      if(json.valid ==  true) {
+          router.push('/')
+      }
+
     }
 }
+  
 
   const router = useRouter()
 
@@ -23,6 +28,15 @@ export default function LoginPage() {
   if (sessionCookie) {
     checkSession()
   }
+
+  setTimeout(function () {
+    try {
+      const overlay = document.getElementById("overlay")
+      if (overlay) {
+        overlay.classList.add('hide')
+      }
+    } catch(e) {}
+  },1000)
   
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -41,19 +55,21 @@ export default function LoginPage() {
 
       if (response.ok) {
         const json = await response.json()
+        var msg = json.msg
+
         const loginerror = document.querySelector('.login-error')
-      if (json.data.length > 0 ) {
-        if (loginerror) {
-          loginerror.classList.remove('error')
-          loginerror.classList.remove('notvisible')
-        }
+        if (json.status == 'success' ) {
+          if (loginerror) {
+            loginerror.classList.remove('error')
+            loginerror.classList.remove('notvisible')
+          }
         router.push('/')
-      } else {
-        if (loginerror) {
-          loginerror.innerHTML = 'The user name and password are incorrect'
-          loginerror.classList.add('error');
-          loginerror.classList.remove('notvisible')
-        }
+        } else {
+          if (loginerror) {
+            loginerror.innerHTML = msg
+            loginerror.classList.add('error');
+            loginerror.classList.remove('notvisible')
+          }
       } 
     }
   } 

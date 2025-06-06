@@ -1,10 +1,12 @@
 'use server'
-import { NextResponse, NextRequest } from 'next/server'
+import { NextResponse} from 'next/server'
 import pool from '@/common/db'
 import {select} from '@/common/dbutils'
 import { getDataFromCookie } from '@/common/common'
-
+import { NextRequest } from 'next/server'
 import {cookies} from 'next/headers'
+
+import {v4 as uuidv4} from 'uuid'
 
 export async function GET(request: NextRequest) {
  try {
@@ -15,7 +17,9 @@ export async function GET(request: NextRequest) {
 
     const rows = await select(query)
 
-    return NextResponse.json({ users: rows });
+    let myuuid = uuidv4();
+
+    return NextResponse.json({ users: myuuid });
   } catch (error) {
     console.error('Error fetching users:', error);
     return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 });

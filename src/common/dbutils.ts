@@ -27,11 +27,11 @@ export const select = async (query:any) => {
     
     try {
         const [rows] = await pool.query(querystr);
+        //pool.end();
         return rows;
     } catch(err) {
-        return {'err': err, 'querystr': query}
+        return {'err2': err}
     }
-    pool.end
 }
 
 export const insert = async (query:any) => {
@@ -58,6 +58,6 @@ export const insert = async (query:any) => {
         }
 
         const data:any = await pool.execute(querystr, query.vals);
+      //  pool.end();
         return {data} 
-
 }

@@ -8,8 +8,10 @@
       database: process.env.DB_DATABASE,
       port: process.env.DB_PORT,
       waitForConnections: true,
-      connectionLimit: 10,
-      queueLimit: 100,
+      connectionLimit: 1,
+      queueLimit: 0,
+      enableKeepAlive: false,
+      keepAliveInitialDelay: 10
     });
 
     export default pool;

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #297F54;
+  --background: #fff;
   --foreground: #171717;
 }
 
@@ -71,6 +71,14 @@ body {
   font-size:18px;
 }
 
+div#overlay {
+  position: absolute;
+  height:100vh;
+  width:100vh;
+  z-index:100;
+  background:var(--color-background);
+}
+
 a, ul.menu li {
   cursor: pointer;
   animation-timing-function: ease-in-out;
@@ -125,6 +133,14 @@ button:hover, input[type = "button"]:hover {
 
 .notvisible {
   visibility:hidden;
+}
+
+.hide {
+  display:none;
+}
+
+.show {
+  display: block;
 }
 
 /*.animation-iteration-count-3 {
