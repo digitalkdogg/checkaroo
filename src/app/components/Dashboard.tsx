@@ -1,4 +1,10 @@
+'use server'
 import { convertToNiceDate, formatDouble } from "@/common/common";
+import { redirect } from 'next/navigation'
+import { setCookie, getCookie } from 'cookies-next';
+import {cookies} from 'next/headers'
+
+
 export default async function Page() {
   const data = await fetch('http://localhost:3000/api/dashboard')
   
@@ -13,8 +19,10 @@ export default async function Page() {
     var trans = await data.json();
     var transdata: Transaction[] = trans.results
 
-    if (transdata) {
-      transdata = []
+    if (transdata.length == undefined) {
+      redirect('/error?msg='+trans.results.err.message )
+
+
     }
 
   return (
@@ -25,7 +33,8 @@ export default async function Page() {
         <div className="flex-1 font-bold text-green">Amount</div>
         <div className="flex-1 font-bold text-green indent-5">Category</div>
       </div>
-       {transdata.map(trans => 
+       {
+         transdata.map(trans => 
           <div key = {trans.trans_id} className = "flex p-4 shadow-sm shadow-stone-400 ">
             <div className = "flex-1">{convertToNiceDate(trans.date)}</div>
             <div className = "flex-1">{trans.company_name}</div>
