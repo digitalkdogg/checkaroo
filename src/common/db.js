@@ -10,7 +10,7 @@
       waitForConnections: true,
       connectionLimit: 1,
       queueLimit: 0,
-      enableKeepAlive: false,
+      enableKeepAlive: true,
       keepAliveInitialDelay: 10
     });
 

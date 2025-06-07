@@ -25,12 +25,15 @@ export const select = async (query:any) => {
         querystr = querystr + ' limit ' + query.limit
     }
     
+    let connection;
     try {
-        const [rows] = await pool.query(querystr);
-        //pool.end();
+        connection = await pool.getConnection();
+        const [rows] = await connection.query(querystr);
         return rows;
     } catch(err) {
         return {'err': err}
+    } finally {
+        if (connection) connection.release()
     }
 }
 
@@ -57,9 +60,16 @@ export const insert = async (query:any) => {
             }
         }
 
-        const data:any = await pool.execute(querystr, query.vals);
-      //  pool.end();
-        return {data} 
+        let connection
+        try { 
+            connection = await pool.getConnection();
+            const data:any = await connection.execute(querystr, query.vals);
+            return {data} 
+        } catch(e) {
+            return {err: e}
+        } finally {
+            if (connection) connection.release()
+        }
 }
 
 export const update = async (query:any) => {
@@ -79,6 +89,14 @@ export const update = async (query:any) => {
         querystr = querystr + ' limit ' + query.limit
     }
 
-    const data:any = await pool.execute(querystr);
-    return {data}
+    let connection
+    try {
+        connection = await pool.getConnection();
+        const data:any = await connection.execute(querystr);
+        return {data}
+    } catch (e) {
+        return {err: e}
+    } finally {
+         if (connection) connection.release()
+    }
 }
