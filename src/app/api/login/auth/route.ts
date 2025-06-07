@@ -23,7 +23,8 @@ export async function POST() {
 
     if (await validateUser(user, password)) {
 
-        const sessionCookie = (await cookieStore).get('nothinedetrahamte')
+        const cookiename:any = process.env.NEXT_PUBLIC_cookiestr
+        const sessionCookie = (await cookieStore).get(cookiename)
 
         if (sessionCookie) {
             if (await doesSessionExists(data.user, sessionCookie.value)) {
@@ -39,7 +40,7 @@ export async function POST() {
                     session = session + uuidv4().trim();
                 }
 
-                (await cookies()).set('nothinedetrahamte', session, {
+                (await cookies()).set(cookiename, session, {
                     secure:true,
                     // sameSite: true,
                     maxAge: 60 * 60 * 12,

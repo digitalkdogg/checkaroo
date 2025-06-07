@@ -14,7 +14,8 @@ const geist = Geist({
 export default async function Page({ params }: { params: { id: string } }) {
 
   const cookieStore = cookies()
-  const sessCookie = (await cookieStore).get('nothinedetrahamte')
+  const cookiename:any = process.env.NEXT_PUBLIC_cookiestr
+  const sessCookie = (await cookieStore).get(cookiename)
 
   if (sessCookie) {
    

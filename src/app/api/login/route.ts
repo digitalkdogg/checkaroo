@@ -13,7 +13,8 @@ export async function POST() {
     try {
 
         const cookieStore = await cookies()
-        const cdata = (await cookieStore).get('nothinedetrahamte') //todo get from env
+        const cookiename:any = process.env.NEXT_PUBLIC_cookiestr
+        const cdata = (await cookieStore).get(cookiename) //todo get from env
         const isValid = await checkValidSession(cdata?.value)
 
         return NextResponse.json({'valid':isValid, 'data': cdata})

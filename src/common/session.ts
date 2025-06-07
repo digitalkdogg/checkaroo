@@ -111,6 +111,7 @@ export const validateUser = async (user:string, word:string) => {
       try {
           const rows = await select(query)
           rowsarr=rows
+          return rowsarr;
           if (rowsarr.length > 0) {
             return true;
           } else {return false;}
@@ -119,7 +120,13 @@ export const validateUser = async (user:string, word:string) => {
 }
 
 export const expireSession = async (user:string) => {
-    const querystr = 'update Logins set ExpireDT = "' + moment('1/1/2025').format('yyyy-MM-DD hh:mm:ss') + '" where user_id = "' + user + '" order by ExpireDT desc limit 10' 
-    const data = await update(querystr);
-    return data
+  const query = {
+    table : 'Logins',
+    fields : 'ExpireDT = "' + moment('1/1/2025').format('yyyy-MM-DD hh:mm:ss') + '"',
+    where : 'user_id = "' + user + '"',
+    sort : 'ExpireDT desc',
+    limit : 10
+  }
+  const data = await update(query);
+  return data
 }

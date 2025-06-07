@@ -12,9 +12,7 @@ export default function LoginPage() {
         headers: { 'Content-Type': 'application/json' },
       })
 
-
     if (response.ok) {
-
       const json = await response.json()
       if(json.valid ==  true) {
           router.push('/')
@@ -23,10 +21,10 @@ export default function LoginPage() {
     }
 }
   
-
   const router = useRouter()
 
-  const sessionCookie = getCookie('nothinedetrahamte')
+  const cookiename:any = process.env.NEXT_PUBLIC_cookiestr
+  const sessionCookie = getCookie(cookiename)
   if (sessionCookie) {
     checkSession()
   }
@@ -46,6 +44,8 @@ export default function LoginPage() {
     const formData = new FormData(event.currentTarget)
     const username = formData.get('username')
     const password = formData.get('password')
+
+    console.log(password);
 
     if (validateForm(username, password)) {
       setCookie('sicher', 
