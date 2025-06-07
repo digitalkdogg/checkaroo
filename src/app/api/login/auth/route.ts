@@ -57,7 +57,12 @@ export async function POST() {
             const login = await insert(insquery);
             return NextResponse.json({'status': 'success'})
         } else {
-            return NextResponse.json({'status': false, 'msg': 'User has a active session already'}) 
+            (await cookies()).set('nothinedetrahamte', session, {
+                 secure:true,
+                // sameSite: true,
+                maxAge: 60 * 60 * 12,
+            })
+            return NextResponse.json({'status': 'success', 'msg': 'User has a active session already'}) 
         }
     } else {
         // I am not so good.

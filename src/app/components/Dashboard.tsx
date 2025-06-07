@@ -26,6 +26,7 @@ export default async function Page() {
       }
     }
 
+
   return (
     <div className = "bg-gray-200 h-dvh">
       <div className = "header flex py-2 px-4 shadow-md shadow-lg shadow-green-light/30 bg-white text-black">
