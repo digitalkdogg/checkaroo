@@ -19,7 +19,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   if (sessCookie) {
    
     if (await checkValidSession(sessCookie.value) != true) {
-       //     redirect('/login')
+            redirect('/login')
       }
     //return <><Redirect value = "/login" /></>
   }  else {

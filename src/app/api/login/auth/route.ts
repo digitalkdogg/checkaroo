@@ -2,7 +2,7 @@
 import { NextResponse } from 'next/server'
 import {select, insert} from '@/common/dbutils'
 import { getDataFromCookie, convertToMySQLDate, setExpireDT} from '@/common/common'
-import {checkUserForActiveSession, doesSessionExists, validateUser} from '@/common/session'
+import {checkUserForActiveSession, doesSessionExists, validateUser, expireSession} from '@/common/session'
 import {cookies} from 'next/headers'
 import {decrypt, encrypt} from '@/common/crypt'
 import crypto from 'crypto-js';
@@ -14,62 +14,52 @@ export async function POST() {
     const cookiestr = decrypt(cdata?.value);
     const data = getDataFromCookie(cookiestr)
 
+    const user = data.user
+    const password =crypto.MD5(data.pass).toString()
+
     if (data == '') {
         return NextResponse.json({'status': false, msg : 'The system can not process your request'})
     }
 
-    const sessionCookie = (await cookieStore).get('nothinedetrahamte')
-
-    if (sessionCookie) {
-        return NextResponse.json({'status': false, 'msg': 'session already exists'})
-    }
-
-    const user = data.user
-    const password =crypto.MD5(data.pass).toString()
-    var session = encrypt(uuidv4().trim() + uuidv4().trim());
-    var active:any = ''
-
-    if (session.length < 90) {
-        session = session + uuidv4().trim();
-    }
-   
-    const sessionArray = await doesSessionExists(session, user)     
-
-    if (sessionArray) {
-        return NextResponse.json({'status': false, 'msg': 'session id already exists'})
-    }
-
     if (await validateUser(user, password)) {
-        //I am good
-        if (await checkUserForActiveSession(user) == false) {
-            (await cookies()).set('nothinedetrahamte', session, {
-                 secure:true,
-                // sameSite: true,
-                maxAge: 60 * 60 * 12,
-            })
 
-            const insquery = {
-                table: 'Logins',
-                fields: ['session_hash', 'user_id', 'LoginDT', 'ExpireDT'],
-                vals: [session, data.user, convertToMySQLDate(new Date()), setExpireDT()]
+        const sessionCookie = (await cookieStore).get('nothinedetrahamte')
+
+        if (sessionCookie) {
+            if (await doesSessionExists(data.user, sessionCookie.value)) {
+                return NextResponse.json({'status': 'success', 'msg': 'Session is valid already'})
+            } else {
+                return NextResponse.json({'status': false, 'msg': 'We can not login in at this time.  Try clearing your cache and try again.'})
             }
-
-            const login = await insert(insquery);
-            return NextResponse.json({'status': 'success'})
         } else {
-            (await cookies()).set('nothinedetrahamte', session, {
-                 secure:true,
-                // sameSite: true,
-                maxAge: 60 * 60 * 12,
-            })
-            return NextResponse.json({'status': 'success', 'msg': 'User has a active session already'}) 
+            if (await checkUserForActiveSession(user) == false) {
+                var session = uuidv4().trim() + uuidv4().trim();
+
+                if (session.length < 90) {
+                    session = session + uuidv4().trim();
+                }
+
+                (await cookies()).set('nothinedetrahamte', session, {
+                    secure:true,
+                    // sameSite: true,
+                    maxAge: 60 * 60 * 12,
+                })
+
+                const insquery = {
+                    table: 'Logins',
+                    fields: ['session_hash', 'user_id', 'LoginDT', 'ExpireDT'],
+                    vals: [session, data.user, convertToMySQLDate(new Date()), setExpireDT()]
+                }
+
+                const login = await insert(insquery);
+                return NextResponse.json({'status': 'success'})
+            } else {
+                expireSession(user);
+                return NextResponse.json({'status': false, 'msg': 'Hmmmm we can not login in at this time.  Try clearing your cache and try again.'})
+            }
         }
-    } else {
-        // I am not so good.
-        return NextResponse.json({'status': false, 'msg' : 'The username and password is incorrect'})
-    }
-   
+    } else { //end validate user true
 
-
-    return NextResponse.json({'status': false, 'msg': 'The system can not log in at this time'})
+        return NextResponse.json({'status': false, 'msg': 'Bad username and password.  Please try again'})
+    } //end validate user false
 }

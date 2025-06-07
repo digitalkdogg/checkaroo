@@ -1,5 +1,5 @@
 import moment from 'moment'
-import {select} from '@/common/dbutils'
+import {select, update} from '@/common/dbutils'
 import { NextResponse } from 'next/server'
 
 export const checkValidSession = async (session:any) => {
@@ -116,4 +116,10 @@ export const validateUser = async (user:string, word:string) => {
           } else {return false;}
       } catch (err) {NextResponse.json({'error':err})}
       return false;
+}
+
+export const expireSession = async (user:string) => {
+    const querystr = 'update Logins set ExpireDT = "' + moment('1/1/2025').format('yyyy-MM-DD hh:mm:ss') + '" where user_id = "' + user + '" order by ExpireDT desc limit 10' 
+    const data = await update(querystr);
+    return data
 }

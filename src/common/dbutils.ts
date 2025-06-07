@@ -61,3 +61,9 @@ export const insert = async (query:any) => {
       //  pool.end();
         return {data} 
 }
+
+export const update = async (query:any) => {
+    //const querystr = 'update Logins set ExpireDT = "' + moment('1/1/2025') + '" where session_hash = "' + session + '"'
+    const data:any = await pool.execute(query);
+    return {data}
+}

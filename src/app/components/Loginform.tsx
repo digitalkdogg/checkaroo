@@ -12,7 +12,9 @@ export default function LoginPage() {
         headers: { 'Content-Type': 'application/json' },
       })
 
+
     if (response.ok) {
+
       const json = await response.json()
       if(json.valid ==  true) {
           router.push('/')
@@ -58,8 +60,12 @@ export default function LoginPage() {
         headers: { 'Content-Type': 'application/json' },
       })
 
+
+
       if (response.ok) {
+
         const json = await response.json()
+
         var msg = json.msg
 
         const loginerror = document.querySelector('.login-error')
