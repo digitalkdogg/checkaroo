@@ -30,7 +30,7 @@ export const select = async (query:any) => {
         //pool.end();
         return rows;
     } catch(err) {
-        return {'err2': err}
+        return {'err': err}
     }
 }
 

@@ -1,5 +1,6 @@
 'use server'
 import { convertToNiceDate, formatDouble } from "@/common/common";
+import Error from '@/app/components/Error'
 import { redirect } from 'next/navigation'
 import { setCookie, getCookie } from 'cookies-next';
 import {cookies} from 'next/headers'
@@ -20,9 +21,9 @@ export default async function Page() {
     var transdata: Transaction[] = trans.results
 
     if (transdata.length == undefined) {
-      redirect('/error?msg='+trans.results.err.message )
-
-
+      if (trans.results.err.message) {
+        return <> <Error value = {trans.results.err.message} /> </>
+      }
     }
 
   return (
