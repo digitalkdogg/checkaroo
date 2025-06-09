@@ -31,7 +31,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     <div className = {geist.className}>
       <main className = "flex">
 
-        <Leftside />
+        <Leftside enable = {true} />
         <Rightside />
       </main>
     </div>
