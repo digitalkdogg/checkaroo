@@ -50,7 +50,7 @@ export default function LoginPage() {
     if (validateForm(username, password)) {
       setCookie('sicher', 
          encrypt('user:' + username + '||pass:' + password),
-         {maxAge:60 * 60 * 12, 
+         {maxAge:512, 
           secure:true, 
          // sameSite: 'strict'
         })  

@@ -43,7 +43,7 @@ export async function POST() {
                 (await cookies()).set(cookiename, session, {
                     secure:true,
                     // sameSite: true,
-                    maxAge: 60 * 60 * 12,
+                    maxAge: 25200
                 })
 
                 const insquery = {
