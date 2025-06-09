@@ -115,17 +115,17 @@ const hideErrorMsg = (e:any) => {
  
   return (
     <form onSubmit={handleSubmit} className = "-translate-y-50" >
-     <div className = "flex flex-col">
+     <div className = "flex flex-col justify-center-safe">
         <p className = "error username-error notvisible">Username is requried</p>
-        <div className = "wrap">
+        <div className = "wrap flex justify-center-safe">
           <label htmlFor="username">Username : </label>
           <input id = "username" name="username" data-error = "username-error" type = "text" onFocus={hideErrorMsg} />
         </div>
       </div>
 
-      <div className = "flex my-5 flex-col">
+      <div className = "flex my-5 flex-col justify-center-safe">
          <p className = "error password-error notvisible">Password is requried</p>
-         <div className = "wrap">
+         <div className = "wrap flex justify-center-safe">
             <label htmlFor="password">Password : </label>
             <input id = "password" name="password" data-error="password-error" type = "password" onFocus={hideErrorMsg}   />
           </div>
@@ -133,11 +133,13 @@ const hideErrorMsg = (e:any) => {
       
       <br />
 
-      <div className= "flex justify-evenly">
-      <button className="inset-shadow-indigo-500" type="submit">Submit</button>
-      <button type="reset">Reset</button>
+      <div className= "flex justify-center-safe mb-20">
+        <button className="inset-shadow-indigo-500 mr-5" type="submit">Submit</button>
+        <button className="ml-5" type="reset">Reset</button>
       </div>
-        <p className = "login-error notvisible flex justify-evenly mt-5">Login Sucess!  Redirecting Now!</p>
+        <div className= "flex justify-center-safe">
+          <p className = "login-error notvisible mt-5">Login Sucess!  Redirecting Now!</p>
+        </div>
     </form>
   )
 }

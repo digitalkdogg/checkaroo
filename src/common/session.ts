@@ -111,7 +111,6 @@ export const validateUser = async (user:string, word:string) => {
       try {
           const rows = await select(query)
           rowsarr=rows
-          return rowsarr;
           if (rowsarr.length > 0) {
             return true;
           } else {return false;}
