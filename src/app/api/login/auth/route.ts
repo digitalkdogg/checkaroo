@@ -61,6 +61,6 @@ export async function POST() {
         }
     } else { //end validate user true
 
-        return NextResponse.json({'status': false, 'msg': 'Bad username and password.  Please try again')
+        return NextResponse.json({'status': false, 'msg': 'Bad username and password.  Please try again'})
     } //end validate user false
 }
