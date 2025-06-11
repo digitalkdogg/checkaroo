@@ -9,7 +9,7 @@ export default function Page(props: Props) {
       <div className = "logotext text-4xl font-bold">Checkaroo</div>
         <ul role = "menu" className="text-lg font-semibold py-4 menu">
           <Menu enable = {props.enable} link = '/trans' text = 'Transacation' />
-          <Menu enable = {props.enable} link = '/clients' text = 'clients' />
+          <Menu enable = {props.enable} link = '/clients' text = 'Clients' />
           <Menu enable = {props.enable} link = '/categories' text = 'Categories' />
         </ul>
     </div>
