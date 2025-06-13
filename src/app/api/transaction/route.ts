@@ -45,6 +45,14 @@ export async function GET(request: NextRequest) {
  }
 }
 
+async function getTrans_id() {
+   const cookieStore = cookies()
+  const cdata = (await cookieStore).get('sicher')
+  const cookiestr =  decrypt(cdata?.value);
+  const data2=  getDataFromCookie(cookiestr)
+  return data2.trans_id
+}
+
 export async function POST(request:NextRequest) {
   const cookieStore = cookies()
   const cookiename:any = process.env.NEXT_PUBLIC_cookiestr
@@ -57,20 +65,20 @@ export async function POST(request:NextRequest) {
      //     return NextResponse.json({'status': false, 'msg': 'We can not login in at this time.  Try clearing your cache and try again.'})
      // }
     const cdata = (await cookieStore).get('sicher')
-    const cookiestr = decrypt(cdata?.value);
-    const data = getDataFromCookie(cookiestr)
+    const cookiestr =  decrypt(cdata?.value);
+    const data2=  getDataFromCookie(cookiestr)
 
-
+    const transid =  getTrans_id()
     const query = {
       select : '*',
       from : 'Transactions', 
-      where: 'trans_Id = "' + data.trans_id + '"',
+      where: 'trans_id = "' + transid + '"',
       limit: 1
     }
 
     try {
       const response = await select(query);
-      return NextResponse.json({response})
+      return NextResponse.json({response, 'data':transid})
     } catch (e) {
       return NextResponse.json({e})
     }
