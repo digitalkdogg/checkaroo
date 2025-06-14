@@ -1,4 +1,5 @@
 import moment from 'moment'
+import {select} from '@/common/dbutils'
 
 export const formatDouble = (amount:number) => {
   return amount.toFixed(2)
@@ -52,4 +53,32 @@ export const getDataFromCookie = (cookiestr:any) => {
 export const setExpireDT = () => {
   let now = moment()
   return now.add(12, 'hours').format('Y-MM-DD HH:mm:ss')
+}
+
+export const getTransDets = async (transid:string) => {
+   var accountid='1'
+
+    let joinarr = [
+        'inner join Clients on Clients.client_id = Transactions.client_id',
+        'inner join Category on Category.category_id = Transactions.category_id' 
+    ];
+
+    var query = {
+      select : '*',
+      from : 'Transactions',
+      where : 'account_id = "' + accountid + '" and trans_id = "' + transid + '"',
+      join: joinarr
+    }
+
+  try {
+    const data = await select(query);
+     var arr:any = []
+     arr = data 
+
+
+    return arr 
+  } catch (e) {
+    return e;
+  }
+  return 
 }
