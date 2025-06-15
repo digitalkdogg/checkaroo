@@ -28,6 +28,8 @@ export const select = async (query:any) => {
     let connection;
     try {
         connection = await pool.getConnection();
+        process.stdout.write('\n' + querystr + '\n\n');
+
         const [rows] = await connection.query(querystr);
         return rows;
     } catch(err) {
@@ -63,6 +65,7 @@ export const insert = async (query:any) => {
         let connection
         try { 
             connection = await pool.getConnection();
+            process.stdout.write('\n' + querystr + ':::' + query.vals.toString + '\n\n');
             const data:any = await connection.execute(querystr, query.vals);
             return {data} 
         } catch(e) {
@@ -92,6 +95,7 @@ export const update = async (query:any) => {
     let connection
     try {
         connection = await pool.getConnection();
+        process.stdout.write('\n' + querystr + '\n\n');
         const data:any = await connection.execute(querystr);
         return {data}
     } catch (e) {
