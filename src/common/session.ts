@@ -1,6 +1,7 @@
 import moment from 'moment'
 import {select, update} from '@/common/dbutils'
 import { NextResponse } from 'next/server'
+import { writelog } from '@/common/logs'
 
 export const checkValidSession = async (session:any) => {
 
@@ -36,6 +37,7 @@ export const checkValidSession = async (session:any) => {
       }
     }
 
+    writelog('session for ' + session + 'is ' + isValid.valueOf() )
     return  isValid;
 }
 
@@ -67,7 +69,6 @@ export const checkUserForActiveSession = async (user:any)=> {
       return false
     }
 
-
   return false
 }
 
@@ -87,6 +88,7 @@ export const doesSessionExists = async (session:string, user:string) => {
         const expireDT = moment(sessionsArray[x].expireDT)
         const now = moment();
         if (expireDT > now) {
+          writelog('session for ' + session + 'and ' + user + 'is true')
           return true;
         } else {
           return false;
