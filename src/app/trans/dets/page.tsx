@@ -65,7 +65,6 @@ export default function TransDetsPage() {
         );
     }
 
-     //  const searchParams = useSearchParams();
         var transid:any = ''
         if (searchParams) {
             transid = searchParams.get('id')

@@ -1,5 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react';
+import Input from '@/app/components/Input';
+import {convertToNiceDate, formatDouble} from '@/common/common'
 
 interface Props {
     transid : string;
@@ -46,13 +48,21 @@ export default function Dets(props:Props) {
 
     return (
         <div >
-            <div className = "flex-3 bg-white flex px-20 flex-col my-50" >
-                <div className = "flex flex-row justify-normal">
-                    ID :  <div id = 'id'>{data.trans_id}</div>
+            <div className = "flex-3 bg-white flex px-20 flex-col my-50 max-w-3/4" >
+                <div className = "flex flex-row justify-between py-5">
+                    <span>TransID :</span>
+                     <Input id = "transid" val = {data.trans_id} disabled = {true} />
                 </div>
-                <div className = "flex flex-row justify-normal">
-                    amount:  <div id = 'amount'>{data.amount}</div>
+
+                <div className = "flex flex-row justify-between py-5">
+                    <span>Date :</span>
+                     <Input id = "date" val = {convertToNiceDate(data.date)} disabled = {false} />
                 </div>
+                <div className = "flex flex-row justify-between py-5">
+                    <span>Amount :</span>
+                     <Input id = "amount" val = {formatDouble(data.amount)} disabled = {false} />
+                </div>
+               
             </div>
         </div>
     );
