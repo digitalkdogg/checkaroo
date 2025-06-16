@@ -11,7 +11,7 @@ interface Props {
 
 export default function Page(trans:Props) {
     return (
-       <a href = {'/trans/dets?id=' + encrypt(trans.transId)} key = {encrypt(trans.transId)} 
+       <a href = {'/trans/dets?id=' +trans.transId} key = {encrypt(trans.transId)} 
             className = "flex p-4 shadow-sm shadow-stone-400 ">
             <div className = "flex-1">{convertToNiceDate(trans.date)}</div>
             <div className = "flex-1">{trans.companyName}</div>

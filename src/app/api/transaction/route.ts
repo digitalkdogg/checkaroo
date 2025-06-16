@@ -7,49 +7,38 @@ import { getDataFromCookie} from '@/common/common'
 import {doesSessionExists} from '@/common/session'
 
 export async function GET(request: NextRequest) {
-
-    try {
       
-      let transid = request.nextUrl!.searchParams!.get('transid')!;
+    let transid = decodeURIComponent(request.nextUrl!.searchParams!.get('transid')!);
 
-      if (transid) {
-        transid = decrypt(transid);
 
-        let get_query = ''
 
-        const accountid='1'
+    if (transid) {
+      let get_query = ''
 
-        let joinarr = [
-          'inner join Clients on Clients.client_id = Transactions.client_id',
-          'inner join Category on Category.category_id = Transactions.category_id' 
-        ];
+      const accountid='1'
 
-        var query = {
-          select : '*',
-          from : 'Transactions',
-          where : 'account_id = "' + accountid + '" and trans_id = "' + transid + '"' ,
-          join: joinarr,
-          limit: 1
+      let joinarr = [
+        'inner join Clients on Clients.client_id = Transactions.client_id',
+        'inner join Category on Category.category_id = Transactions.category_id' 
+      ];
+
+      var query = {
+        select : '*',
+        from : 'Transactions',
+        where : 'account_id = "' + accountid + '" and trans_id = "' + transid + '"' ,
+        join: joinarr,
+        limit: 1
+      }
+
+        var arr:any = []
+        const results = await select(query);
+        arr  = results
+        if (arr.length == 0 ) {
+          arr = ['no results found here']
         }
 
-          var arr:any = []
-          const results = await select(query);
-          arr  = results
-          if (arr.length == 0 ) {
-            arr = ['no results found'];
-          }
-
-          return NextResponse.json(arr[0])
-      } else {
-          return NextResponse.json([{'error' : 'No transid'}])
-      }
-  
-  } catch (err) {
-
-    const response = {
-      error: (err as Error).message,
-     returnedStatus: 401,
+        return NextResponse.json(arr[0])
+    } else {
+        return NextResponse.json([{'error' : 'No transid'}])
     }
-    return NextResponse.json(response, { status: 401 })
- }
 }

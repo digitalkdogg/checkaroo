@@ -4,7 +4,7 @@ const cipherKey:any = process.env.NEXT_PUBLIC_APP_crypt
 
 export const encrypt = (data:any) => {
   const encrypted = CryptoJS.AES.encrypt(data, cipherKey).toString();
-  process.stdout.write('\n' +'after enc val: ' + encrypted + '\n')
+ // process.stdout.write('\n' +'after enc val: ' + encrypted + '\n')
    return encodeURIComponent(encrypted);
 };
 

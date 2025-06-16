@@ -17,7 +17,7 @@ export async function POST() {
         const cdata = (await cookieStore).get(cookiename) //todo get from env
         const isValid = await checkValidSession(cdata?.value)
 
-        return NextResponse.json({'valid':isValid, 'data': cdata})
+        return NextResponse.json({'valid':isValid})
     } catch(err) {
         return NextResponse.json({'error': err })
     }
