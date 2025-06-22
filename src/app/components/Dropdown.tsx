@@ -89,16 +89,18 @@ function Dropdown(prop:Props) {
     };
 
     const showResultsBox = () => {
-        var results, wrapper, dropdownInput, results_eles
+        var results, wrapper, dropdownInput, results_eles, arrow
 
 
         if (prop.type == 'clients') {
+            arrow = document.querySelector('#clients .arrow svg');
             results = document.querySelector('#clients #results')
             wrapper = document.getElementById('clients');
             dropdownInput = document.querySelector('#clients #cldropdown_input')
             results_eles = document.querySelectorAll('#clients #results div')
    
         } else {
+            arrow = document.querySelector('#categories .arrow svg');
             results = document.querySelector('#categories #results')
             wrapper = document.getElementById('categories');
             dropdownInput = document.querySelector('#categories #cadropdown_input')
@@ -113,8 +115,15 @@ function Dropdown(prop:Props) {
         })
 
         results?.classList.remove('hide');
+
+        if (results.classList.contains('hide')) {
+            arrow.classList.remove('rotate-270')    
+        } else {
+            arrow.classList.add('rotate-270')
+        }
+
         if (dropdownInput) {
-            dropdownInput.classList.remove('sendtoback')
+            dropdownInput.focus()
         }
     }
 
@@ -123,16 +132,16 @@ function Dropdown(prop:Props) {
     }
 
     const selectResult = (event:any) => {
-        var selectValue, results, dropdownInput, wrapper
+        var selectValue, results, dropdownInput, wrapper, arrow
    
 
         if (prop.type == 'clients') {
-            selectValue = document.querySelector('#clients #selectValue')
+            arrow = document.querySelector('#clients .arrow svg');
             wrapper = document.getElementById('clients');
             results = document.querySelector('#clients #results')
             dropdownInput = document.getElementById('cldropdown_input');
         } else {
-            selectValue = document.querySelector('#categories #selectValue')
+            arrow = document.querySelector('#categories .arrow svg');
             wrapper = document.getElementById('categories');
             results = document.querySelector('#categories #results')
             dropdownInput = document.getElementById('cadropdown_input');
@@ -141,17 +150,21 @@ function Dropdown(prop:Props) {
         wrapper?.classList.remove('sendtofront');
 
         const html = event.target.innerHTML;
-        if (selectValue) {
-            if (html.length > 0 ) {
-                selectValue.innerHTML = html;
-                if (dropdownInput) {
-                    dropdownInput.classList.add('sendtoback')
-                    dropdownInput.focus()
-                }
+        if (html.length > 0 ) {
+            if (dropdownInput) {
+                dropdownInput.placeholder = html;
+                dropdownInput.focus()
+            }
 
-                results?.classList.add('hide');
-            }   
-        }
+            results?.classList.add('hide');
+
+            if (results.classList.contains('hide')) {
+                console.log('true');
+                arrow.classList.remove('rotate-270')    
+            } else {
+                arrow.classList.add('rotate-270')
+            }
+        }   
 
     }
 
@@ -161,13 +174,14 @@ function Dropdown(prop:Props) {
             <div className = {styles.wrapper} id = "clients">
                 <div className = "flex flex-row" onClick= {showResultsBox}>
                   <input
-                      className = {'sendtoback ' + styles.dropdown_input}
+                      className = {styles.dropdown_input}
                       type="text"
                       id = "cldropdown_input"
+                      placeholder={prop.val}
                       onChange={handleInputChange}
                   />
-                  <div className = {styles.selectValue} id = "selectValue">{prop.val}</div>
-                  <div className = {styles.droparrow}>
+                  <div className = {styles.selectValue} id = "selectValue">{''}</div>
+                  <div className = {'arrow ' + styles.droparrow}>
                     <Svg type = 'downarrow' />
                   </div>
                 </div>
@@ -186,13 +200,14 @@ function Dropdown(prop:Props) {
             <div className = {styles.wrapper} id = "categories">
                 <div className = "flex flex-row " onClick= {showResultsBox}>
                   <input
-                      className = {'sendtoback ' + styles.dropdown_input}
+                      className = {styles.dropdown_input}
                       type="text"
                       id = "cadropdown_input"
+                      placeholder={prop.val}
                       onChange={handleInputChange}
                   />
-                  <div className = {styles.selectValue} id = "selectValue">{prop.val}</div>
-                  <div className = {styles.droparrow}>
+                  <div className = {styles.selectValue} id = "selectValue">{''}</div>
+                  <div className = {'arrow ' + styles.droparrow}>
                     <Svg type = 'downarrow' />
                   </div>
                 </div>
