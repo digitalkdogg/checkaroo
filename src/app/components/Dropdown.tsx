@@ -131,6 +131,7 @@ function Dropdown(prop:Props) {
         return str.replace(/ /g, '_')
     }
 
+
     const selectResult = (event:any) => {
         var selectValue, results, dropdownInput, wrapper, arrow
    
@@ -153,13 +154,12 @@ function Dropdown(prop:Props) {
         if (html.length > 0 ) {
             if (dropdownInput) {
                 dropdownInput.placeholder = html;
-                dropdownInput.focus()
+                dropdownInput.value = ''
             }
 
             results?.classList.add('hide');
 
             if (results.classList.contains('hide')) {
-                console.log('true');
                 arrow.classList.remove('rotate-270')    
             } else {
                 arrow.classList.add('rotate-270')
@@ -181,7 +181,7 @@ function Dropdown(prop:Props) {
                       onChange={handleInputChange}
                   />
                   <div className = {styles.selectValue} id = "selectValue">{''}</div>
-                  <div className = {'arrow ' + styles.droparrow}>
+                  <div className = {'arrow ' + styles.droparrow} >
                     <Svg type = 'downarrow' />
                   </div>
                 </div>
