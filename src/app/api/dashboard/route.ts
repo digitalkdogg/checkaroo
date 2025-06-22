@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     var query = {
       select : '*',
       from : 'Transactions',
-      where : 'account_id = "' + accountid + '"',
+      where : 'Transactions.account_id = "' + accountid + '"',
       join: joinarr
     }
 

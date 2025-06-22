@@ -143,6 +143,19 @@ button:hover, input[type = "button"]:hover {
   display: block;
 }
 
+.sendtoback {
+  z-index:-1 !important;
+}
+
+.sendtofront {
+  z-index:5 !important;
+}
+
+.dim {
+  filter: opacity(.5) drop-shadow(2px 4px 6px black)
+
+}
+
 /*.animation-iteration-count-3 {
   animation-iteration-count: 7;
 } */

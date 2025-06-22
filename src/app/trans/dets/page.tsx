@@ -5,6 +5,7 @@ import Leftside from '@/app/components/Leftside'
 import { Geist } from 'next/font/google'
 import { useState, useEffect } from 'react';
 
+
 const geist = Geist({
   subsets: ['latin'],
 })

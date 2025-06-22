@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import Input from '@/app/components/Input';
 import {convertToNiceDate, formatDouble} from '@/common/common'
+import Dropdown from '@/app/components/Dropdown'
+import styles from '@/resources/dropdown.module.css'
 
 interface Props {
     transid : string;
@@ -62,7 +64,14 @@ export default function Dets(props:Props) {
                     <span>Amount :</span>
                      <Input id = "amount" val = {formatDouble(data.amount)} disabled = {false} />
                 </div>
-               
+                <div className = {'flex flex-row justify-between py-5 ' + styles.container}>
+                    <span>Company : </span>
+                    <Dropdown val = {data.company_name} api = "../api/clients" type = 'clients' />
+                </div>
+                <div className = {'flex flex-row justify-between py-5 ' + styles.container}>
+                    <span>Category : </span>
+                    <Dropdown val = {data.category_name} api = "../api/categories" type = 'categories' />
+                </div>
             </div>
         </div>
     );
