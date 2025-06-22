@@ -1,7 +1,4 @@
 import Menu from '@/app/components/Menu'
-interface Props {
-  enable: boolean
-}
 
 export default function Page(props: Props) {
   return (

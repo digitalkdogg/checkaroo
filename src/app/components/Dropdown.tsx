@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useEffect } from 'react';
 import styles from '@/resources/dropdown.module.css'
 import Svg from '@/app/components/Svg'
@@ -55,12 +56,7 @@ function Dropdown(prop:Props) {
 
     const searchResult = (search:string) => {
         var results_eles 
-        
-        if (prop.type == 'clients') {
-            results_eles =  document.querySelectorAll('#clients #results div');
-        } else {
-            results_eles = document.querySelectorAll('#categories #results div');
-        }
+        results_eles =  document.querySelectorAll('#' + prop.type + '_results div');
 
         if (results_eles) {
             results_eles.forEach( el => {
@@ -75,9 +71,7 @@ function Dropdown(prop:Props) {
         
     }
 
-
     const handleInputChange = (event:any) => {
-
         const val = event.target.value
 
         if (val.length > 0) {
@@ -91,22 +85,11 @@ function Dropdown(prop:Props) {
     const showResultsBox = () => {
         var results, wrapper, dropdownInput, results_eles, arrow
 
-
-        if (prop.type == 'clients') {
-            arrow = document.querySelector('#clients .arrow svg');
-            results = document.querySelector('#clients #results')
-            wrapper = document.getElementById('clients');
-            dropdownInput = document.querySelector('#clients #cldropdown_input')
-            results_eles = document.querySelectorAll('#clients #results div')
-   
-        } else {
-            arrow = document.querySelector('#categories .arrow svg');
-            results = document.querySelector('#categories #results')
-            wrapper = document.getElementById('categories');
-            dropdownInput = document.querySelector('#categories #cadropdown_input')
-            results_eles = document.querySelectorAll('#categories #results div')
-        }
-
+        wrapper = document.getElementById(prop.type);
+        arrow = document.querySelector('#' + prop.type + '_arrow svg');
+        results = document.querySelector('#' + prop.type + '_results')
+        results_eles = document.querySelectorAll('#' + prop.type  + '_results div')
+        dropdownInput = document.querySelector('#' + prop.type + '_dropinput')
 
         wrapper?.classList.add('sendtofront');
 
@@ -135,18 +118,10 @@ function Dropdown(prop:Props) {
     const selectResult = (event:any) => {
         var selectValue, results, dropdownInput, wrapper, arrow
    
-
-        if (prop.type == 'clients') {
-            arrow = document.querySelector('#clients .arrow svg');
-            wrapper = document.getElementById('clients');
-            results = document.querySelector('#clients #results')
-            dropdownInput = document.getElementById('cldropdown_input');
-        } else {
-            arrow = document.querySelector('#categories .arrow svg');
-            wrapper = document.getElementById('categories');
-            results = document.querySelector('#categories #results')
-            dropdownInput = document.getElementById('cadropdown_input');
-        }
+        wrapper = document.getElementById(prop.type);
+        arrow = document.querySelector('#' + prop.type + '_arrow svg');
+        results = document.querySelector('#' + prop.type + '_results')
+        dropdownInput = document.getElementById(prop.type + '_dropinput');
 
         wrapper?.classList.remove('sendtofront');
 
@@ -168,61 +143,52 @@ function Dropdown(prop:Props) {
 
     }
 
-
-   if (prop.type == 'clients') {
-        return (
-            <div className = {styles.wrapper} id = "clients">
-                <div className = "flex flex-row" onClick= {showResultsBox}>
-                  <input
-                      className = {styles.dropdown_input}
-                      type="text"
-                      id = "cldropdown_input"
-                      placeholder={prop.val}
-                      onChange={handleInputChange}
-                  />
-                  <div className = {styles.selectValue} id = "selectValue">{''}</div>
-                  <div className = {'arrow ' + styles.droparrow} >
-                    <Svg type = 'downarrow' />
-                  </div>
-                </div>
-                
-                <div className = {'border-t border-gray-300 hide ' + styles.results} id = "results">
-                    {Object.entries(data).map(([key, value]) => (
-                    <div key={key} id = {'k_' + makeWebFriendly(data[key].company_name)} onClick={selectResult} className = {styles.results_div}>
-                        {data[key].company_name}
-                    </div>
-                    ))}
-                </div>
-            </div>
-        )
-    } else if(prop.type == 'categories') {
-          return (
-            <div className = {styles.wrapper} id = "categories">
-                <div className = "flex flex-row " onClick= {showResultsBox}>
-                  <input
-                      className = {styles.dropdown_input}
-                      type="text"
-                      id = "cadropdown_input"
-                      placeholder={prop.val}
-                      onChange={handleInputChange}
-                  />
-                  <div className = {styles.selectValue} id = "selectValue">{''}</div>
-                  <div className = {'arrow ' + styles.droparrow}>
-                    <Svg type = 'downarrow' />
-                  </div>
-                </div>
-                
-                <div className = {'border-t border-gray-300 hide ' + styles.results} id = "results">
-                    {Object.entries(data).map(([key, value]) => (
-                    <div key={key} id = {'k_' + makeWebFriendly(data[key].category_name)} onClick={selectResult} className = {styles.results_div}>
-                        {data[key].category_name}
-                    </div>
-                    ))}
-                </div>
-            </div>
-          )
+    const getPlaceholder = () => {
+        if (prop.val == '') {
+            return 'Select Text'
+        } else {
+            return prop.val
+        }
     }
 
+    const getValue = () => {
+        if (prop.type == 'clients') {
+            return 'company_name'
+        } else {
+            return 'category_name'
+        }
+    }
+
+    return (
+        <div className = {styles.wrapper} id = {prop.type} >
+            <div className = "flex flex-row" onClick= {showResultsBox}>
+                <input
+                    className = {styles.dropdown_input}
+                    type="text"
+                    name={'drop_' + getValue()}
+                    id = {prop.type + '_dropinput'}
+                    placeholder={getPlaceholder()}
+                    onChange={handleInputChange}
+                />
+                <div className = {styles.selectValue} id = {prop.type + '_selectValue'}>{''}</div>
+                <div className = {'arrow ' + styles.droparrow} id = {prop.type + '_arrow'}>
+                    <Svg type = 'downarrow' />
+                </div>
+            </div>
+            
+            <div className = {'border-t border-gray-300 hide ' + styles.results} id = {prop.type + '_results'}>
+                {Object.entries(data).map(([key, value]) => (
+                    <div key ={key} 
+                        id = {'k' + makeWebFriendly(data[key][getValue()])} 
+                        onClick={selectResult}
+                        className = {styles.results_div}
+                    >
+                        {data[key][getValue()]}
+                    </div>
+                ))}
+            </div>
+        </div>
+    )
 }
 
 export default Dropdown; 

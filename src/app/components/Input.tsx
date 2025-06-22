@@ -16,7 +16,7 @@ function Input(props:Props) {
     if (props.disabled==true) {
         return (
             <input
-                id = {props.val}
+                id = {props.id}
                 type="text"
                 defaultValue = {props.val}
                 onChange={handleInputChange}
@@ -26,7 +26,7 @@ function Input(props:Props) {
     } else {
         return (
             <input
-                id = {props.val}
+                id = {props.id}
                 type="text"
                 defaultValue = {props.val}
                 onChange={handleInputChange}
