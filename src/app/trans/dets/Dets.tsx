@@ -53,16 +53,16 @@ export default function Dets(props:Props) {
             <div className = "flex-3 bg-white flex px-20 flex-col my-50 max-w-3/4" >
                 <div className = "flex flex-row justify-between py-5">
                     <span>TransID :</span>
-                     <Input id = "transid" val = {data.trans_id} disabled = {true} />
+                     <Input name = "transid" id = "transid" val = {data.trans_id} disabled = {true} />
                 </div>
 
                 <div className = "flex flex-row justify-between py-5">
                     <span>Date :</span>
-                     <Input id = "date" val = {convertToNiceDate(data.date)} disabled = {false} />
+                     <Input name = "date" id = "date" val = {convertToNiceDate(data.date)} disabled = {false} />
                 </div>
                 <div className = "flex flex-row justify-between py-5">
                     <span>Amount :</span>
-                     <Input id = "amount" val = {formatDouble(data.amount)} disabled = {false} />
+                     <Input name = "amount" id = "amount" val = {formatDouble(data.amount)} disabled = {false} />
                 </div>
                 <div className = {'flex flex-row justify-between py-5 ' + styles.container}>
                     <span>Company : </span>

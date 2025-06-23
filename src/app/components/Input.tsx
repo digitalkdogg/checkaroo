@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 interface Props {
     val: any,
     id: string,
+    name: string,
     disabled: boolean
 }
 
@@ -18,6 +19,7 @@ function Input(props:Props) {
             <input
                 id = {props.id}
                 type="text"
+                name={props.name}
                 defaultValue = {props.val}
                 onChange={handleInputChange}
                 disabled = {true}
@@ -28,6 +30,7 @@ function Input(props:Props) {
             <input
                 id = {props.id}
                 type="text"
+                name ={props.name}
                 defaultValue = {props.val}
                 onChange={handleInputChange}
             />

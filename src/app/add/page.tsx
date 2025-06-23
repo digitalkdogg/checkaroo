@@ -6,9 +6,10 @@ import Dropdown from '@/app/components/Dropdown'
 import Datepicker from '@/app/components/Datepicker'
 import { Geist } from 'next/font/google'
 import { useState, useEffect } from 'react';
-import {redirect} from 'next/navigation'
 import { FormEvent } from 'react'
 import '@/app/globals.css'
+
+  import { createItem } from '@/app/add/actions';
 
 
 const geist = Geist({
@@ -22,8 +23,10 @@ const geist = Geist({
 export default function Page() {
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-
-        redirect('/save');
+        event.preventDefault();
+        //console.log(event.target)
+       // redirect('/save');
+       event.currentTarget.submit()
     }
 
      const [startDate, setStartDate] = useState(new Date());
@@ -36,10 +39,10 @@ export default function Page() {
             <main className = "flex" id = "login-main">
                 <Leftside enable = {true} />
                 <div className = "flex-3 bg-white flex justify-center-safe items-center-safe px-20 flex-col ">
-                    <form onSubmit={handleSubmit} > 
+                     <form action = {createItem} onSubmit={handleSubmit} > 
                         <div className = "flex flex-row justify-between py-5">
                             <span>Date :</span>
-                            <Input id = "date" val = '' disabled = {false} />
+                            <Input id = "date" name = "date" val = '' disabled = {false} />
                         </div>
 
                         <div className = {'flex flex-row justify-between py-5 '}>
@@ -54,7 +57,7 @@ export default function Page() {
 
                         <div className = "flex flex-row justify-between py-5">
                             <span>Amount :</span>
-                            <Input id = "amount" val = '' disabled = {false} />
+                            <Input id = "amount" name = "amount" val = '' disabled = {false} />
                         </div>
 
                         <div className = {'flex flex-row justify-between py-5 '}>
@@ -65,7 +68,10 @@ export default function Page() {
 
 
                         <div className= "flex justify-center-safe mb-20">
-                            <button className="inset-shadow-indigo-500 mr-5" type="submit">Submit</button>
+                            <button className="inset-shadow-indigo-500 mr-5" 
+                                type="submit">
+                                    Submit
+                                </button>
                             <button className="ml-5" type="reset">Reset</button>
                         </div>
                     </form>
