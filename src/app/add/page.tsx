@@ -3,10 +3,13 @@
 import Leftside from '@/app/components/Leftside'
 import Input from '@/app/components/Input'
 import Dropdown from '@/app/components/Dropdown'
+import Datepicker from '@/app/components/Datepicker'
 import { Geist } from 'next/font/google'
 import { useState, useEffect } from 'react';
 import {redirect} from 'next/navigation'
+import { FormEvent } from 'react'
 import '@/app/globals.css'
+
 
 const geist = Geist({
   subsets: ['latin'],
@@ -23,7 +26,11 @@ export default function Page() {
         redirect('/save');
     }
 
+     const [startDate, setStartDate] = useState(new Date());
+
     return (
+
+
 
         <div className = {geist.className}>
             <main className = "flex" id = "login-main">
@@ -32,7 +39,12 @@ export default function Page() {
                     <form onSubmit={handleSubmit} > 
                         <div className = "flex flex-row justify-between py-5">
                             <span>Date :</span>
-                            <Input id = "date" name = "date" val = '' disabled = {false} />
+                            <Input id = "date" val = '' disabled = {false} />
+                        </div>
+
+                        <div className = {'flex flex-row justify-between py-5 '}>
+
+                         <Datepicker />
                         </div>
 
                         <div className = {'flex flex-row justify-between py-5'}>
@@ -42,13 +54,15 @@ export default function Page() {
 
                         <div className = "flex flex-row justify-between py-5">
                             <span>Amount :</span>
-                            <Input id = "amount" name = "date" val = '' disabled = {false} />
+                            <Input id = "amount" val = '' disabled = {false} />
                         </div>
 
                         <div className = {'flex flex-row justify-between py-5 '}>
                             <span>Category : </span>
                             <Dropdown val = '' api = "../api/categories" type = 'categories' />
                         </div>
+
+
 
                         <div className= "flex justify-center-safe mb-20">
                             <button className="inset-shadow-indigo-500 mr-5" type="submit">Submit</button>
