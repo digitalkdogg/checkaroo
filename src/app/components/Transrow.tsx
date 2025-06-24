@@ -12,7 +12,7 @@ interface Props {
 export default function Page(trans:Props) {
     return (
        <a href = {'/trans/dets?id=' +trans.transId} key = {trans.transId} 
-            className = "flex p-4 shadow-sm shadow-stone-400 ">
+            className = "flex p-4 shadow-sm shadow-stone-400 no-scale-hover">
             <div className = "flex-1">{convertToNiceDate(trans.date)}</div>
             <div className = "flex-1">{trans.companyName}</div>
             <div className = "flex-1">${formatDouble(trans.amount)}</div>

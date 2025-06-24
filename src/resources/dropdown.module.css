@@ -2,9 +2,7 @@
     border:1px solid black;
     border-radius:7px;
     transition: all .5s;
-    position:absolute;
     background:white;
-    right:25vw;
 }
 
 .droparrow {

@@ -91,6 +91,12 @@ a:hover, ul.menu li:hover {
   filter: contrast(0.7);
 }
 
+a.no-scale-hover:hover {
+  transform: translate(0,0);
+  scale:100%;
+  filter: opacity(0.5);
+}
+
 input[type = "text"], input[type = "password"], input[type = "select"] {
   border: 1px solid #333;
   border-radius: 7px;
@@ -155,6 +161,16 @@ button[type="submit"]:hover, button[type="reset"]:hover, button.btn:hover input[
   filter: opacity(.5) drop-shadow(2px 4px 6px black)
 
 }
+
+/* date picker css */
+.my-custom-calendar {
+  z-index:1;
+}
+
+.my-custom-calendar .react-datepicker__day--selected {
+    background-color: var(--color-green);
+}
+/* end date picker */
 
 /*.animation-iteration-count-3 {
   animation-iteration-count: 7;

@@ -46,13 +46,14 @@ export default function Datepicker(props:Props) {
     }
 
     return (
-      <div className = "flex flex-row">
+      <div className = {'flex flex-row '}>
         <DatePicker selected={startDate} 
             onChange={changeDate} 
             id = {props.id} 
             name = {props.name} 
             onClickOutside = {showbtn} 
-            dateFormat = "MM-dd-YYYY"    
+            dateFormat = "MM-dd-YYYY"   
+            calendarClassName="my-custom-calendar" 
         /> 
         <div id = "calbtn" onClick={triggerCal}><Svg id = "svgcalbtn" type = "calendar" /></div>
       </div>         
