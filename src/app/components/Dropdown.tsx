@@ -120,12 +120,13 @@ function Dropdown(prop:Props) {
 
 
     const selectResult = (event:any) => {
-        var selectValue, results, dropdownInput, wrapper, arrow
+        var selectValue, results, dropdownInput, wrapper, arrow, hidden_input
    
         wrapper = document.getElementById(prop.type);
         arrow = document.querySelector('#' + prop.type + '_arrow svg');
         results = document.querySelector('#' + prop.type + '_results')
         dropdownInput = document.getElementById(prop.type + '_dropinput');
+        hidden_input = document.getElementById(prop.type + '_hidden_input')
 
         wrapper?.classList.remove('sendtofront');
 
@@ -133,6 +134,7 @@ function Dropdown(prop:Props) {
         if (html.length > 0 ) {
             if (dropdownInput) {
                 dropdownInput.placeholder = html;
+                hidden_input.value = html
                 dropdownInput.value = ''
             }
 
@@ -155,7 +157,7 @@ function Dropdown(prop:Props) {
         if (dropdownInput.value.length>0) {
             dropdownInput.value = ''
         }
-        
+
         if (ele.classList.contains('rotate-270')) {
             
             setTimeout(function () {
@@ -188,12 +190,12 @@ function Dropdown(prop:Props) {
                 <input
                     className = {styles.dropdown_input}
                     type="text"
-                    name={'drop_' + getValue()}
+                    name={prop.type + '_dropinput'}
                     id = {prop.type + '_dropinput'}
                     placeholder={getPlaceholder()}
                     onChange={handleInputChange}
                 />
-                <div className = {styles.selectValue} id = {prop.type + '_selectValue'}>{''}</div>
+                <input type = "hidden" id = {prop.type + '_hidden_input'} name = {prop.type + '_hidden_input'} />
                 <div className = {'arrow ' + styles.droparrow} id = {prop.type + '_arrow'} onClick={(e) => arrowclick(e)}>
                     <Svg type = 'downarrow' />
                 </div>

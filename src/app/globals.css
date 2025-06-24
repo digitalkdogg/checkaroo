@@ -109,7 +109,7 @@ label {
   font-weight: bold;
 }
 
-button, input[type = "button"] {
+button[type="submit"],button[type="reset"], button.btn, input[type = "button"] {
 
   border: 1px solid #333;
   min-width:130px;
@@ -122,7 +122,7 @@ button, input[type = "button"] {
   transition-duration : .3s;
 }
 
-button:hover, input[type = "button"]:hover {
+button[type="submit"]:hover, button[type="reset"]:hover, button.btn:hover input[type = "button"]:hover {
     scale: 110%;
     filter: contrast(0.5);
 }

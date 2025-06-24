@@ -9,7 +9,7 @@ import { useState, useEffect } from 'react';
 import { FormEvent } from 'react'
 import '@/app/globals.css'
 
-  import { createItem } from '@/app/add/actions';
+  import { saveItem } from '@/app/add/actions';
 
 
 const geist = Geist({
@@ -26,7 +26,10 @@ export default function Page() {
         event.preventDefault();
         //console.log(event.target)
        // redirect('/save');
-       event.currentTarget.submit()
+        
+       event.currentTarget.submit();
+
+
     }
 
      const [startDate, setStartDate] = useState(new Date());
@@ -39,15 +42,10 @@ export default function Page() {
             <main className = "flex" id = "login-main">
                 <Leftside enable = {true} />
                 <div className = "flex-3 bg-white flex justify-center-safe items-center-safe px-20 flex-col ">
-                     <form action = {createItem} onSubmit={handleSubmit} > 
+                     <form action = {saveItem} onSubmit={handleSubmit} > 
                         <div className = "flex flex-row justify-between py-5">
                             <span>Date :</span>
-                            <Input id = "date" name = "date" val = '' disabled = {false} />
-                        </div>
-
-                        <div className = {'flex flex-row justify-between py-5 '}>
-
-                         <Datepicker />
+                            <Datepicker id = "date" name = "date" />
                         </div>
 
                         <div className = {'flex flex-row justify-between py-5'}>
