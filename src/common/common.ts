@@ -6,7 +6,7 @@ export const formatDouble = (amount:number) => {
 }
 
 export const convertToMySQLDate = (jsdate:Date) => {
-    return moment(jsdate).format('Y-MM-DD HH:mm:ss')
+    return moment(jsdate).format('YYYY-MM-DD HH:mm:ss')
 }
 
 export const convertToNiceDate = (mydate:string) => {

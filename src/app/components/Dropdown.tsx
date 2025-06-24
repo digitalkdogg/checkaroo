@@ -9,16 +9,12 @@ interface Props {
     type: string
 }
 
-
 function Dropdown(prop:Props) {
     const [inputValue, setInputValue] = useState('');
 
     const [data, setData] = useState<any>([])
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<any>(null);
-
-
-
 
     useEffect(() => {
   
@@ -68,7 +64,6 @@ function Dropdown(prop:Props) {
 
             });
         }
-        
     }
 
     const handleInputChange = (event:any) => {
@@ -83,7 +78,7 @@ function Dropdown(prop:Props) {
     };
 
     const showResultsBox = () => {
-        var results, wrapper, dropdownInput, results_eles, arrow
+        var results:any, wrapper:any, dropdownInput:any, results_eles:any, arrow:any
 
         wrapper = document.getElementById(prop.type);
         arrow = document.querySelector('#' + prop.type + '_arrow svg');
@@ -95,7 +90,7 @@ function Dropdown(prop:Props) {
 
         results?.classList.remove('hide');
 
-        results_eles.forEach( el => {
+        results_eles.forEach((el: any) => {
             el.classList.remove('hide')
         })
 
@@ -120,8 +115,8 @@ function Dropdown(prop:Props) {
 
 
     const selectResult = (event:any) => {
-        var selectValue, results, dropdownInput, wrapper, arrow, hidden_input
-   
+        var selectValue, results:any, dropdownInput:any, wrapper:any, arrow:any, hidden_input:any
+
         wrapper = document.getElementById(prop.type);
         arrow = document.querySelector('#' + prop.type + '_arrow svg');
         results = document.querySelector('#' + prop.type + '_results')
@@ -149,10 +144,10 @@ function Dropdown(prop:Props) {
 
     }
 
-    const arrowclick = (event) => {
-        const ele = event.target
-        const dropdownInput = document.getElementById(prop.type + '_dropinput');
-        const results = document.querySelector('#' + prop.type + '_results')
+    const arrowclick = (event:any) => {
+        const ele:any = event.target
+        const dropdownInput:any = document.getElementById(prop.type + '_dropinput');
+        const results:any = document.querySelector('#' + prop.type + '_results')
      
         if (dropdownInput.value.length>0) {
             dropdownInput.value = ''
@@ -197,7 +192,7 @@ function Dropdown(prop:Props) {
                 />
                 <input type = "hidden" id = {prop.type + '_hidden_input'} name = {prop.type + '_hidden_input'} />
                 <div className = {'arrow ' + styles.droparrow} id = {prop.type + '_arrow'} onClick={(e) => arrowclick(e)}>
-                    <Svg type = 'downarrow' />
+                    <Svg id = {prop.type + '_droparrow'} type = 'downarrow' />
                 </div>
             </div>
             

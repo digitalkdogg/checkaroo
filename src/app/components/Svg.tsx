@@ -2,7 +2,7 @@
 
 interface Props {
     type: string,
-   
+    id : string
 }
 
 function Svg(props:Props) {
