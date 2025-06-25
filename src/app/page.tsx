@@ -5,6 +5,7 @@ import { Geist } from 'next/font/google'
 import { redirect } from 'next/navigation'
 import SessionCheck from '@/app/components/SessionCheck'
 
+
 const geist = Geist({
   subsets: ['latin'],
 })
