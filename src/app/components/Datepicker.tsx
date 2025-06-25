@@ -55,7 +55,7 @@ export default function Datepicker(props:Props) {
             dateFormat = "MM-dd-YYYY"   
             calendarClassName="my-custom-calendar" 
         /> 
-        <div id = "calbtn" onClick={triggerCal}><Svg id = "svgcalbtn" type = "calendar" /></div>
+        <div id = "calbtn" className = "flex items-center cursor-pointer" onClick={triggerCal}><Svg id = "svgcalbtn" type = "calendar" /></div>
       </div>         
    )
 

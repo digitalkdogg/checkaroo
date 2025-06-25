@@ -3,6 +3,7 @@
     border-radius:7px;
     transition: all .5s;
     background:white;
+    position: absolute;
 }
 
 .droparrow {
