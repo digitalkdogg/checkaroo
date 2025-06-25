@@ -1,10 +1,9 @@
 import Leftside from '@/app/components/Leftside'
 import Rightside from '@/app/components/Rightside'
-import {checkValidSession} from '@/common/session'
 import './globals.css'
 import { Geist } from 'next/font/google'
 import { redirect } from 'next/navigation'
-import {cookies} from 'next/headers'
+import SessionCheck from '@/app/components/SessionCheck'
 
 const geist = Geist({
   subsets: ['latin'],
@@ -13,22 +12,14 @@ const geist = Geist({
 
 export default async function Page({ params }: { params: { id: string } }) {
 
-  const cookieStore = cookies()
-  const cookiename:any = process.env.NEXT_PUBLIC_cookiestr
-  const sessCookie = (await cookieStore).get(cookiename)
-
-  if (sessCookie) {
-   
-    if (await checkValidSession(sessCookie.value) != true) {
-            redirect('/login')
-      }
-    //return <><Redirect value = "/login" /></>
-  }  else {
-        redirect('/login')
+  if (await SessionCheck()==false) {
+    redirect('/login')
   }
 
   return (
     <div className = {geist.className}>
+
+
       <main className = "flex">
 
         <Leftside enable = {true} />
