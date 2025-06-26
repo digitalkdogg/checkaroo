@@ -8,7 +8,8 @@ import { setCookie } from 'cookies-next';
 import { Geist } from 'next/font/google'
 import { redirect } from 'next/navigation'
 import {encrypt} from '@/common/crypt'
-//import {cookies} from 'next/headers'
+
+import { writeCookie } from '@/common/cookieServer'
 
 const geist = Geist({
   subsets: ['latin'],
@@ -23,12 +24,14 @@ var amount = 0
 
 const getTrans = async (transid:any) => {
 
-  setCookie('sicher', 
-    encrypt('trans_id :' + transid),
-    {maxAge:512, 
+  writeCookie('sicher', encrypt('trans_id:' + transid), {maxAge:512, secure:true})
+
+ // setCookie('sicher', 
+ //   encrypt('trans_id :' + transid),
+ //   {maxAge:512, 
     //secure:true, 
     // sameSite: 'strict'
-  })  
+//  })  
 
   const response = await fetch('http://localhost:3000/api/transaction?transid=D95A8AFE67C45', {
     method: 'GET',
@@ -38,7 +41,9 @@ const getTrans = async (transid:any) => {
 
   if (response.ok) {
     const json = await response.json()
-    amount = await json.results[0].amount
+    if (json.length > 0 ) {
+      amount = await json.results[0].amount
+    }
    //setAmount(json.results[0].amount)
     //return json
   }
