@@ -1,16 +1,15 @@
 import { NextResponse, NextRequest } from 'next/server'
-import {cookies} from 'next/headers'
-import pool from '@/common/db';
 import {select} from '@/common/dbutils'
-import {decrypt, encrypt} from '@/common/crypt'
-import { getDataFromCookie} from '@/common/common'
-import {doesSessionExists} from '@/common/session'
+import SessionCheck from '@/app/components/SessionCheck'
 
 export async function GET(request: NextRequest) {
-      
+
+    const session = await SessionCheck();
+    if (!session) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     let transid = decodeURIComponent(request.nextUrl!.searchParams!.get('transid')!);
-
-
 
     if (transid) {
       let get_query = ''

@@ -1,33 +1,32 @@
 import { NextResponse, NextRequest } from 'next/server'
 import {select} from '@/common/dbutils'
+import SessionCheck from '@/app/components/SessionCheck'
 
 
 export async function GET(request: NextRequest) {
-      
-    let transid = decodeURIComponent(request.nextUrl!.searchParams!.get('transid')!);
 
+    const session = await SessionCheck();
+    if (!session) {
+        return NextResponse.json({'results': { 'err': 'Unauthorized' }}, { status: 200 });
+    }
 
-    if (transid) {
-      let get_query = ''
+    let get_query = ''
 
-      const accountid='1'
+    const accountid='1'
 
-      var query = {
-        select : '*',
-        from : 'Clients',
-        where : 'account_id = "' + accountid  + '"' ,
+    var query = {
+      select : '*',
+      from : 'Clients',
+      where : 'account_id = "' + accountid  + '"' ,
+    }
+
+      var arr:any = []
+      const results = await select(query);
+      arr = results;
+
+      if (arr.length == 0 ) {
+        arr = ['no results found here']
       }
 
-        var arr:any = []
-        const results = await select(query);
-        arr = results;
-
-        if (arr.length == 0 ) {
-          arr = ['no results found here']
-        }
-
-        return NextResponse.json(arr)
-    } else {
-        return NextResponse.json([{'error' : 'No transid'}])
-    }
+      return NextResponse.json(arr)
 }
