@@ -50,7 +50,7 @@ export default function Dets(props:Props) {
 
     return (
         <div >
-            <div className = "flex-3 bg-white flex px-20 flex-col my-50 max-w-3/4" >
+            <div className = "flex-3 bg-white flex px-20 flex-col my-50 max-w-130" >
                 <div className = "flex flex-row justify-between py-5">
                     <span>TransID :</span>
                      <Input name = "transid" id = "transid" val = {data.trans_id} disabled = {true} />
