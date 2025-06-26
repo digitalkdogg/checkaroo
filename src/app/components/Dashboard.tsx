@@ -1,11 +1,6 @@
 'use server'
-import { convertToNiceDate, formatDouble } from "@/common/common";
 import Error from '@/app/components/Error'
 import Transrow from '@/app/components/Transrow'
-import { redirect } from 'next/navigation'
-import { setCookie, getCookie } from 'cookies-next';
-import {cookies} from 'next/headers'
-
 
 export default async function Page() {
   const data = await fetch('http://localhost:3000/api/dashboard')
