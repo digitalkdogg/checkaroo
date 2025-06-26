@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '@/resources/dropdown.module.css'
 import Svg from '@/app/components/Svg'
+import Loading from '@/app/components/Loading'
 
 interface Props {
     val: any,
@@ -38,8 +39,8 @@ function Dropdown(prop:Props) {
   
     if (isLoading) {
         return (
-            <div className = "flex-3 bg-white flex px-20 flex-col my-50 items-center">
-                Loading...
+            <div className = "flex-3 bg-white flex px-20 flex-col items-center">
+                <Loading size={6} />
             </div>
         );
     }

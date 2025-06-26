@@ -1,7 +1,6 @@
 'use server'
 import Error from '@/app/components/Error'
 import Transrow from '@/app/components/Transrow'
-import Loading from '@/app/components/Loading'
 
 export default async function Page() {
   const data = await fetch('http://localhost:3000/api/dashboard')
