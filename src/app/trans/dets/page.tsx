@@ -21,11 +21,9 @@ export default function TransDetsPage() {
         if (await SessionCheck()==false) {
             redirect('/login')
         } else {
-            setIsLoading(true);
+            setIsLoading(false);
         }
     }
-
-
 
     useEffect(() => {
         session();
@@ -35,8 +33,8 @@ export default function TransDetsPage() {
         return (
             <div className = {geist.className}>
                 <main className = "flex">
-                    <Leftside enable = {true} />
-                    <div className = "flex-3 bg-white flex px-20 flex-col my-50 items-center">Loading ......</div>
+                    <Leftside enable = {false} />
+                    <div className = "flex-3 bg-white flex px-20 flex-col my-50 items-center">Loading Here ......</div>
                 </main>
             </div>
         );
