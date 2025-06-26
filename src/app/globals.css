@@ -90,6 +90,10 @@ div#overlay {
   background:var(--color-background);
 }
 
+div.flex.flex-row > span {
+    margin-right: 5px;
+}
+
 a, ul.menu li {
   cursor: pointer;
   animation-timing-function: ease-in-out;

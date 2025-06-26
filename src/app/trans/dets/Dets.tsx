@@ -64,13 +64,17 @@ export default function Dets(props:Props) {
                     <span>Amount :</span>
                      <Input name = "amount" id = "amount" val = {formatDouble(data.amount)} disabled = {false} />
                 </div>
-                <div className = {'flex flex-row justify-between py-5 ' + styles.container}>
+                <div className = {'flex flex-row py-5 ' + styles.container}>
                     <span>Company : </span>
-                    <Dropdown val = {data.company_name} api = "../api/clients" type = 'clients' />
+                    <div className="flex">
+                        <Dropdown val = {data.company_name} api = "../api/clients" type = 'clients' />
+                    </div>
                 </div>
-                <div className = {'flex flex-row justify-between py-5 ' + styles.container}>
+                <div className = {'flex flex-row py-5 ' + styles.container}>
                     <span>Category : </span>
-                    <Dropdown val = {data.category_name} api = "../api/categories" type = 'categories' />
+                    <div className="flex">
+                        <Dropdown val = {data.category_name} api = "../api/categories" type = 'categories' />
+                    </div>
                 </div>
             </div>
         </div>

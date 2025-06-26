@@ -30,9 +30,11 @@ export default function Page() {
             <Datepicker id = "date" name = "date" />
         </div>
 
-        <div className = {'flex flex-row justify-between py-5'}>
+        <div className = {'flex flex-row py-5'}>
             <span>Company : </span>
-            <Dropdown val = '' api = "../api/clients" type = 'clients' />
+            <div className="flex">
+              <Dropdown val = '' api = "../api/clients" type = 'clients' />
+            </div>
         </div>
 
         <div className = "flex flex-row justify-between py-5">
@@ -40,12 +42,12 @@ export default function Page() {
             <Input id = "amount" name = "amount" val = '' disabled = {false} />
         </div>
 
-        <div className = {'flex flex-row justify-between py-5 '}>
+        <div className = {'flex flex-row py-5 '}>
             <span>Category : </span>
-            <Dropdown val = '' api = "../api/categories" type = 'categories' />
+            <div className="flex">
+              <Dropdown val = '' api = "../api/categories" type = 'categories' />
+            </div>
         </div>
-
-
 
         <div className= "flex justify-center-safe mb-20">
             <button className="inset-shadow-indigo-500 mr-5" 
