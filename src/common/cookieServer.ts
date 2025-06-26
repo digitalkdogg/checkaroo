@@ -2,13 +2,16 @@
 
 import {cookies} from 'next/headers'
 
-export const writeCookie = async (cookiename:string, data:any, secure:any) => {
-  (await cookies()).set(cookiename, data, {
-                    secure:true,
-                    // sameSite: true,
-                    maxAge: 25200
-                })
+interface CookieData {
+    secure?: boolean;
+    maxAge?: number;
+}
+export const writeCookie = async (cookiename:string, data:any, options?:CookieData) => {
 
+   (await cookies()).set(cookiename, data, {
+        secure: options?.secure || false,
+        maxAge: options?.maxAge || 25200 // Default to 7 hours if
+   })
 
 }
 
