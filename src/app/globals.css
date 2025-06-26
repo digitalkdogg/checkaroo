@@ -14,6 +14,17 @@
   --color-green-light : #297F54;
   --color-green-ultalight: #edfff4;
   --color-error: #b90707;
+
+  --animate-wiggle: wiggle 1s ease-in-out infinite;
+  @keyframes wiggle {
+    0%,
+    100% {
+      transform: rotate(0deg) scale(1);
+    }
+    50% {
+      transform: rotate(360deg) scale(1.5);
+    }
+  }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -171,6 +182,7 @@ button[type="submit"]:hover, button[type="reset"]:hover, button.btn:hover input[
     background-color: var(--color-green);
 }
 /* end date picker */
+
 
 /*.animation-iteration-count-3 {
   animation-iteration-count: 7;

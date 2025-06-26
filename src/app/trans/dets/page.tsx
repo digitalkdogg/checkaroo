@@ -6,6 +6,7 @@ import { Geist } from 'next/font/google'
 import { useState, useEffect } from 'react';
 import SessionCheck from '@/app/components/SessionCheck'
 import { redirect } from 'next/navigation'
+import Loading from '@/app/components/Loading'
 
 const geist = Geist({
   subsets: ['latin'],
@@ -29,16 +30,19 @@ export default function TransDetsPage() {
         session();
     }, []);
 
+
     if (isLoading) {
         return (
             <div className = {geist.className}>
                 <main className = "flex">
-                    <Leftside enable = {false} />
-                    <div className = "flex-3 bg-white flex px-20 flex-col my-50 items-center">Loading Here ......</div>
+                    <Leftside enable = {true} />
+                    <div className = "flex-3 bg-white flex items-center justify-center" >
+                        <Loading size={24} />
+                    </div>
                 </main>
             </div>
-        );
-    }
+        )
+   }
 
     if (error) {
         return (
