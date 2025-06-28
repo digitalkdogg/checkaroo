@@ -4,6 +4,10 @@ import {select} from '@/common/dbutils'
 export async function GET(request: NextRequest) {
   try {
 
+    /* todo : need to check session here */
+
+    
+
     let get_query = ''
     let accountid = request.nextUrl!.searchParams!.get('accountid')!;
 
