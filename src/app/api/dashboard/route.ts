@@ -1,5 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server'
 import {select} from '@/common/dbutils'
+import {getAccountIDSession} from '@/common/session'
 
 export async function GET(request: NextRequest) {
 
@@ -16,10 +17,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({'results': {'err': {'message' : 'Not Authorized'}}})
     }
 
-    let get_query = ''
-    let accountid = request.nextUrl!.searchParams!.get('accountid')!;
+    const accountid = await getAccountIDSession(session) 
+  
 
-    accountid='1'
+    if (!accountid) {
+      return NextResponse.json({'results': {'err': {'message' : 'Not Authorized'}}})
+    }
 
     let joinarr = [
         'inner join Clients on Clients.client_id = Transactions.client_id',
@@ -29,7 +32,7 @@ export async function POST(request: NextRequest) {
     var query = {
       select : '*',
       from : 'Transactions',
-      where : 'Transactions.account_id = "' + accountid + '"',
+      where : 'Transactions.account_id = "' + accountid  + '"',
       join: joinarr
     }
 

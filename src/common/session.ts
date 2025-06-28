@@ -41,6 +41,31 @@ export const checkValidSession = async (session:any) => {
     return  isValid;
 }
 
+
+export const getAccountIDSession = async (session:string) => {
+  if (await checkValidSession(session)) {
+        const query = {
+          select: '*',
+          from: 'Logins',
+          where: 'Logins.session_hash = "' + session + '"',
+          join : ['inner join Account on Account.user_id = Logins.user_id'],
+          limit: 1
+      }
+
+      var rowsarr:any = []
+      const rows = await select(query);
+      rowsarr = rows;
+
+      if (rowsarr.length == 1) {
+        const account = rowsarr[0].account_id;
+        return account;
+      }
+
+      return null;
+      
+  }
+}
+
 export const checkUserForActiveSession = async (user:any)=> {
    const sessionQuery = {
         select: '*',
