@@ -1,58 +1,13 @@
 'use client'
 import { FormEvent } from 'react'
-import { useRouter } from 'next/router'
+//import { useRouter } from 'next/router'
 import { setCookie,getCookie } from 'cookies-next';
 import { encrypt } from '@/common/crypt';
-import { useState, useEffect } from 'react';
+import {redirect} from 'next/navigation'
+
 import  Loading  from '@/app/components/Loading';
 
 export default function LoginPage() {
-
-  
-  const router = useRouter()
-
-  const [loginData, setLoginData] = useState<any>([])
-  const [isLoginLoading, setIsLoginLoading] = useState(true);
-  const [loginError, setLoginError] = useState<any>(null);
-
-
-    useEffect(() => {
-
-      const checkSession = async () => {
-        try {
-          const response = await fetch('/api/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-          })
-        
-          if (response.ok) {
-            const json = await response.json()
-            console.log('Session check response:', json);
-            if(json.valid ==  true) {
-              // setIsLoginLoading(false);
-              router.push('/')
-            } 
-
-          }
-        } catch(err) {
-          console.error('Error checking session:', err);
-          setLoginError(err);
-        } finally {
-           
-        }
-      
-      }
-
-      const cookiename:any = process.env.NEXT_PUBLIC_cookiestr
-      const sessionCookie = getCookie(cookiename)
-
-      if (sessionCookie) {
-        checkSession();
-      } else {
-        setIsLoginLoading(false);
-        // You can add any additional logic here if needed
-      }
-    }, []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -89,7 +44,8 @@ export default function LoginPage() {
             loginerror.classList.remove('error')
             loginerror.classList.remove('notvisible')
           }
-        router.push('/')
+          redirect('/');
+
         } else {
           if (loginerror) {
             loginerror.innerHTML = msg
@@ -126,23 +82,6 @@ const hideErrorMsg = (e:any) => {
   document.querySelector('.'+parent)?.classList.add('notvisible')
 }
 
-  if (isLoginLoading) {
-    return (
-      <div className="flex-3 bg-white flex px-20 flex-col items-center">
-        <Loading size={24} />
-      </div>
-    );
-  }
-
-  if (loginError) { 
-    return (
-      <div className="flex-3 bg-white flex px-20 flex-col my-50 items-center">
-        <p>Error: {loginError.message}</p>
-      </div>
-    );
-  }  
-   
-    
   return (
     <form onSubmit={handleSubmit} className = "-translate-y-50" >
      <div className = "flex flex-col justify-center-safe">
