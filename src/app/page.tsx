@@ -2,8 +2,8 @@ import Leftside from '@/app/components/Leftside'
 import Rightside from '@/app/components/Rightside'
 import './globals.css'
 import { Geist } from 'next/font/google'
-import { redirect } from 'next/navigation'
-import SessionCheck from '@/app/components/SessionCheck'
+
+import ChecksessionComp from '@/app/components/ChecksessionComp'
 
 
 const geist = Geist({
@@ -13,19 +13,15 @@ const geist = Geist({
 
 export default async function Page({ params }: { params: { id: string } }) {
 
-  if (await SessionCheck()==false) {
-    redirect('/login')
-  }
 
   return (
     <div className = {geist.className}>
-
-
+      <ChecksessionComp reverseLogic = {true} />
       <main className = "flex">
-
         <Leftside enable = {true} />
         <Rightside />
       </main>
     </div>
   )
 }
+

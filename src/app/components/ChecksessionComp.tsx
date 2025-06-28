@@ -6,43 +6,60 @@ import Leftside from '@/app/components/Leftside'
 import Loading from '@/app/components/Loading';
 import { readCookie } from '@/common/cookieServer';
 
+interface componentsProps {
+    reverseLogic?: boolean,
+}
 
-const checkRedirect = async (setLoginData:any, setIsLoginLoading:any) =>{
+
+const checkRedirect = async (setLoginData:any, setIsLoginLoading:any, props:componentsProps) =>{
 
     const cookiename:any = process.env.NEXT_PUBLIC_cookiestr;
     var sessionCookie = await readCookie(cookiename);
 
     if (!sessionCookie) {
+        
+        if (props.reverseLogic) {
+          return redirect('/login'); // Redirect to the login page
+        }
         setIsLoginLoading(false);
         return; // No session cookie, do not redirect
     }
     
     const response = await fetch('/api/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-         })
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    })
 
     if (response.ok) {
         const json = await response.json()
         if(json.valid ==  true) {
+          
+            if (props.reverseLogic) {
+              setLoginData(true);
+              setIsLoginLoading(false);
+              return;
+            }
             return redirect('/'); // Redirect to the home page
+
         } else {
             setLoginData(true);
             setIsLoginLoading(false);
-            console.log('I stay right here');
+            if (props.reverseLogic) {
+                return redirect('/login'); // Redirect to the login page
+            }
         }
     }
 } 
 
 
 
-export default function ChecksessionComp() {
+export default function ChecksessionComp(props:componentsProps) {
       const [loginData, setLoginData] = useState<any>(false)
       const [isLoginLoading, setIsLoginLoading] = useState(true);
       const [loginError, setLoginError] = useState<any>(null);
           
     useEffect(() => {
-      checkRedirect(setLoginData, setIsLoginLoading)
+      checkRedirect(setLoginData, setIsLoginLoading, props)
     }, []);
 
     if (isLoginLoading) {
