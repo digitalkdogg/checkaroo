@@ -2,11 +2,19 @@ import { NextResponse, NextRequest } from 'next/server'
 import {select} from '@/common/dbutils'
 
 export async function GET(request: NextRequest) {
+
+    return NextResponse.json({'results': {'err': {'message': 'Not Authorized'}}})
+}
+
+export async function POST(request: NextRequest) {
+
   try {
+    const json = await request.json();
+    const session = await json.session;
 
-    /* todo : need to check session here */
-
-    
+    if (!session) {
+      return NextResponse.json({'results': {'err': {'message' : 'Not Authorized'}}})
+    }
 
     let get_query = ''
     let accountid = request.nextUrl!.searchParams!.get('accountid')!;
@@ -29,12 +37,8 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ results})
   } catch (err) {
-    console.log('ERROR: API - ', (err as Error).message)
-
-    const response = {
-      error: (err as Error).message,
-     returnedStatus: 200,
-    }
+    const response = {'results': {'err': {message : (err as Error).message}}}
     return NextResponse.json(response, { status: 200})
   }
+
 }

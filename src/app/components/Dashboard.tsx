@@ -2,27 +2,37 @@
 import Error from '@/app/components/Error'
 import Transrow from '@/app/components/Transrow'
 
-export default async function Page() {
-  const data = await fetch('http://localhost:3000/api/dashboard')
-  
-    interface Transaction {
-        trans_id: string,
-        date: string,
-        company_name: string, 
-        amount: number,
-        category_name: string,
-    }
+interface Props {
+  session: string,
+}
 
-    var trans = await data.json();
-    var transdata: Transaction[] = trans.results
 
-    if (transdata.length == undefined) {
-      if (trans.results.err.message) {
-        return <> <Error value = {trans.results.err.message} /> </>
-      }
-    }
+interface Transaction {
+  trans_id: string,
+  date: string,
+  company_name: string, 
+  amount: number,
+  category_name: string,
+  err? : object
+}
 
-  //make a transrow component and pass the transdata to it.  
+
+export default async function Page(prop: Props) {
+
+  const data = await fetch('http://localhost:3000/api/dashboard', {
+    method: 'POST',
+    body: JSON.stringify({
+      session: prop.session ,
+    })
+    });
+
+  var trans = await data.json();
+  var transdata: Transaction[] = trans.results
+
+  if (trans.results.err) {
+    return <> <Error value = {trans.results.err.message} /> </>
+  }
+
   return (
     <div className = "bg-gray-200 h-dvh">
       <div className = "header flex py-2 px-4 shadow-md shadow-lg shadow-green-light/30 bg-white text-black">
