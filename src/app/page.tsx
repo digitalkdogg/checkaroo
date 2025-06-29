@@ -17,17 +17,11 @@ const geist = Geist({
 export default async function Page() {
 
   const cookiename:any = process.env.NEXT_PUBLIC_cookiestr
-  const session = await readCookie(cookiename)
+  var session = await readCookie(cookiename)
 
-  if (!session ) {
-    return (
-      <div className = {geist.className}>
-        <ChecksessionComp reverseLogic = {false} />
-        <Leftside enable = {false} />
-      </div>
-    )
+  if (!session) {
+    session = ''
   }
-  
 
   return (
     <div className = {geist.className}>
