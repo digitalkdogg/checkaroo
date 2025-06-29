@@ -1,5 +1,5 @@
 'use server'
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
 import {select, insert} from '@/common/dbutils'
 import { checkValidSession} from '@/common/session'
 import {cookies} from 'next/headers'
@@ -9,13 +9,20 @@ import crypto from 'crypto-js';
 import { redirect } from 'next/navigation'
 
 
-export async function POST() {
+export async function POST(request: NextRequest) {
     try {
 
-        const cookieStore = await cookies()
-        const cookiename:any = process.env.NEXT_PUBLIC_cookiestr
-        const cdata = (await cookieStore).get(cookiename) //todo get from env
-        const isValid = await checkValidSession(cdata?.value)
+        const json = await request.json();
+        const session:string = json.session;
+
+        if (!session) {
+            return NextResponse.json({ error: 'Unauthorized Session' }, { status: 401 });
+        }
+
+       // const cookieStore = await cookies()
+       // const cookiename:any = process.env.NEXT_PUBLIC_cookiestr
+       // const cdata = (await cookieStore).get(cookiename) //todo get from env
+        const isValid = await checkValidSession(session)
 
         return NextResponse.json({'valid':isValid})
     } catch(err) {

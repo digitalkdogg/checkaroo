@@ -2,7 +2,6 @@ import { NextResponse, NextRequest } from 'next/server'
 import {select} from '@/common/dbutils'
 import {getAccountIDSession} from '@/common/session'
 
-
 export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized method' }, { status: 401 });
 }

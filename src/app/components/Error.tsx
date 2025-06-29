@@ -16,6 +16,7 @@ export default function Page(props: Props) {
         width={200}
         height={200}
         alt="a cicle icon idicating there was an error"
+        priority={true}
       />
       </div>
       {props.value}

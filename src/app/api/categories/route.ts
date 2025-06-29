@@ -1,6 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server'
 import {select} from '@/common/dbutils'
-import SessionCheck from '@/app/components/SessionCheck'
 import {getAccountIDSession} from '@/common/session'
 
 export async function GET(request: NextRequest) {
