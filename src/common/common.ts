@@ -2,7 +2,11 @@ import moment from 'moment'
 import {select} from '@/common/dbutils'
 
 export const formatDouble = (amount:number) => {
-  return amount.toFixed(2)
+  try {
+    return amount.toFixed(2)
+  } catch (e) {
+    return (0.00)
+  }
 }
 
 export const convertToMySQLDate = (jsdate:Date) => {

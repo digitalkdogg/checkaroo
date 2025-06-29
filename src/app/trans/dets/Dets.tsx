@@ -3,30 +3,47 @@ import { useState, useEffect } from 'react';
 import Input from '@/app/components/Input';
 import {convertToNiceDate, formatDouble} from '@/common/common'
 import Dropdown from '@/app/components/Dropdown'
+import Error from '@/app/components/Error'
 import styles from '@/resources/dropdown.module.css'
 
 interface Props {
-    transid : string;
+    transid : string,
+    session: string
 }
 
 export default function Dets(props:Props) {
 
     const [data, setData] = useState<any>([])
     const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<any>(null);
+    const [errorTrans, setErrorTrans] = useState<any>(null);
 
     useEffect(() => {
 
         const fetchData = async () => {
             try {
-                const response = await fetch('/api/transaction?transid=' + props.transid); // Replace with your API endpoint
+
+                const response = await fetch('/api/transaction', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    session: props.session,
+                    transid: props.transid
+                  })
+                })
+
                 if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
+                    const err = await response.json();
+                     setErrorTrans({message: err.error});
+                } else {
+                  const result = await response.json();
+                  if (result=='no results found here') {
+                    setErrorTrans({message: 'No Transaction Details Found'})
+                  } else {
+                    setData(result)
+                  }
                 }
-                const result = await response.json();
-                setData(result)
             } catch (err) {
-                setError(err);
+                setErrorTrans(err);
             } finally {
                 setIsLoading(false);
             }
@@ -42,11 +59,15 @@ export default function Dets(props:Props) {
         );
     }
 
-    if (error) {
+    if (errorTrans) {
         return (
-         <div className = "flex-3 bg-white flex px-20 flex-col my-50 items-center">Error: {error.message}</div>
+         <Error value = {errorTrans.message} /> 
         );
     }
+
+    //  if (trans.results.err) {
+    //    return <> <Error value = {trans.results.err.message} /> </>
+    //  }
 
     return (
         <div >

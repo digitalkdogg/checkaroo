@@ -1,5 +1,6 @@
+'use client'
 import { convertToNiceDate, formatDouble } from "@/common/common" 
-import {encrypt} from '@/common/crypt'
+import Link from 'next/link'
 
 interface Props {
     transId: string,
@@ -9,15 +10,17 @@ interface Props {
     categoryName: string
 }
 
-export default function Page(trans:Props) {
+export default function Transrow(trans:Props) {
     return (
-       <a href = {'/trans/dets?id=' +trans.transId} key = {trans.transId} 
-            className = "flex p-4 shadow-sm shadow-stone-400 no-scale-hover">
-            <div className = "flex-1">{convertToNiceDate(trans.date)}</div>
-            <div className = "flex-1">{trans.companyName}</div>
-            <div className = "flex-1">${formatDouble(trans.amount)}</div>
-            <div className = "flex-1">{trans.categoryName}</div>
-        </a>
+
+            <Link href = {{pathname : 'trans/dets', query: {id : trans.transId}}} 
+             className = "flex p-4 shadow-sm shadow-stone-400 no-scale-hover">
+                <div className = "flex-1">{convertToNiceDate(trans.date)}</div>
+                <div className = "flex-1">{trans.companyName}</div>
+                <div className = "flex-1">${formatDouble(trans.amount)}</div>
+                <div className = "flex-1">{trans.categoryName}</div>
+            </Link>
+
 
     )
 
