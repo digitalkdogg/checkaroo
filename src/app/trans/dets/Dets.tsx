@@ -5,6 +5,7 @@ import {convertToNiceDate, formatDouble} from '@/common/common'
 import Dropdown from '@/app/components/Dropdown'
 import Error from '@/app/components/Error'
 import styles from '@/resources/dropdown.module.css'
+import { Session } from 'inspector/promises';
 
 interface Props {
     transid : string,
@@ -65,10 +66,6 @@ export default function Dets(props:Props) {
         );
     }
 
-    //  if (trans.results.err) {
-    //    return <> <Error value = {trans.results.err.message} /> </>
-    //  }
-
     return (
         <div >
             <div className = "flex-3 bg-white flex px-20 flex-col my-50 max-w-130" >
@@ -88,13 +85,13 @@ export default function Dets(props:Props) {
                 <div className = {'flex flex-row py-5 ' + styles.container}>
                     <span>Company : </span>
                     <div className="flex">
-                        <Dropdown val = {data.company_name} api = "../api/clients" type = 'clients' />
+                        <Dropdown val = {data.company_name} api = "../api/clients" type = 'clients' session = {props.session} />
                     </div>
                 </div>
                 <div className = {'flex flex-row py-5 ' + styles.container}>
                     <span>Category : </span>
                     <div className="flex">
-                        <Dropdown val = {data.category_name} api = "../api/categories" type = 'categories' />
+                        <Dropdown val = {data.category_name} api = "../api/categories" type = 'categories' session = {props.session} />
                     </div>
                 </div>
             </div>

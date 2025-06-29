@@ -1,18 +1,26 @@
 import { NextResponse, NextRequest } from 'next/server'
 import {select} from '@/common/dbutils'
-import SessionCheck from '@/app/components/SessionCheck'
+import {getAccountIDSession} from '@/common/session'
 
 
 export async function GET(request: NextRequest) {
+    return NextResponse.json({ error: 'Unauthorized method' }, { status: 401 });
+}
 
-    const session = await SessionCheck();
+export async function POST(request: NextRequest) {
+
+    const json = await request.json();
+    const session:string = json.session;
+
     if (!session) {
-        return NextResponse.json({'results': { 'err': 'Unauthorized' }}, { status: 200 });
+        return NextResponse.json({ error: 'Unauthorized Session' }, { status: 401 });
     }
 
-    let get_query = ''
+    const accountid = await getAccountIDSession(session) 
 
-    const accountid='1'
+    if (!accountid) {
+      return NextResponse.json({ error: 'Unauthorized Account' }, { status: 401 });
+    }
 
     var query = {
       select : '*',

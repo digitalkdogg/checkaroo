@@ -7,7 +7,8 @@ import Loading from '@/app/components/Loading'
 interface Props {
     val: any,
     api: string, 
-    type: string
+    type: string,
+    session : string
 }
 
 function Dropdown(prop:Props) {
@@ -15,41 +16,41 @@ function Dropdown(prop:Props) {
 
     const [data, setData] = useState<any>([])
     const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<any>(null);
+    const [errorDropDown, setErrorDropDown] = useState<any>(null);
 
     useEffect(() => {
   
         const fetchData = async () => {
-            try {
-                const response = await fetch(prop.api);  
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
 
-                const results = await response.json();
-                setData (results)
+            try {
+                 const response = await fetch(prop.api, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session: prop.session
+                    })
+                })
+
+                if (!response.ok) {
+                    const err = await response.json();
+                     setErrorDropDown({message: err.error});
+                } else {
+                    
+                    const results = await response.json();
+                    if (results == 'no results found here') {
+                        setErrorDropDown({message: 'No Results Found'})
+                    } else {
+                        setData (results)
+                    }
+                }
             } catch (err) {
-                setError(err);
+                setErrorDropDown(err);
             } finally {
                 setIsLoading(false);
             }
         };
         fetchData();
     }, []);
-  
-    if (isLoading) {
-        return (
-            <div className = "flex-3 bg-white flex px-20 flex-col items-center">
-                <Loading size={6} />
-            </div>
-        );
-    }
-  
-    if (error) {
-        return (
-           <div className = "flex-3 bg-white flex px-20 flex-col my-50 items-center">Error: {error.message}</div>
-        );
-    }
 
     const searchResult = (search:string) => {
         var results_eles 
@@ -111,7 +112,11 @@ function Dropdown(prop:Props) {
     }
 
     const makeWebFriendly = (str:string) => {
-        return str.replace(/ /g, '_')
+        if (str) {
+            return str.replace(/ /g, '_')
+        } else {
+            return ''
+        }
     }
 
 
@@ -178,6 +183,27 @@ function Dropdown(prop:Props) {
         } else {
             return 'category_name'
         }
+    }
+
+    if (isLoading) {
+        return (
+            <div className = "flex-3 bg-white flex px-20 flex-col items-center">
+                <Loading size={6} />
+            </div>
+        );
+    }
+
+  
+    if (errorDropDown) {
+        return (
+             <div className = {styles.wrapper} id = {prop.type} >
+                <div className = "flex flex-row" >
+                    <div className = "ml-5 mr-5">
+                        {errorDropDown.message}
+                    </div>
+                </div>
+           </div>
+        );
     }
 
     return (
