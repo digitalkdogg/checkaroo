@@ -1,6 +1,5 @@
 'use client'
 import { FormEvent } from 'react'
-//import { useRouter } from 'next/router'
 import { setCookie,getCookie } from 'cookies-next';
 import { encrypt } from '@/common/crypt';
 import {redirect} from 'next/navigation'
@@ -18,11 +17,12 @@ export default function LoginPage() {
 
 
     if (validateForm(username, password)) {
+
+      showSubmitSpinner('show')
       setCookie('sicher', 
          encrypt('user:' + username + '||pass:' + password),
          {maxAge:512, 
           secure:true, 
-         // sameSite: 'strict'
         })  
 
       const response = await fetch('/api/login/auth', {
@@ -47,6 +47,7 @@ export default function LoginPage() {
           redirect('/');
 
         } else {
+          showSubmitSpinner('hide');
           if (loginerror) {
             loginerror.innerHTML = msg
             loginerror.classList.add('error');
@@ -77,6 +78,26 @@ export default function LoginPage() {
   }
 }
 
+const showSubmitSpinner = (type:string) => {
+
+    var submit = document.getElementById('submit')
+    if (submit) { 
+      const child = submit.querySelector('span#loadingspan');
+      if (child) {
+        if (type == 'show') {
+          child.classList.remove('notvisible');
+        } else {
+          child.classList.add('notvisible');
+        }
+      }
+    }
+  //const parentElement = element.target
+ // const child = parentElement.querySelector('span#loadingspan');
+ // console.log(child.length);
+//  child.classList.remove('notvisible')
+
+}
+
 const hideErrorMsg = (e:any) => {
   const parent = e.currentTarget.getAttribute('data-error');
   document.querySelector('.'+parent)?.classList.add('notvisible')
@@ -99,11 +120,12 @@ const hideErrorMsg = (e:any) => {
             <input id = "password" name="password" data-error="password-error" type = "password" onFocus={hideErrorMsg}   />
           </div>
       </div>
-      
       <br />
 
       <div className= "flex justify-center-safe mb-20">
-        <button className="inset-shadow-indigo-500 mr-5" type="submit">Submit</button>
+        <button className="inset-shadow-indigo-500 mr-5 flex flex-row" type="submit" id = "submit">
+          <span id = "loadingspan" className = "notvisible mr-5 translate-x-2"><Loading size={6} /></span>Submit
+        </button>
         <button className="ml-5" type="reset">Reset</button>
       </div>
         <div className= "flex justify-center-safe">
