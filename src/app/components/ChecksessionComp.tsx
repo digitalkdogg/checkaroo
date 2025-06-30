@@ -6,8 +6,6 @@ import Leftside from '@/app/components/Leftside'
 import Loading from '@/app/components/Loading';
 import { readCookie } from '@/common/cookieServer';
 import Error from '@/app/components/Error'
-import {encrypt} from '@/common/crypt'
-import moment from 'moment'
 
 interface componentsProps {
     reverseLogic?: boolean,
@@ -22,7 +20,6 @@ export default function ChecksessionComp(props:componentsProps) {
       checkRedirect()
     }, []);
 
-    //const checkRedirect = async (setLoginData:any, setIsLoginLoading:any, props:componentsProps) =>{
     const checkRedirect = async () => {
         const cookiename:any = process.env.NEXT_PUBLIC_cookiestr;
         var sessionCookie = await readCookie(cookiename);
@@ -30,23 +27,25 @@ export default function ChecksessionComp(props:componentsProps) {
         if (!sessionCookie) {
             
             if (props.reverseLogic) {
-            return redirect('/login'); // Redirect to the login page
+                return redirect('/login'); // Redirect to the login page
             }
             setIsLoginLoading(false);
             return; // No session cookie, do not redirect
         }
         
+        var session = sessionCookie
 
         const response = await fetch('/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                session: encrypt(sessionCookie  + '|||' + moment().format('SSS'))
+                session: session,
             })
         })
 
         if (response.ok) {
             const json = await response.json()
+            console.log(json);
             if(json.valid ==  true) {
             
                 if (props.reverseLogic) {
@@ -99,7 +98,7 @@ export default function ChecksessionComp(props:componentsProps) {
     if (isLoginLoading) {
         return (
             <div>
-                <main className = "flex">
+                <main className = "flex" id = "sessioncheck">
                     <Leftside enable = {true} />
                     <div className = "flex-3 bg-white flex items-center justify-center" >
                         <Loading size={24} />

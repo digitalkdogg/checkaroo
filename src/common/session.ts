@@ -2,6 +2,7 @@ import moment from 'moment'
 import {select, update} from '@/common/dbutils'
 import { NextResponse } from 'next/server'
 import { writelog } from '@/common/logs'
+import {decrypt} from '@/common/crypt'
 
 export const checkValidSession = async (session:any) => {
 
@@ -37,12 +38,23 @@ export const checkValidSession = async (session:any) => {
       }
     }
 
-    writelog('session for ' + session + 'is ' + isValid.valueOf(), 'session validation right here' )
+    writelog('session for ' + session + 'is ' + isValid.valueOf())
     return  isValid;
 }
 
 
 export const getAccountIDSession = async (session:string) => {
+  const sessionstr = decrypt(session);
+  if (sessionstr.indexOf('|||')>=0) {
+    const split = sessionstr.split('|||')
+    if (split.length >=1 ) {
+      session = split[1]
+    } else {
+      return null;
+    }
+  } else {
+    return null;
+  }
   if (await checkValidSession(session)) {
         const query = {
           select: '*',

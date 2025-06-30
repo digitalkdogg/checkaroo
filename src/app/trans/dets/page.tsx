@@ -31,7 +31,7 @@ export default async function page({
             <main className = "flex">
                 <Leftside enable = {true} />
                 <div className = "flex-3 bg-white flex px-20 flex-col" >
-                    <Dets transid = {id} session= {encrypt(session + '|||' + moment().format('SSS'))} />
+                    <Dets transid = {id} session= {session} />
                 </div>
             </main>
         </div>

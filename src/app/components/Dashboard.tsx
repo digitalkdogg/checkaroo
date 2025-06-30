@@ -22,7 +22,7 @@ export default async function Page(prop: Props) {
   const data = await fetch('http://localhost:3000/api/dashboard', {
     method: 'POST',
     body: JSON.stringify({
-      session: prop.session ,
+      session:  prop.session,
     })
     });
 
@@ -30,7 +30,7 @@ export default async function Page(prop: Props) {
   var transdata: Transaction[] = trans.results
 
   if (trans.results.err) {
-    return <> <Error value = {trans.results.err.message} /> </>
+    return <div id = "dash-error"><Error value = {trans.results.err.message} /> </div>
   }
 
   return (

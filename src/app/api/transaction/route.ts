@@ -11,12 +11,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
     const json = await request.json();
     const transid = decrypt(json.transid);
-    const sessionstr:string = decrypt(json.session);
-
-    var session
-    if (sessionstr.indexOf('|||')>0) {
-      session = sessionstr.split('|||')[0]
-    }
+    const session = json.session
 
     if (!session) {
         return NextResponse.json({ error: 'Unauthorized Session' }, { status: 401 });

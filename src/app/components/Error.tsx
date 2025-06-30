@@ -9,7 +9,7 @@ interface Props {
 export default function Page(props: Props) {
 
   return (
-    <div className = "h-screen bg-white flex justify-center-safe items-center-safe px-20 flex-col -translate-y-70">
+    <div className = "h-screen bg-white flex justify-center-safe items-center-safe px-20 flex-col">
       <div className="my-20">
         <Image 
         src="/error-icon.webp"

@@ -4,11 +4,10 @@ import { insert} from '@/common/dbutils'
 import { convertToMySQLDate, setExpireDT} from '@/common/common'
 import {checkUserForActiveSession, doesSessionExists, validateUser, expireSession} from '@/common/session'
 import { readCookie, writeCookie, deleteCookie } from '@/common/cookieServer'
-import {decrypt} from '@/common/crypt'
+import {decrypt, encrypt} from '@/common/crypt'
 import crypto from 'crypto-js';
 import {v4 as uuidv4} from 'uuid'
 import moment from 'moment'
-import { writelog } from '@/common/logs'
 
 // @todo secure this api endpoint
 
@@ -20,6 +19,7 @@ export async function POST(request:NextRequest) {
 
     const password =crypto.MD5(pass).toString()
 
+    
     if (user =='' || password == '') {
         return NextResponse.json({'status': false, msg : 'The system can not process your request'})
     }
@@ -38,13 +38,17 @@ export async function POST(request:NextRequest) {
         } else {
             if (await checkUserForActiveSession(user) == false) {
                 var session = uuidv4().trim() + uuidv4().trim();
-                var sessionencrypted = session;
-
-                if (session.length < 90) {
-                    session = session + uuidv4().trim();
+                for (let x=0; x<5; x++) {
+                    if (session.length < 96) {
+                        session = session + uuidv4().trim();
+                    }
                 }
 
-                await writeCookie(cookiename, session, {
+                var sessionencrypted = ''
+                sessionencrypted =  moment().format('SSS') + '|||' + session + '|||' + moment().format('SSS');
+                sessionencrypted = encrypt(sessionencrypted)
+
+                await writeCookie(cookiename, sessionencrypted, {
                     secure: true,
                     maxAge: 25200 // 7 hours});
                 });
