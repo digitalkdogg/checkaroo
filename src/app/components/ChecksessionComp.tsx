@@ -46,7 +46,6 @@ export default function ChecksessionComp(props:componentsProps) {
 
         if (response.ok) {
             const json = await response.json()
-            console.log(json);
             if(json.valid ==  true) {
             
                 if (props.reverseLogic) {

@@ -1,6 +1,7 @@
 'use server'
 import Error from '@/app/components/Error'
 import Transrow from '@/app/components/Transrow'
+import { superEcnrypt } from '@/common/crypt'
 
 interface Props {
   session: string,
@@ -22,7 +23,7 @@ export default async function Page(prop: Props) {
   const data = await fetch('http://localhost:3000/api/dashboard', {
     method: 'POST',
     body: JSON.stringify({
-      session:  prop.session,
+      session:  superEcnrypt(prop.session),
     })
     });
 

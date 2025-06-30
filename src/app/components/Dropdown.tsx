@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import styles from '@/resources/dropdown.module.css'
 import Svg from '@/app/components/Svg'
 import Loading from '@/app/components/Loading'
+import { superEcnrypt } from '@/common/crypt';
 
 interface Props {
     val: any,
@@ -27,7 +28,7 @@ function Dropdown(prop:Props) {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        session: prop.session
+                        session: superEcnrypt(prop.session)
                     })
                 })
 
