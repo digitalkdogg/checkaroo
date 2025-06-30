@@ -1,5 +1,6 @@
 import CryptoJS from 'crypto-js';
 import {writelog} from '@/common/logs'
+import moment from 'moment'
 
 const cipherKey:any = process.env.NEXT_PUBLIC_APP_crypt 
 
@@ -14,4 +15,9 @@ export const decrypt = (encryptedData:any) => {
   const bytes = CryptoJS.AES.decrypt(decoded, cipherKey);
   writelog('\n' +'after decrypt val now: ' + bytes.toString(CryptoJS.enc.Utf8) + '\n')
   return bytes.toString(CryptoJS.enc.Utf8);
+};
+
+export const superEcnrypt = (session:string) => {
+  const decrypted = decrypt(session);
+  return encrypt(moment().format('SSSS') + '|||' + decrypted + '|||' + moment().format('SSSS'));
 };

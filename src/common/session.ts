@@ -3,6 +3,7 @@ import {select, update} from '@/common/dbutils'
 import { NextResponse } from 'next/server'
 import { writelog } from '@/common/logs'
 import {decrypt} from '@/common/crypt'
+import { write } from 'fs'
 
 export const checkValidSession = async (session:any) => {
 
@@ -42,24 +43,33 @@ export const checkValidSession = async (session:any) => {
     return  isValid;
 }
 
+export const findSession = (sessionstr:string) => {
+    if (sessionstr.indexOf('|||')>=0) {
+      const split = sessionstr.split('|||')
+      if (split.length >=1 ) {
 
-export const getAccountIDSession = async (session:string) => {
-  const sessionstr = decrypt(session);
-  if (sessionstr.indexOf('|||')>=0) {
-    const split = sessionstr.split('|||')
-    if (split.length >=1 ) {
-      session = split[1]
+        for (let x =0; x<split.length; x++) {
+          if (split[x].indexOf('-') > 0) {
+            return split[x] 
+          }
+        }
+      } else {
+        return null;
+      }
     } else {
       return null;
     }
-  } else {
-    return null;
-  }
-  if (await checkValidSession(session)) {
+}
+
+export const getAccountIDSession = async (session:string) => {
+  const sessionstr = decrypt(session);
+  const sessionhash = findSession(sessionstr)
+
+  if (await checkValidSession(sessionhash)) {
         const query = {
           select: '*',
           from: 'Logins',
-          where: 'Logins.session_hash = "' + session + '"',
+          where: 'Logins.session_hash = "' + sessionhash + '"',
           join : ['inner join Account on Account.user_id = Logins.user_id'],
           limit: 1
       }

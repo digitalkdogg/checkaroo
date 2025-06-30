@@ -5,7 +5,8 @@ import {convertToNiceDate, formatDouble} from '@/common/common'
 import Dropdown from '@/app/components/Dropdown'
 import Error from '@/app/components/Error'
 import styles from '@/resources/dropdown.module.css'
-import { encrypt } from '@/common/crypt';
+import { encrypt, decrypt, superEcnrypt } from '@/common/crypt';
+import moment from 'moment'
 
 interface Props {
     transid : string,
@@ -27,7 +28,7 @@ export default function Dets(props:Props) {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
-                    session: props.session,
+                    session: superEcnrypt(props.session),
                     transid: encrypt(props.transid)
                   })
                 })
