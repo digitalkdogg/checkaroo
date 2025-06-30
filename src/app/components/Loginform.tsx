@@ -1,6 +1,5 @@
 'use client'
 import { FormEvent } from 'react'
-import { setCookie,getCookie } from 'cookies-next';
 import { encrypt } from '@/common/crypt';
 import {redirect} from 'next/navigation'
 
@@ -19,15 +18,13 @@ export default function LoginPage() {
     if (validateForm(username, password)) {
 
       showSubmitSpinner('show')
-      setCookie('sicher', 
-         encrypt('user:' + username + '||pass:' + password),
-         {maxAge:512, 
-          secure:true, 
-        })  
 
       const response = await fetch('/api/login/auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user: encrypt(username), pass:encrypt(password)
+        })
       })
 
 
@@ -43,6 +40,7 @@ export default function LoginPage() {
           if (loginerror) {
             loginerror.classList.remove('error')
             loginerror.classList.remove('notvisible')
+            loginerror.innerHTML = 'Login Success! Redirecting Now!'
           }
           redirect('/');
 
@@ -91,11 +89,6 @@ const showSubmitSpinner = (type:string) => {
         }
       }
     }
-  //const parentElement = element.target
- // const child = parentElement.querySelector('span#loadingspan');
- // console.log(child.length);
-//  child.classList.remove('notvisible')
-
 }
 
 const hideErrorMsg = (e:any) => {
@@ -124,7 +117,7 @@ const hideErrorMsg = (e:any) => {
 
       <div className= "flex justify-center-safe mb-20">
         <button className="inset-shadow-indigo-500 mr-5 flex flex-row" type="submit" id = "submit">
-          <span id = "loadingspan" className = "notvisible mr-5 translate-x-2"><Loading size={6} /></span>Submit
+          <span id = "loadingspan" className = "notvisible mr-0 ml-2"><Loading size={6} /></span>Submit
         </button>
         <button className="ml-5" type="reset">Reset</button>
       </div>
