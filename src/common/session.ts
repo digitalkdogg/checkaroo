@@ -37,7 +37,7 @@ export const checkValidSession = async (session:any) => {
       }
     }
 
-    writelog('session for ' + session + 'is ' + isValid.valueOf() )
+    writelog('session for ' + session + 'is ' + isValid.valueOf(), 'session validation right here' )
     return  isValid;
 }
 

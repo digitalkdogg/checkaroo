@@ -4,6 +4,8 @@ import Leftside from '@/app/components/Leftside'
 import { Geist } from 'next/font/google'
 import Dets from '@/app/trans/dets/Dets'
 import ChecksessionComp from '@/app/components/ChecksessionComp';
+import {encrypt} from '@/common/crypt'
+import moment from 'moment'
 
 const geist = Geist({
   subsets: ['latin'],
@@ -29,7 +31,7 @@ export default async function page({
             <main className = "flex">
                 <Leftside enable = {true} />
                 <div className = "flex-3 bg-white flex px-20 flex-col" >
-                    <Dets transid = {id} session= {session} />
+                    <Dets transid = {id} session= {encrypt(session + '|||' + moment().format('SSS'))} />
                 </div>
             </main>
         </div>

@@ -6,6 +6,8 @@ import Leftside from '@/app/components/Leftside'
 import Loading from '@/app/components/Loading';
 import { readCookie } from '@/common/cookieServer';
 import Error from '@/app/components/Error'
+import {encrypt} from '@/common/crypt'
+import moment from 'moment'
 
 interface componentsProps {
     reverseLogic?: boolean,
@@ -39,7 +41,7 @@ export default function ChecksessionComp(props:componentsProps) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                session: sessionCookie
+                session: encrypt(sessionCookie  + '|||' + moment().format('SSS'))
             })
         })
 

@@ -7,6 +7,7 @@ import { readCookie, writeCookie, deleteCookie } from '@/common/cookieServer'
 import {decrypt} from '@/common/crypt'
 import crypto from 'crypto-js';
 import {v4 as uuidv4} from 'uuid'
+import moment from 'moment'
 import { writelog } from '@/common/logs'
 
 // @todo secure this api endpoint
@@ -37,6 +38,7 @@ export async function POST(request:NextRequest) {
         } else {
             if (await checkUserForActiveSession(user) == false) {
                 var session = uuidv4().trim() + uuidv4().trim();
+                var sessionencrypted = session;
 
                 if (session.length < 90) {
                     session = session + uuidv4().trim();

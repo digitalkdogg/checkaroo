@@ -5,7 +5,7 @@ import {convertToNiceDate, formatDouble} from '@/common/common'
 import Dropdown from '@/app/components/Dropdown'
 import Error from '@/app/components/Error'
 import styles from '@/resources/dropdown.module.css'
-import { Session } from 'inspector/promises';
+import { encrypt } from '@/common/crypt';
 
 interface Props {
     transid : string,
@@ -28,7 +28,7 @@ export default function Dets(props:Props) {
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
                     session: props.session,
-                    transid: props.transid
+                    transid: encrypt(props.transid)
                   })
                 })
 

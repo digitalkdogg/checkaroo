@@ -1,6 +1,9 @@
-export const writelog = (msg:string) => {
+export const writelog = (msg:string, premsg?:string) => {
     try {
-        process.stdout.write(msg.toString())
+        if (premsg) {
+            msg = premsg + '\n' + msg
+        } 
+        process.stdout.write('\n' + msg.toString() + '\n')
     } catch (e) {
         return;
     }

@@ -1,6 +1,8 @@
 import { NextResponse, NextRequest } from 'next/server'
 import {select} from '@/common/dbutils'
 import {getAccountIDSession} from '@/common/session'
+import {decrypt} from '@/common/crypt'
+import {writelog} from '@/common/logs'
 
 export async function GET(request: NextRequest) {
   return NextResponse.json({ error: 'Unauthorized method' }, { status: 401 });
@@ -9,12 +11,13 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
       const json = await request.json();
-      const session:string = json.session;
+      const sessionstr:string = decrypt(json.session);
+      const session:string = sessionstr.split('|||')[0]
   
       if (!session) {
           return NextResponse.json({ error: 'Unauthorized Session' }, { status: 401 });
       }
-  
+      
       const accountid = await getAccountIDSession(session) 
   
       if (!accountid) {
