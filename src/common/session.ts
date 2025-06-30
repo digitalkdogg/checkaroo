@@ -65,6 +65,10 @@ export const getAccountIDSession = async (session:string) => {
   const sessionstr = decrypt(session);
   const sessionhash = findSession(sessionstr)
 
+  if (!sessionhash) {
+    return null;
+  }
+
   if (await checkValidSession(sessionhash)) {
         const query = {
           select: '*',
