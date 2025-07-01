@@ -89,7 +89,7 @@ function Dropdown(prop:Props) {
         results_eles = document.querySelectorAll('#' + prop.type  + '_results div')
         dropdownInput = document.querySelector('#' + prop.type + '_dropinput')
 
-        wrapper?.classList.add('sendtofront');
+        wrapper?.classList.add('expand');
 
         results?.classList.remove('hide');
 
@@ -130,7 +130,7 @@ function Dropdown(prop:Props) {
         dropdownInput = document.getElementById(prop.type + '_dropinput');
         hidden_input = document.getElementById(prop.type + '_hidden_input')
 
-        wrapper?.classList.remove('sendtofront');
+        wrapper?.classList.remove('expand');
 
         const html = event.target.innerHTML;
         if (html.length > 0 ) {
@@ -208,7 +208,7 @@ function Dropdown(prop:Props) {
     }
 
     return (
-        <div className = {styles.wrapper} id = {prop.type} >
+        <div className = {'dropdown-wrapper ' + styles.wrapper} id = {prop.type} >
             <div className = "flex flex-row" onClick= {showResultsBox}>
                 <input
                     className = {styles.dropdown_input}
