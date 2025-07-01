@@ -3,26 +3,33 @@ import { NextRequest, NextResponse } from 'next/server'
 import { insert} from '@/common/dbutils'
 import { convertToMySQLDate, setExpireDT} from '@/common/common'
 import {checkUserForActiveSession, doesSessionExists, validateUser, expireSession} from '@/common/session'
-import { readCookie, writeCookie, deleteCookie } from '@/common/cookieServer'
+import { readCookie, writeCookie } from '@/common/cookieServer'
 import {decrypt, encrypt} from '@/common/crypt'
 import crypto from 'crypto-js';
 import {v4 as uuidv4} from 'uuid'
 import moment from 'moment'
+import { writelog } from '@/common/logs'
 
 // @todo secure this api endpoint
 
 export async function POST(request:NextRequest) {
+    let referer = request.headers.get('referer');
+    if (referer == null || referer == '') {
+        return NextResponse.json({'status': false, msg : 'The system can not process your request'})
+    } else {
+        if (referer.indexOf('login') == -1) {
+            return NextResponse.json({'status': false, msg : 'The system can not process your request'})
+        }
+    }
 
     const json = await request.json();
+    if (!json.user || !json.pass) {
+        return NextResponse.json({'status': false, msg : 'The reqired fields are not present'})
+    }
     const user:string = decrypt(json.user);
     const pass:string = decrypt(json.pass);
 
     const password =crypto.MD5(pass).toString()
-
-    
-    if (user =='' || password == '') {
-        return NextResponse.json({'status': false, msg : 'The system can not process your request'})
-    }
 
     if (await validateUser(user, password)) {
 
