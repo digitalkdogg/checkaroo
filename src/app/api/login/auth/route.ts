@@ -12,7 +12,7 @@ import { writelog } from '@/common/logs'
 
 
 export async function POST(request:NextRequest) {
-    if (!headersLegit(request, 'login')) {
+    if (!headersLegit(request, ['login'])) {
         return NextResponse.json({ error: 'Unauthorized request' }, { status: 401 });
     }
 

@@ -187,27 +187,42 @@ export const headersLegit = (request:any, legitrefer:any) => {
 
   let referer = request.headers.get('referer');
     let headers = request.headers
-
-     headers.forEach((value:any, key:any) => {
-       writelog(key + '::' + value + '\n', '------ special header item here -------')
-      });
     
 
-  if (referer == null || referer == '') {
+    if (referer == null || referer == '') {
       return false;
-  } else {
+    } else {
 
-
-  if (legitrefer == '/') {
-    if (referer != legitrefer) {
-      return false;
-    } 
-  } else {
-      if (referer.indexOf(legitrefer) == -1) {
-        return false;
+      var foundit = false;
+      for (let x =0; x<legitrefer.length; x++) {
+        if (legitrefer[x] == '/') {
+          if (referer == legitrefer[x]) {
+            foundit = true;
+            break;  
+          }
+        } else {
+          if (referer.indexOf(legitrefer[x])>=0) {
+            foundit = true;
+            break;  
+          } 
+        }
       }
     }
-  }
+
+    if (foundit ==false) {
+      return false;
+    }
+
+  //if (legitrefer == '/') {
+  //  if (referer != legitrefer) {
+  //    return false;
+  //  } 
+  //} else {
+  //    if (referer.indexOf(legitrefer) == -1) {
+  //      return false;
+  //    }
+  //  }
+  //}
 
   if (request.headers.get('content-type') !== 'application/json') {
       return false;
