@@ -34,11 +34,11 @@ export async function POST(request: NextRequest) {
     data = JSON.parse(data);
 
     const date = data.date;
-    const company = data.company;
+    const clients = data.clients;
     const amount = data.amount;
-    const category = data.category; 
+    const categories = data.categories; 
     
-    writelog( 'transid is ' +  data.date + ' and session is ' + session, '------------------transid is here------------------')
+    writelog( 'transid is ' +  data.clients + 'and cat is : ' + data.categories + ' and session is ' + session, '------------------transid is here------------------')
 
 
    // if (transid) {

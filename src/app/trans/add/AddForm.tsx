@@ -17,14 +17,14 @@ export default function AddForm(prop:Props) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const date = formData.get('date');
-    const company = formData.get('company');
+    const clients = formData.get('clients');
     const amount = formData.get('amount');
-    const category = formData.get('category');  
+    const categories = formData.get('categories');  
     const data = {
       date: date,
-      company: company,
+      clients: clients,
       amount: amount,
-      category: category,
+      categories: categories,
       session: prop.session
     };
 
