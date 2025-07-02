@@ -21,7 +21,7 @@ export default function Page(props: Props) {
     return (
         <div className = {'flex flex-col items-center ' + styles.button} role="button" onClick={redirectTo}>
             Add
-            <Svg type = 'add' />
+            <Svg type = 'add' id = "add" />
         </div>
     )
 }

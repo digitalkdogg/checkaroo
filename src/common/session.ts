@@ -182,3 +182,22 @@ export const expireSession = async (user:string) => {
   const data = await update(query);
   return data
 }
+
+export const headersLegit = (request:any, legitrefer:any) => {
+
+  let referer = request.headers.get('referer');
+  if (referer == null || referer == '') {
+      return false;
+  } else {
+
+    if (referer.indexOf(legitrefer) == -1) {
+      return false;
+    }
+  }
+
+  if (request.headers.get('content-type') !== 'application/json') {
+      return false;
+  }
+
+  return true;
+}

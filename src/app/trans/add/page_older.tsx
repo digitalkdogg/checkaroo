@@ -49,7 +49,7 @@ export default function Page() {
 
                         <div className = {'flex flex-row justify-between py-5'}>
                             <span>Company : </span>
-                            <Dropdown val = '' api = "../api/clients" type = 'clients' />
+                            <Dropdown val = '' api = "../api/clients" type = 'clients' session = 'asfdasfa' />
                         </div>
 
                         <div className = "flex flex-row justify-between py-5">
@@ -59,7 +59,7 @@ export default function Page() {
 
                         <div className = {'flex flex-row justify-between py-5 '}>
                             <span>Category : </span>
-                            <Dropdown val = '' api = "../api/categories" type = 'categories' />
+                            <Dropdown val = '' api = "../api/categories" type = 'categories' session = 'sdasfds' />
                         </div>
 
 

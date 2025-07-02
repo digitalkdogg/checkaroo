@@ -30,7 +30,7 @@ export default async function Page() {
         <Leftside enable = {true} />
         <div className ="flex-3">
           <Dashboard session = {session} />
-          <Addbutton url = '/add' />   
+          <Addbutton url = '/trans/add' />   
         </div>
       </main>
     </div>
