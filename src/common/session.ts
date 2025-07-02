@@ -186,12 +186,26 @@ export const expireSession = async (user:string) => {
 export const headersLegit = (request:any, legitrefer:any) => {
 
   let referer = request.headers.get('referer');
+    let headers = request.headers
+
+     headers.forEach((value:any, key:any) => {
+       writelog(key + '::' + value + '\n', '------ special header item here -------')
+      });
+    
+
   if (referer == null || referer == '') {
       return false;
   } else {
 
-    if (referer.indexOf(legitrefer) == -1) {
+
+  if (legitrefer == '/') {
+    if (referer != legitrefer) {
       return false;
+    } 
+  } else {
+      if (referer.indexOf(legitrefer) == -1) {
+        return false;
+      }
     }
   }
 

@@ -1,6 +1,7 @@
 import { NextResponse, NextRequest } from 'next/server'
 import {select} from '@/common/dbutils'
 import {getAccountIDSession} from '@/common/session'
+import { headersLegit } from '@/common/session'
 
 export async function GET(request: NextRequest) {
 
@@ -10,6 +11,11 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
 
   try {
+
+    if (!headersLegit(request, '/')) {
+      return NextResponse.json({ error: 'Unauthorized request' }, { status: 401 });
+    }
+
     const json = await request.json();
     const session = await json.session;
 

@@ -3,6 +3,8 @@ import Error from '@/app/components/Error'
 import Transrow from '@/app/components/Transrow'
 import { superEcnrypt } from '@/common/crypt'
 
+/* @todo : better error handling.  Need to look at use state on the app page */
+
 interface Props {
   session: string,
 }
@@ -22,6 +24,10 @@ export default async function Page(prop: Props) {
 
   const data = await fetch('http://localhost:3000/api/dashboard', {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'referer': '/'
+    },
     body: JSON.stringify({
       session:  superEcnrypt(prop.session),
     })

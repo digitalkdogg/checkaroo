@@ -30,7 +30,7 @@ export default async function page({
             <ChecksessionComp reverseLogic = {true} />
             <main className = "flex">
                 <Leftside enable = {true} />
-                <div className = "flex-3 bg-white flex px-20 flex-col" >
+                <div className = "flex-3 bg-white flex px-20 flex-col items-center" >
                     <Dets transid = {id} session= {session} />
                 </div>
             </main>
