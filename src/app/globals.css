@@ -3,6 +3,10 @@
 :root {
   --background: #fff;
   --foreground: #171717;
+  --green: #036803;
+  --green-light: #297F54;
+  --green-ultalight: #edfff4;
+  --error: #b90707;
 }
 
 @theme inline {
@@ -10,10 +14,10 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --color-green : #036803;
-  --color-green-light : #297F54;
-  --color-green-ultalight: #edfff4;
-  --color-error: #b90707;
+  --color-green : var(--green);
+  --color-green-light : var(--green-light);
+  --color-green-ultalight: var(--green-ultalight);
+  --color-error: var(--error);
 
   --animate-wiggle: wiggle 1s ease-in-out infinite;
   @keyframes wiggle {
@@ -150,6 +154,10 @@ button[type="submit"]:hover, button[type="reset"]:hover, button.btn:hover input[
 
 .error {
   color: var(--color-error);
+}
+
+.success {
+  color: var(--color-green);
 }
 
 .notvisible {

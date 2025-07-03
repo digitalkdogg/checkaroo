@@ -1,5 +1,7 @@
 import moment from 'moment'
 import {select} from '@/common/dbutils'
+import { write } from 'fs'
+import { writelog } from './logs'
 
 export const formatDouble = (amount:number) => {
   try {
@@ -10,7 +12,7 @@ export const formatDouble = (amount:number) => {
 }
 
 export const convertToMySQLDate = (jsdate:Date) => {
-    return moment(jsdate).format('YYYY-MM-DD HH:mm:ss')
+    return moment(jsdate, ['MMDDY','MMMDDY','MM-DD-Y']).format('YYYY-MM-DD HH:mm:ss')
 }
 
 export const convertToNiceDate = (mydate:string) => {
