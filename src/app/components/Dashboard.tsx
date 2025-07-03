@@ -26,7 +26,7 @@ export default async function Page(prop: Props) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'referer': '/'
+      'referer': 'http://localhost:3000/dashboard'
     },
     body: JSON.stringify({
       session:  superEcnrypt(prop.session),

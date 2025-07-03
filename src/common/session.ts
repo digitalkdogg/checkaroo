@@ -184,48 +184,33 @@ export const expireSession = async (user:string) => {
 }
 
 export const headersLegit = (request:any, legitrefer:any) => {
-
   let referer = request.headers.get('referer');
-    let headers = request.headers
+
+  if (referer == null || referer == '') {
     
-
-    if (referer == null || referer == '') {
-      return false;
-    } else {
-
-      var foundit = false;
-      for (let x =0; x<legitrefer.length; x++) {
-        if (legitrefer[x] == '/') {
-          if (referer == legitrefer[x]) {
-            foundit = true;
-            break;  
-          }
-        } else {
-          if (referer.indexOf(legitrefer[x])>=0) {
-            foundit = true;
-            break;  
-          } 
-        }
-      }
+    return false;
+  } else {
+    var foundit = false;
+    for (let x =0; x<legitrefer.length; x++) {
+      if (referer.indexOf(legitrefer[x])>=0) {
+        foundit = true;
+        break;  
+      } 
     }
+  }
 
+  let larva = request.headers.get('larva');
+  if (larva ) {
+    larva = decrypt(larva)
+  }  
+  if (larva !== 'checkaroo') {
     if (foundit ==false) {
       return false;
     }
-
-  //if (legitrefer == '/') {
-  //  if (referer != legitrefer) {
-  //    return false;
-  //  } 
-  //} else {
-  //    if (referer.indexOf(legitrefer) == -1) {
-  //      return false;
-  //    }
-  //  }
-  //}
-
+  }
+    
   if (request.headers.get('content-type') !== 'application/json') {
-      return false;
+    return false;
   }
 
   return true;

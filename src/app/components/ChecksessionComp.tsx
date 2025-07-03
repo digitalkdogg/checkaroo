@@ -6,7 +6,7 @@ import Leftside from '@/app/components/Leftside'
 import Loading from '@/app/components/Loading';
 import { readCookie } from '@/common/cookieServer';
 import Error from '@/app/components/Error'
-import { superEcnrypt } from '@/common/crypt';
+import { encrypt, superEcnrypt } from '@/common/crypt';
 
 interface componentsProps {
     reverseLogic?: boolean,
@@ -38,7 +38,7 @@ export default function ChecksessionComp(props:componentsProps) {
 
         const response = await fetch('/api/login', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json',  'larva': encrypt('checkaroo') },
             body: JSON.stringify({
                 session: superEcnrypt(session),
             })
@@ -74,7 +74,7 @@ export default function ChecksessionComp(props:componentsProps) {
             }
             setTimeout(function () {
                 if (props.reverseLogic) { // I am not on the login page already
-                    return redirect('/login')
+                   return redirect('/login')
                 }
             },5000);
         }

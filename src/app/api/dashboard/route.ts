@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
 
   try {
 
-    if (!headersLegit(request, ['/'])) {
+    if (!headersLegit(request, ['/dashboard'])) {
       return NextResponse.json({ error: 'Unauthorized request' }, { status: 401 });
     }
 
