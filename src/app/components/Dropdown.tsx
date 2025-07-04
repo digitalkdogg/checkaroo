@@ -19,9 +19,12 @@ function Dropdown(prop:Props) {
     const [isLoading, setIsLoading] = useState(true);
     const [errorDropDown, setErrorDropDown] = useState<any>(null);
 
-    useEffect(() => {
-  
-        const fetchData = async () => {
+    const [addData, setAddData] = useState<any>(false)
+    const [isAddLoading, setIsAddLoading] = useState(false);
+    const [errorAddDropDown, setErrorAddDropDown] = useState<any>(null);
+    const [successAddDropDown, setSuccessAddDropDown] = useState<any>(null);
+
+           const fetchData = async () => {
 
             try {
                  const response = await fetch(prop.api, {
@@ -50,6 +53,8 @@ function Dropdown(prop:Props) {
                 setIsLoading(false);
             }
         };
+
+    useEffect(() => {
         fetchData();
     }, []);
 
@@ -77,43 +82,100 @@ function Dropdown(prop:Props) {
         if (val.length > 0) {
             searchResult(val)
             addrow?.classList.remove('notvisible')
+            addrow?.setAttribute('data-value', val);
+            setAddData(true);
         } else {
             showResultsBox()
+            setAddData(false);
             addrow?.classList.add('notvisible')
+            addrow?.setAttribute('data-value', '');
         }
         setInputValue(val);
     };
 
-    const showResultsBox = () => {
-        var results:any, wrapper:any, dropdownInput:any, results_eles:any, arrow:any
-
-        wrapper = document.getElementById(prop.type);
-        arrow = document.querySelector('#' + prop.type + '_arrow svg');
-        results = document.querySelector('#' + prop.type + '_results')
-        results_eles = document.querySelectorAll('#' + prop.type  + '_results div')
-        dropdownInput = document.querySelector('#' + prop.type + '_dropinput')
-
-        wrapper?.classList.add('expand');
-
-        results?.classList.remove('hide');
+    const hideResultsBox = () => {
+        const results = document.querySelector('#' + prop.type + '_results')
+        const results_eles = document.querySelectorAll('#' + prop.type  + '_results div')
+        const wrapper = document.getElementById(prop.type);
+        const arrow = document.querySelector('#' + prop.type + '_arrow svg');
 
         results_eles.forEach((el: any) => {
             el.classList.remove('hide')
         })
 
-        if (results.classList.contains('hide')) {
-            if (arrow.classList.contains('rotate-270')) {
-                arrow.classList.remove('rotate-270')    
-            }
-        } else {
-            if (arrow.classList.contains('rotate-270') == false) {
-                arrow.classList.add('rotate-270')
-            }
+        if (results && arrow) {
+            results?.classList.add('hide');
+                if (arrow.classList.contains('rotate-270')) {
+                    arrow.classList.remove('rotate-270')    
+                    wrapper?.classList.remove('absolute');
+                    if (prop.type == 'categories') {
+                        const otherarrow = document.querySelector('#clients #clients_arrow');
+                        if (otherarrow) {
+                            otherarrow.classList.remove('sendtoback');
+                        }
+                    } else {
+                        const otherarrow = document.querySelector('#categories #categories_arrow');
+                        if (otherarrow) {
+                            otherarrow.classList.remove('sendtoback');
+                        }
+                    }
+                }
         }
 
-        if (dropdownInput) {
-            dropdownInput.focus()
+    }
+
+    const showResultsBox = () => {
+        var results:any, wrapper:any, dropdownInput:any, results_eles:any, arrow:any, arrowwrap:any;
+
+
+        wrapper = document.getElementById(prop.type);
+        arrow = document.querySelector('#' + prop.type + '_arrow svg');
+        arrowwrap = document.querySelector('#' + prop.type + '_arrow');
+        results = document.querySelector('#' + prop.type + '_results')
+        results_eles = document.querySelectorAll('#' + prop.type  + '_results div')
+        dropdownInput = document.querySelector('#' + prop.type + '_dropinput')
+
+        if (results.classList.contains('hide') == false) {
+            return;
         }
+        console.log('show results box')
+            setSuccessAddDropDown(false);
+            setErrorAddDropDown(false);
+            setAddData(false);
+
+            wrapper?.classList.add('expand');
+            wrapper?.classList.add('absolute');
+
+            results?.classList.remove('hide');
+
+            results_eles.forEach((el: any) => {
+                el.classList.remove('hide')
+            })
+
+            if (results.classList.contains('hide')) {
+                if (arrow.classList.contains('rotate-270')) {
+                    arrow.classList.remove('rotate-270')    
+                }
+            } else {
+                if (arrow.classList.contains('rotate-270') == false) {
+                    if (prop.type == 'categories') {
+                        const otherarrow = document.querySelector('#clients #clients_arrow');
+                        if (otherarrow) {
+                            otherarrow.classList.add('sendtoback');
+                        }
+                    } else {
+                        const otherarrow = document.querySelector('#categories #categories_arrow');
+                        if (otherarrow) {
+                            otherarrow.classList.add('sendtoback');
+                        }
+                    }
+                    arrow.classList.add('rotate-270')
+                }
+            }
+
+            if (dropdownInput) {
+                dropdownInput.focus()
+            }
     }
 
     const makeWebFriendly = (str:string) => {
@@ -144,13 +206,7 @@ function Dropdown(prop:Props) {
                 dropdownInput.value = ''
             }
 
-            results?.classList.add('hide');
-
-            if (results.classList.contains('hide')) {
-                arrow.classList.remove('rotate-270')    
-            } else {
-                arrow.classList.add('rotate-270')
-            }
+            hideResultsBox();
         }   
 
     }
@@ -190,8 +246,68 @@ function Dropdown(prop:Props) {
         }
     }
 
-    const addThing = (event:any) => {
-        console.log('Add thing clicked');
+    const addThing = async (event:any) => {
+        console.log('add thing')
+        var target; 
+        if (event.target.nodeName=='svg') {
+            target = event.target.parentNode;
+        } else if (event.target.nodeName=='path') {
+            target = event.target.parentNode.parentNode;    
+        } else if (event.target.nodeName=='span' || event.target.nodeName=='SPAN') {
+            target = event.target;
+        }
+
+        if (addData) {
+            if (target) {
+                setIsAddLoading(true);
+                setErrorAddDropDown(null);
+                setSuccessAddDropDown(false);
+                
+                const val = target.getAttribute('data-value'); 
+                const input:any = document.getElementById(prop.type + '_dropinput');
+                const results = document.querySelector('#' + prop.type + '_results')
+
+                const response = await fetch(prop.api + '/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session: superEcnrypt(prop.session),
+                        data: {value: val}
+                    })
+                }).then(async (res:any) => {
+                    if (res.ok) {
+                        const json = await res.json();
+                        if (json.status === 'success') {
+                            setIsAddLoading(false);
+                            setSuccessAddDropDown(true);
+                            setAddData(false);
+                            const arrow = document.querySelector('#' + prop.type + '_arrow svg');
+                            input.value = '';
+                            input.placeholder = val;
+                            const hidden_input:any = document.getElementById(prop.type + '_hidden_input');
+                            hidden_input.value = val;
+                            hideResultsBox();
+                            fetchData()
+                            setTimeout(() => {
+                                setSuccessAddDropDown(false);
+                            }, 5000); 
+
+                        } else {
+                            throw new Error(json.message);
+                        }
+                    } else {
+                        const err = await res.json();
+                        throw new Error(err.error);
+                    }
+                }).catch((err:any) => {
+                    setIsAddLoading(false);
+                    setAddData(false);
+                    setErrorAddDropDown({message: err.message});
+                    hideResultsBox();
+                    console.error('Error adding item:', err);
+                });
+            }
+        }
     }
 
     if (isLoading) {
@@ -218,8 +334,11 @@ function Dropdown(prop:Props) {
     return (
         <div className = {'dropdown-wrapper ' + styles.wrapper} id = {prop.type} >
             <div className = "flex flex-row" onClick= {showResultsBox}>
-                <span className={styles.addrow + " inline-flex text-base notvisible"} id = "addrow" onClick={addThing}>
-                    <Svg type = "add" id = "add" />
+                <span className={styles.addrow + " inline-flex text-base notvisible"} id = "addrow" onClick={addThing} data-value = ''>
+                    {addData && <Svg type = "add" id = "add" />}
+                    {isAddLoading && <Loading size={24} />}
+                    {errorAddDropDown && <Svg type = "x-circle" id = "error" class="error" />}
+                    {successAddDropDown && <Svg type = "success" id = "success" class="success" />}
                 </span>
                 <input
                     className = {styles.dropdown_input}
