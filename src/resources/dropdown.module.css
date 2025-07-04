@@ -25,12 +25,22 @@
     cursor: pointer;
 }
 
+.addrow {
+    cursor: pointer;
+    color: black;
+    position: relative;
+    font-size:.6em;
+    height:2em;
+    width:18px;
+    top:3px;
+}
+
 .dropdown_input {
     border: none !important;
     outline: none !important;
     box-shadow: none !important;
     width:100%;
-    margin-left:15px;
+    margin-left:0px;
     background:white;
 }
 

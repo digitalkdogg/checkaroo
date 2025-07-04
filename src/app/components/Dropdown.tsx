@@ -54,12 +54,14 @@ function Dropdown(prop:Props) {
     }, []);
 
     const searchResult = (search:string) => {
-        var results_eles 
-        results_eles =  document.querySelectorAll('#' + prop.type + '_results div');
+       // var results_eles 
+        const results_eles =  document.querySelectorAll('#' + prop.type + '_results div');
 
         if (results_eles) {
             results_eles.forEach( el => {
-                el.classList.add('hide')
+                if (el.classList.contains('donothide') == false) {
+                    el.classList.add('hide')
+                }
             
                 if (el.innerHTML.toUpperCase().indexOf(search.toUpperCase()) >= 0) {
                     el.classList.remove('hide')
@@ -71,11 +73,13 @@ function Dropdown(prop:Props) {
 
     const handleInputChange = (event:any) => {
         const val = event.target.value
-
+        const addrow = document.querySelector('#' + prop.type + ' #addrow');
         if (val.length > 0) {
             searchResult(val)
+            addrow?.classList.remove('notvisible')
         } else {
             showResultsBox()
+            addrow?.classList.add('notvisible')
         }
         setInputValue(val);
     };
@@ -186,6 +190,10 @@ function Dropdown(prop:Props) {
         }
     }
 
+    const addThing = (event:any) => {
+        console.log('Add thing clicked');
+    }
+
     if (isLoading) {
         return (
             <div className = "flex-3 bg-white flex px-20 flex-col items-center">
@@ -210,6 +218,9 @@ function Dropdown(prop:Props) {
     return (
         <div className = {'dropdown-wrapper ' + styles.wrapper} id = {prop.type} >
             <div className = "flex flex-row" onClick= {showResultsBox}>
+                <span className={styles.addrow + " inline-flex text-base notvisible"} id = "addrow" onClick={addThing}>
+                    <Svg type = "add" id = "add" />
+                </span>
                 <input
                     className = {styles.dropdown_input}
                     type="text"
@@ -224,7 +235,8 @@ function Dropdown(prop:Props) {
                 </div>
             </div>
             
-            <div className = {'border-t border-gray-300 hide ' + styles.results} id = {prop.type + '_results'}>
+            <div className = {'hide ' + styles.results} id = {prop.type + '_results'}>
+               
                 {Object.entries(data).map(([key, value]) => (
                     <div key ={key} 
                         id = {'k' + makeWebFriendly(data[key][getValue()])} 
