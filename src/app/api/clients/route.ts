@@ -31,6 +31,7 @@ export async function POST(request: NextRequest) {
       select : '*',
       from : 'Clients',
       where : 'account_id = "' + accountid  + '"' ,
+      sort: 'company_name asc'
     }
 
       var arr:any = []

@@ -29,6 +29,7 @@ export async function POST(request: NextRequest) {
         select : '*',
         from : 'Category',
         where : 'account_id = "' + accountid  + '"' ,
+        sort : 'category_name asc'
       }
 
         var arr:any = []
