@@ -16,10 +16,10 @@ export default function Page() {
  
     return (
         <div className = {geist.className}>
-            <ChecksessionComp />
+            <ChecksessionComp session = "" />
 
             <main className = "flex" id = "login-main">
-                <Leftside enable = {false} />
+                <Leftside enable = {false} session="" />
                 <div className = "flex-3 bg-white flex justify-center-safe items-center-safe px-20 flex-col ">
                     <h2 className = "text-center my-20 -translate-y-50">Please login to use the Checkaroo Web Application and hop into your banking</h2>
                     <LoginPage />

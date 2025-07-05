@@ -73,6 +73,7 @@ export default function AddForm(prop:Props) {
 
   return (
   <div >
+
       <form  onSubmit={saveData} > 
         <div className = "flex flex-row justify-between py-5">
             <span>Date :</span>

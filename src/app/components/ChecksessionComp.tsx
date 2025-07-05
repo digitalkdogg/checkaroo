@@ -10,6 +10,7 @@ import { encrypt, superEcnrypt } from '@/common/crypt';
 
 interface componentsProps {
     reverseLogic?: boolean,
+    session : string
 }
 
 export default function ChecksessionComp(props:componentsProps) {
@@ -40,7 +41,7 @@ export default function ChecksessionComp(props:componentsProps) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json',  'larva': encrypt('checkaroo') },
             body: JSON.stringify({
-                session: superEcnrypt(session),
+                session: superEcnrypt(props.session),
             })
         })
 
@@ -86,7 +87,7 @@ export default function ChecksessionComp(props:componentsProps) {
         return (
                 <div>
                     <main className = "flex">
-                        <Leftside enable = {true} />
+                        <Leftside enable = {true} session = {props.session} />
                         <div className = "flex-3 bg-white flex items-center justify-center" >
                             <Error value = {loginError.message} /> 
                          </div>
@@ -99,7 +100,7 @@ export default function ChecksessionComp(props:componentsProps) {
         return (
             <div>
                 <main className = "flex" id = "sessioncheck">
-                    <Leftside enable = {true} />
+                    <Leftside enable = {true} session = {props.session} />
                     <div className = "flex-3 bg-white flex items-center justify-center" >
                         <Loading size={24} />
                     </div>

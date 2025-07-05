@@ -3,6 +3,7 @@ import {readCookie} from '@/common/cookieServer'
 import Leftside from '@/app/components/Leftside'
 import AddForm from './AddForm'
 import { Geist } from 'next/font/google'
+import '@/app/globals.css'
 
 import ChecksessionComp from '@/app/components/ChecksessionComp';
 
@@ -23,9 +24,9 @@ export default async function page() {
 
     return (
             <div className = {geist.className}>
-            <ChecksessionComp reverseLogic = {true} />
+            <ChecksessionComp reverseLogic = {true} session = {session} />
             <main className = "flex">
-                <Leftside enable = {true} />
+                <Leftside enable = {true} session = {session} />
                 <div className = "flex-3 bg-white flex px-20 py-50 flex-col items-center" >
                    <AddForm session = {session} />
                 </div>

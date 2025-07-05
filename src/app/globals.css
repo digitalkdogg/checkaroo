@@ -5,6 +5,7 @@
   --foreground: #171717;
   --green: #036803;
   --green-light: #297F54;
+  --green-medium : #c8ffdd;
   --green-ultalight: #edfff4;
   --error: #b90707;
 }
@@ -16,6 +17,7 @@
   --font-mono: var(--font-geist-mono);
   --color-green : var(--green);
   --color-green-light : var(--green-light);
+  --color-green-medium: var(--green-medium);
   --color-green-ultalight: var(--green-ultalight);
   --color-error: var(--error);
 
@@ -84,6 +86,13 @@ p {
 
 body {
   font-size:18px;
+}
+
+form {
+  border-radius: 20px;
+  box-shadow: 0px 0px 1px 1px var(--color-green);
+  padding: 30px 50px;
+  width:35vw;
 }
 
 div#overlay {
