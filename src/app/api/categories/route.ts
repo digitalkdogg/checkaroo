@@ -36,9 +36,5 @@ export async function POST(request: NextRequest) {
         const results = await select(query);
         arr = results;
 
-        if (arr.length == 0 ) {
-          arr = ['no results found here']
-        }
-
         return NextResponse.json(arr)
 }

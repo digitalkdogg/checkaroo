@@ -24,18 +24,19 @@ function Dropdown(prop:Props) {
     const [errorAddDropDown, setErrorAddDropDown] = useState<any>(null);
     const [successAddDropDown, setSuccessAddDropDown] = useState<any>(null);
 
-    const results_eles:any =  document.querySelectorAll('#' + prop.type + '_results div');
-    const addrow:any = document.querySelector('#' + prop.type + ' #addrow');
-    const results:any = document.querySelector('#' + prop.type + '_results')
-    const wrapper:any = document.getElementById(prop.type);
-    const arrow:any = document.querySelector('#' + prop.type + '_arrow svg');
-    const hidden_input:any = document.getElementById(prop.type + '_hidden_input')
-    const dropdownInput:any = document.getElementById(prop.type + '_dropinput');
+    const [resultEles, setResultEles] = useState<any>(null);
+    const [addRow, setAddRow] = useState<any>(null);
+    const [results, setResults] = useState<any>(null);
+    const [wrapper, setWrapper] = useState<any>(null);
+    const [arrow, setArrow] = useState<any>(null);
+    const [hidden_input, setHiddenInput] = useState<any>(null);
+    const [dropdownInput, setDropDownInput] = useState<any>(null);
+    const [otherArrow, setOtherArrow] = useState<any>(null);
 
-        const fetchData = async () => {
+    const fetchData = async () => {
 
         try {
-                const response = await fetch(prop.api, {
+            const response = await fetch(prop.api, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -53,6 +54,9 @@ function Dropdown(prop:Props) {
                     setErrorDropDown({message: 'No Results Found'})
                 } else {
                     setData (data)
+                    setTimeout(function () {
+                        init()
+                    }, 200);
                 }
             }
         } catch (err) {
@@ -66,9 +70,25 @@ function Dropdown(prop:Props) {
         fetchData();
     }, []);
 
+    const init = () => {
+        setAddRow(document.querySelector('#' + prop.type + ' #addrow'));
+        setResultEles(document.querySelectorAll('#' + prop.type + '_results div'));
+        setResults(document.querySelector('#' + prop.type + '_results'));
+        setWrapper(document.getElementById(prop.type));
+        setArrow(document.querySelector('#' + prop.type + '_arrow svg'));
+        setHiddenInput(document.getElementById(prop.type + '_hidden_input'));
+        setDropDownInput(document.getElementById(prop.type + '_dropinput'));
+        if (prop.type == 'clients') {
+            setOtherArrow(document.querySelector('#categories #categories_arrow'));
+        } else {
+            setOtherArrow(document.querySelector('#clients #clients_arrow'));
+        }
+    }
+
     const searchResult = (search:string) => {
-        if (results_eles) {
-            results_eles.forEach((el: any) => {
+
+        if (resultEles) {
+            resultEles.forEach((el: any) => {
                 if (el.classList.contains('donothide') == false) {
                     el.classList.add('hide')
                 }
@@ -81,49 +101,43 @@ function Dropdown(prop:Props) {
 
     const handleInputChange = (event:any) => {
         const val = event.target.value
+
         if (val.length > 0) {
             searchResult(val)
-            addrow?.classList.remove('notvisible')
-            addrow?.setAttribute('data-value', val);
+            addRow?.classList.remove('notvisible')
+            addRow?.setAttribute('data-value', val);
             setAddData(true);
         } else {
             showResultsBox()
             setAddData(false);
-            addrow?.classList.add('notvisible')
-            addrow?.setAttribute('data-value', '');
+            addRow?.classList.add('notvisible')
+            addRow?.setAttribute('data-value', '');
         }
         setInputValue(val);
     };
 
     const hideResultsBox = () => {
-        results_eles.forEach((el: any) => {
+        resultEles.forEach((el: any) => {
             el.classList.remove('hide')
         })
 
         if (results && arrow) {
+            otherArrow.classList.remove('sendtoback');
             results?.classList.add('hide');
             if (arrow.classList.contains('rotate-270')) {
                 arrow.classList.remove('rotate-270')    
                 wrapper?.classList.remove('absolute');
-                if (prop.type == 'categories') {
-                    const otherarrow = document.querySelector('#clients #clients_arrow');
-                    if (otherarrow) {
-                        otherarrow.classList.remove('sendtoback');
-                    }
-                } else {
-                    const otherarrow = document.querySelector('#categories #categories_arrow');
-                    if (otherarrow) {
-                        otherarrow.classList.remove('sendtoback');
-                    }
-                }
+                
             }
         }
 
     }
 
     const showResultsBox = () => {
-        if (results.classList.contains('hide') == false) {
-            return;
+        if (results) {
+            if (results.classList.contains('hide') == false) {
+                return;
+            }
         }
 
         setSuccessAddDropDown(false);
@@ -135,28 +149,21 @@ function Dropdown(prop:Props) {
 
         results?.classList.remove('hide');
 
-        results_eles.forEach((el: any) => {
+        resultEles.forEach((el: any) => {
             el.classList.remove('hide')
         })
 
-        if (results.classList.contains('hide')) {
-            if (arrow.classList.contains('rotate-270')) {
-                arrow.classList.remove('rotate-270')    
-            }
-        } else {
-            if (arrow.classList.contains('rotate-270') == false) {
-                if (prop.type == 'categories') {
-                    const otherarrow = document.querySelector('#clients #clients_arrow');
-                    if (otherarrow) {
-                        otherarrow.classList.add('sendtoback');
-                    }
-                } else {
-                    const otherarrow = document.querySelector('#categories #categories_arrow');
-                    if (otherarrow) {
-                        otherarrow.classList.add('sendtoback');
-                    }
+        if (results) {
+            if (results.classList.contains('hide')) {
+                if (arrow.classList.contains('rotate-270')) {
+                    arrow.classList.remove('rotate-270')    
                 }
-                arrow.classList.add('rotate-270')
+            } else {
+                if (arrow.classList.contains('rotate-270') == false) {
+                     otherArrow.classList.add('sendtoback');
+                   
+                    arrow.classList.add('rotate-270')
+                }
             }
         }
 
@@ -175,9 +182,7 @@ function Dropdown(prop:Props) {
 
 
     const selectResult = (event:any) => {
-
         wrapper?.classList.remove('expand');
-
         const html = event.target.innerHTML;
         if (html.length > 0 ) {
             if (dropdownInput) {
@@ -191,8 +196,7 @@ function Dropdown(prop:Props) {
 
     const arrowclick = (event:any) => {
         const ele:any = event.target
-        const dropInput:any = document.getElementById(prop.type + '_dropinput');
-     
+        const dropInput:any = document.getElementById(prop.type + '_dropinput')
         if (dropInput.value.length>0) {
             dropInput.value = ''
         }
@@ -200,6 +204,7 @@ function Dropdown(prop:Props) {
         if (ele.classList.contains('rotate-270')) {
             setTimeout(function () {
                 ele.classList.remove('rotate-270')
+                otherArrow.classList.remove('sendtoback');
                 if (results) {
                     results.classList.add('hide')
                 }
@@ -224,7 +229,7 @@ function Dropdown(prop:Props) {
         }
     }
 
-    const addThing = async (event:any) => {
+    const addItem = async (event:any) => {
         var target; 
         if (event.target.nodeName=='svg') {
             target = event.target.parentNode;
@@ -241,7 +246,6 @@ function Dropdown(prop:Props) {
                 setSuccessAddDropDown(false);
                 
                 const val = target.getAttribute('data-value'); 
-                const input:any = document.getElementById(prop.type + '_dropinput');
 
                 const response = await fetch(prop.api + '/add', {
                     method: 'POST',
@@ -257,9 +261,8 @@ function Dropdown(prop:Props) {
                             setIsAddLoading(false);
                             setSuccessAddDropDown(true);
                             setAddData(false);
-                            input.value = '';
-                            input.placeholder = val;
-                           // const hidden_input:any = document.getElementById(prop.type + '_hidden_input');
+                            dropdownInput.value = '';
+                            dropdownInput.placeholder = val;
                             hidden_input.value = val;
                             hideResultsBox();
                             fetchData()
@@ -309,7 +312,7 @@ function Dropdown(prop:Props) {
     return (
         <div className = {'dropdown-wrapper ' + styles.wrapper} id = {prop.type} >
             <div className = "flex flex-row" onClick= {showResultsBox}>
-                <span className={styles.addrow + " inline-flex text-base notvisible"} id = "addrow" onClick={addThing} data-value = ''>
+                <span className={styles.addrow + " inline-flex text-base notvisible"} id = "addrow" onClick={addItem} data-value = ''>
                     {addData && <Svg type = "add" id = "add" />}
                     {isAddLoading && <Loading size={24} />}
                     {errorAddDropDown && <Svg type = "x-circle" id = "error" class="error" />}
