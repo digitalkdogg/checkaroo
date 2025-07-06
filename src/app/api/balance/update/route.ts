@@ -2,6 +2,7 @@ import { NextResponse, NextRequest } from 'next/server'
 import {select, insert} from '@/common/dbutils'
 import {getAccountIDSession} from '@/common/session'
 import {headersLegit} from '@/common/session'
+import { update } from '@/common/dbutils'
 import {v4 as uuidv4, validate} from 'uuid'
 import { writelog } from '@/common/logs'
 
@@ -33,16 +34,37 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'No data provided' }, { status: 400 });
     }
 
-    const data = json.data;
+    const data = JSON.parse(json.data);
     if (!data.value) {
         return NextResponse.json({ error: 'Invalid data format' }, { status: 400 });
     }
 
-    const validateRows = await validateCategory(data.value, accountid);
-    if (validateRows) {
-        return NextResponse.json({ error: 'Category already exists' }, { status: 400 });
+    const query = {
+      select: 'balance',
+      from : 'Account',
+      where : 'account_id = "' + accountid + '"'
     }
 
+    const oldbalance:any = await select(query);
+    var arr = [];
+    arr.push(oldbalance)
+    writelog('balance ' + oldbalance[0].balance.toString(), 'old blance inquery---------------------')
+
+    const newbalance = oldbalance[0].balance - data.value
+
+    const updatequery = {
+        table : 'Account',
+        fields : 'balance = "' +newbalance + '"',
+        where : 'account_id = "' + accountid + '"'
+    }
+
+    try {
+     
+      const balance = await update(updatequery);
+      return NextResponse.json({status: 'success', balance: data.value})
+    } catch (e) {
+      return NextResponse.json({status: 'error', error: e})
+    }
    // const insquery = {
    //     table: 'Account',
    //     fields: ['category_name', 'account_id'],

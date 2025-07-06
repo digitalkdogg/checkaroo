@@ -78,10 +78,17 @@ function Dropdown(prop:Props) {
         setArrow(document.querySelector('#' + prop.type + '_arrow svg'));
         setHiddenInput(document.getElementById(prop.type + '_hidden_input'));
         setDropDownInput(document.getElementById(prop.type + '_dropinput'));
+        getOtherArrow()
+      
+    }
+
+    const getOtherArrow= () => {
         if (prop.type == 'clients') {
             setOtherArrow(document.querySelector('#categories #categories_arrow'));
+            return document.querySelector('#categories #categories_arrow')
         } else {
             setOtherArrow(document.querySelector('#clients #clients_arrow'));
+            return document.querySelector('#clients #clients_arrow')
         }
     }
 

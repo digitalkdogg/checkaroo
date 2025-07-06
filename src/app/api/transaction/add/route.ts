@@ -1,11 +1,10 @@
 import { NextResponse, NextRequest } from 'next/server'
-import {select, insert} from '@/common/dbutils'
+import {select, insert, update} from '@/common/dbutils'
 import {getAccountIDSession, headersLegit} from '@/common/session'
 import {decrypt} from '@/common/crypt'
 import {v4 as uuidv4, validate} from 'uuid'
 import {writelog} from '@/common/logs'
 import { convertToMySQLDate } from '@/common/common'
-import { write } from 'fs'
 
 
 export async function GET(request: NextRequest) {
@@ -60,7 +59,8 @@ export async function POST(request: NextRequest) {
       const validateRows = await validateTransaction(transid, accountid);
 
       if (await validateRows) {
-        return {status: 'completed'};
+          return {status: 'completed'};
+        
       } else return {status: 'failed'}
 
     }).catch((err:any) => {
