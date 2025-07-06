@@ -5,6 +5,7 @@ import {headersLegit} from '@/common/session'
 import { writelog } from '@/common/logs'
 
 export async function GET(request: NextRequest) {
+  writelog(request.toString(), '-----invalid requests get --------')
   return NextResponse.json({ error: 'Unauthorized method' }, { status: 401 });
 }
 
@@ -15,8 +16,6 @@ export async function POST(request: NextRequest) {
 
       const json = await request.json();
       const session:string = json.session;
-  
-      writelog('session ' + session.toString(), '-----blance session here------')
 
       if (!session) {
           return NextResponse.json({ error: 'Unauthorized Session' }, { status: 401 });
@@ -28,7 +27,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'Unauthorized Account' }, { status: 401 });
       }
 
-      var query = {
+      const query = {
         select : 'balance',
         from : 'Account',
         where : 'account_id = "' + accountid  + '"'

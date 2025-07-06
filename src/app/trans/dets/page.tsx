@@ -14,7 +14,8 @@ const geist = Geist({
 export default async function page({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: {[key: string]: string | string[] | Promise<any>}
+ // searchParams: { [key: string]: string | string[] | undefined }
 }) {
     const id:any = (await searchParams).id;
     var session = ''

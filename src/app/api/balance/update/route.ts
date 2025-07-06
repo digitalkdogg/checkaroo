@@ -1,12 +1,13 @@
 import { NextResponse, NextRequest } from 'next/server'
-import {select, insert} from '@/common/dbutils'
+import {select} from '@/common/dbutils'
 import {getAccountIDSession} from '@/common/session'
 import {headersLegit} from '@/common/session'
 import { update } from '@/common/dbutils'
-import {v4 as uuidv4, validate} from 'uuid'
 import { writelog } from '@/common/logs'
+import { OkPacketParams } from 'mysql2'
 
 export async function GET(request: NextRequest) {
+    writelog(request.toString(), '---------invalide request get-------------')
     return NextResponse.json({ error: 'Unauthorized method' }, { status: 401 });
 }
 
@@ -42,21 +43,24 @@ export async function POST(request: NextRequest) {
     const query = {
       select: 'balance',
       from : 'Account',
-      where : 'account_id = "' + accountid + '"'
+      where : 'account_id = "' + accountid + '"',
+      limit: '1'
     }
 
-    const oldbalance:any = await select(query);
-    var arr = [];
-    arr.push(oldbalance)
-    writelog('balance ' + oldbalance[0].balance.toString(), 'old blance inquery---------------------')
 
-    const newbalance = oldbalance[0].balance - data.value
+    const oldbalance:object = await select(query);
+
+    let newbalance:number = 0
+    Object.entries(oldbalance).map(([key, value]) => (
+       newbalance = parseFloat(value.balance) - parseFloat(data.value)
+    ))
 
     const updatequery = {
         table : 'Account',
         fields : 'balance = "' +newbalance + '"',
-        where : 'account_id = "' + accountid + '"'
-    }
+        where : 'account_id = "' + accountid + '"',
+        limit: '1'
+      }
 
     try {
      
