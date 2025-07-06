@@ -1,13 +1,12 @@
 import moment from 'moment'
-import {select} from '@/common/dbutils'
-import { write } from 'fs'
-import { writelog } from './logs'
 
 export const formatDouble = (amount:number) => {
   try {
     return amount.toFixed(2)
   } catch (e) {
-    return (0.00)
+    if (e) {
+      return (0.00)
+    }
   }
 }
 

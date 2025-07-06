@@ -5,6 +5,7 @@ import {headersLegit} from '@/common/session'
 import { writelog } from '@/common/logs'
 
 export async function GET(request: NextRequest) {
+    writelog(request.toString(), '----------invalid request get----------' )
     return NextResponse.json({ error: 'Unauthorized method' }, { status: 401 });
 }
 
@@ -50,7 +51,7 @@ export async function POST(request: NextRequest) {
       }
       
     try {
-        const results:any = await insert(insquery).then(async (res:any) => {
+        const results:any = await insert(insquery).then(async () => {
           const validateRows = await validateCategory(data.value, accountid);
           if (await validateRows) {
             return {status: 'completed'};
@@ -58,7 +59,7 @@ export async function POST(request: NextRequest) {
     
         }).catch((err:any) => {
 
-          return NextResponse.json({ error: 'Error inserting category' }, { status: 500 });
+          return NextResponse.json({ error: 'Error inserting category', msg: err.toString()}, { status: 500 });
         })
     
         if (results && results.status === 'completed') {

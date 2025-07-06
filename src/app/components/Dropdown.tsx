@@ -341,7 +341,7 @@ function Dropdown(prop:Props) {
             
             <div className = {'hide ' + styles.results} id = {prop.type + '_results'}>
                
-                {Object.entries(data).map(([key, value]) => (
+                {Object.entries(data).map(([key]) => (
                     <div key ={key} 
                         id = {'k' + makeWebFriendly(data[key][getValue()])} 
                         onClick={selectResult}

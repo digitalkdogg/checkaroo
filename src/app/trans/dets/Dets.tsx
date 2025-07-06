@@ -5,8 +5,8 @@ import {convertToNiceDate, formatDouble} from '@/common/common'
 import Dropdown from '@/app/components/Dropdown'
 import Error from '@/app/components/Error'
 import styles from '@/resources/dropdown.module.css'
-import { encrypt, decrypt, superEcnrypt } from '@/common/crypt';
-import moment from 'moment'
+import { encrypt, superEcnrypt } from '@/common/crypt';
+
 
 interface Props {
     transid : string,

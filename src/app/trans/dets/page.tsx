@@ -4,8 +4,6 @@ import Leftside from '@/app/components/Leftside'
 import { Geist } from 'next/font/google'
 import Dets from '@/app/trans/dets/Dets'
 import ChecksessionComp from '@/app/components/ChecksessionComp';
-import {encrypt} from '@/common/crypt'
-import moment from 'moment'
 
 const geist = Geist({
   subsets: ['latin'],
@@ -15,7 +13,6 @@ export default async function page({
   searchParams,
 }: {
   searchParams: {[key: string]: string | string[] | Promise<any>}
- // searchParams: { [key: string]: string | string[] | undefined }
 }) {
     const id:any = (await searchParams).id;
     var session = ''

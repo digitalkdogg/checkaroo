@@ -41,7 +41,9 @@ export default function Page(props: Props) {
                 setData(0)
             }
         } catch(e) {
-            setData(0)
+            if(e) {
+                setData(0)
+            }
         }
     }
 

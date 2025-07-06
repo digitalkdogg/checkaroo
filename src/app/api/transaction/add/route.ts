@@ -1,8 +1,8 @@
 import { NextResponse, NextRequest } from 'next/server'
-import {select, insert, update} from '@/common/dbutils'
+import {select, insert} from '@/common/dbutils'
 import {getAccountIDSession, headersLegit} from '@/common/session'
 import {decrypt} from '@/common/crypt'
-import {v4 as uuidv4, validate} from 'uuid'
+import {v4 as uuidv4} from 'uuid'
 import {writelog} from '@/common/logs'
 import { convertToMySQLDate } from '@/common/common'
 
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
   }
   
   try {
-    const results:any = await insert(insquery).then(async (res:any) => {
+    const results:any = await insert(insquery).then(async () => {
       const validateRows = await validateTransaction(transid, accountid);
 
       if (await validateRows) {
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
 
     }).catch((err:any) => {
       writelog('Error inserting transaction: ' + err, 'Transaction');
-      return NextResponse.json({ error: 'Error inserting transaction' }, { status: 500 });
+      return NextResponse.json({ error: 'Error inserting transaction', msg:err.toString() }, { status: 500 });
     })
 
     if (results && results.status === 'completed') {

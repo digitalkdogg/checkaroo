@@ -4,7 +4,6 @@ import {getAccountIDSession} from '@/common/session'
 import {headersLegit} from '@/common/session'
 import { update } from '@/common/dbutils'
 import { writelog } from '@/common/logs'
-import { OkPacketParams } from 'mysql2'
 
 export async function GET(request: NextRequest) {
     writelog(request.toString(), '---------invalide request get-------------')
@@ -65,7 +64,7 @@ export async function POST(request: NextRequest) {
     try {
      
       const balance = await update(updatequery);
-      return NextResponse.json({status: 'success', balance: data.value})
+      return NextResponse.json({status: 'success', balance: balance})
     } catch (e) {
       return NextResponse.json({status: 'error', error: e})
     }
@@ -100,19 +99,3 @@ export async function POST(request: NextRequest) {
 
 }
 
-async function validateCategory(value: string, accountid: string) {
-  const validateQuery = {
-    select: '*',
-    from: 'Category',
-    where: `category_name = "${value}" AND account_id = "${accountid}"`
-  } 
-
-   const validateRows = await select(validateQuery);
-      var validateRowsArr:any = [];
-      validateRowsArr = validateRows;
-
-      if (validateRowsArr.length > 0) {
-        return true;
-      }
-      return false; 
-}

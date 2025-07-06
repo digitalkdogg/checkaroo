@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Svg from '@/app/components/Svg'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import moment from 'moment'
 
 
 interface Props {
@@ -14,7 +13,6 @@ export default function Datepicker(props:Props) {
   
     const changeDate = (date:any) => {
         showbtn();
-       // const date2:any = moment(date).format('yyyy-DD-MM hh:mm:ss')
         setStartDate(date)
     }
 

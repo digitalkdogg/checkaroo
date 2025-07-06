@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
 
     if (transid) {
 
-      let joinarr = [
+      const joinarr = [
         'inner join Clients on Clients.client_id = Transactions.client_id',
         'inner join Category on Category.category_id = Transactions.category_id' 
       ];

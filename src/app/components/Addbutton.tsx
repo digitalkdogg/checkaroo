@@ -1,5 +1,4 @@
 'use client'
-import Menu from '@/app/components/Menu'
 import styles from '@/resources/addbutton.module.css'
 import Svg from '@/app/components/Svg';
 import { redirect } from 'next/navigation'

@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
       }
       
     try {
-        const results:any = await insert(insquery).then(async (res:any) => {
+        const results:any = await insert(insquery).then(async () => {
           const validateRows = await validateClient(data.value, accountid);
           if (await validateRows) {
             return {status: 'completed'};
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
     
         }).catch((err:any) => {
 
-          return NextResponse.json({ error: 'Error inserting client' }, { status: 500 });
+          return NextResponse.json({ error: 'Error inserting client', msg: err.toString() }, { status: 500 });
         })
     
         if (results && results.status === 'completed') {
