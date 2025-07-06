@@ -5,6 +5,6 @@ export const writelog = (msg:string, premsg?:string) => {
         } 
         process.stdout.write('\n' + msg.toString() + '\n')
     } catch (e) {
-        return;
+        return e;
     }
 }

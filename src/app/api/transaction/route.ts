@@ -6,6 +6,7 @@ import { headersLegit } from '@/common/session'
 import {writelog} from '@/common/logs'
 
 export async function GET(request: NextRequest) {
+  writelog(request.toString(), '----------invalid request get-----------')
   return NextResponse.json({ error: 'Unauthorized request' }, { status: 401 }); 
 }
 

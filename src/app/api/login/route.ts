@@ -2,6 +2,12 @@
 import { NextResponse, NextRequest } from 'next/server'
 import { getAccountIDSession} from '@/common/session'
 import { headersLegit } from '@/common/session';
+import { writelog } from '@/common/logs';
+
+export async function GET(request: NextRequest) {
+  writelog(request.toString(), '----------invalid request get-----------')
+  return NextResponse.json({'results': {'err': {'message': 'Not Authorized'}}})
+}
 
 export async function POST(request: NextRequest) {
     try {

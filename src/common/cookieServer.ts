@@ -14,7 +14,9 @@ export const writeCookie = async (cookiename:string, data:any, options?:CookieDa
         maxAge: options?.maxAge || 25200 // Default to 7 hours if
    })
   } catch (e) {
-    writelog('Error writing cookie ' + cookiename)
+    if (e) {
+      writelog('Error writing cookie ' + cookiename)
+    }
   }
 
 }
@@ -30,7 +32,9 @@ export const readCookie = async (cookiename:string) => {
       return null
     }
   } catch(e) {
-    writelog('Error reading cookie ' + cookiename);
+    if (e) {
+      writelog('Error reading cookie ' + cookiename);
+    }
     return null;
   }
 }
@@ -47,7 +51,9 @@ export const deleteCookie = async (cookiename:string) => {
       return true
     }
   } catch(e) {
-    writelog('Error deleting cookie ' + cookiename);
+    if(e) {
+      writelog('Error deleting cookie ' + cookiename);
+    }
     return false;
   }
 }

@@ -10,6 +10,10 @@ import {v4 as uuidv4} from 'uuid'
 import moment from 'moment'
 import { writelog } from '@/common/logs'
 
+export async function GET(request: NextRequest) {
+  writelog(request.toString(), '----------invalid request get-----------')
+   return NextResponse.json({'results': {'err': {'message': 'Not Authorized'}}})
+}
 
 export async function POST(request:NextRequest) {
     if (!headersLegit(request, ['login'])) {

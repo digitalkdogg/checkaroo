@@ -1,6 +1,5 @@
 import pool from '@/common/db'
 import {writelog} from '@/common/logs';
-import mysql from 'mysql2/promise';
 
 
 export const select = async (query:any) => {

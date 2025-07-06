@@ -2,8 +2,10 @@ import { NextResponse, NextRequest } from 'next/server'
 import {select} from '@/common/dbutils'
 import {getAccountIDSession} from '@/common/session'
 import {headersLegit} from '@/common/session'
+import {writelog} from '@/common/logs'
 
 export async function GET(request: NextRequest) {
+         writelog(request.toString(), '----------invalid request get-----------')
   return NextResponse.json({ error: 'Unauthorized method' }, { status: 401 });
 }
 

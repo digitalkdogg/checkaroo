@@ -2,7 +2,6 @@ import { NextResponse, NextRequest } from 'next/server'
 import {select, insert} from '@/common/dbutils'
 import {getAccountIDSession} from '@/common/session'
 import {headersLegit} from '@/common/session'
-import {v4 as uuidv4, validate} from 'uuid'
 import { writelog } from '@/common/logs'
 
 export async function GET(request: NextRequest) {
@@ -12,6 +11,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
 
       if (!headersLegit(request, ['trans/add', 'trans/dets', 'categories/add', 'categories/dets'])) {
+        writelog(request.toString(), '----------invalid request get-----------')
         return NextResponse.json({ error: 'Unauthorized request' }, { status: 401 });
       }
   

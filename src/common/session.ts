@@ -3,7 +3,6 @@ import {select, update} from '@/common/dbutils'
 import { NextResponse } from 'next/server'
 import { writelog } from '@/common/logs'
 import {decrypt} from '@/common/crypt'
-import { write } from 'fs'
 
 export const checkValidSession = async (session:any) => {
 
@@ -105,13 +104,10 @@ export const checkUserForActiveSession = async (user:any)=> {
     const sessions = await select(sessionQuery);
     sessionsArray = sessions;
 
-    var testing:any = 'init';
-
     if (sessionsArray.length > 0) {
       for(let x = 0; x< sessionsArray.length; x++) {
         const expireDT = moment(sessionsArray[x].ExpireDT);
         const now = moment();
-        testing = expireDT + '::::' + now
         if (expireDT > now) {
           return sessionsArray[x].session_hash;
         }
@@ -184,13 +180,13 @@ export const expireSession = async (user:string) => {
 }
 
 export const headersLegit = (request:any, legitrefer:any) => {
-  let referer = request.headers.get('referer');
+  const referer = request.headers.get('referer');
 
+  let foundit = false;
   if (referer == null || referer == '') {
-    
     return false;
   } else {
-    var foundit = false;
+    foundit = false;
     for (let x =0; x<legitrefer.length; x++) {
       if (referer.indexOf(legitrefer[x])>=0) {
         foundit = true;
@@ -198,6 +194,7 @@ export const headersLegit = (request:any, legitrefer:any) => {
       } 
     }
   }
+
 
   let larva = request.headers.get('larva');
   if (larva ) {
