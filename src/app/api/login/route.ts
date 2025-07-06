@@ -17,7 +17,6 @@ export async function POST(request: NextRequest) {
 
         const json = await request.json();
         const sessionstr:string = json.session;
-        var session:any;
 
         if (!sessionstr) {
             return NextResponse.json({ error: 'Unauthorized Session' }, { status: 401 });

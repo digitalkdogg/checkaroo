@@ -29,14 +29,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized Account' }, { status: 401 });
     }
 
-    var query = {
+    const query = {
       select : '*',
       from : 'Clients',
       where : 'account_id = "' + accountid  + '"' ,
       sort: 'company_name asc'
     }
 
-      var arr:any = []
+      let arr:any = []
       const results = await select(query);
       arr = results;
 

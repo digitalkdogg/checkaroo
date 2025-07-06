@@ -31,17 +31,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({'results': {'err': {'message' : 'Not Authorized'}}})
     }
 
-    let joinarr = [
-        'inner join Clients on Clients.client_id = Transactions.client_id',
-        'inner join Category on Category.category_id = Transactions.category_id' 
-    ];
-
     var query = {
       select : '*',
       from : 'Transactions',
       where : 'Transactions.account_id = "' + accountid  + '"',
       sort: 'date desc',
-      join: joinarr
+      join: [
+        'inner join Clients on Clients.client_id = Transactions.client_id',
+        'inner join Category on Category.category_id = Transactions.category_id'
+      ]
     }
 
     const results = await select(query)

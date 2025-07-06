@@ -82,7 +82,7 @@ async function validateClient(value: string, accountid: string) {
   } 
 
    const validateRows = await select(validateQuery);
-      var validateRowsArr:any = [];
+      let validateRowsArr:any = [];
       validateRowsArr = validateRows;
 
       if (validateRowsArr.length > 0) {

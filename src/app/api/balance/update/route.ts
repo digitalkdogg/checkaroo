@@ -50,9 +50,11 @@ export async function POST(request: NextRequest) {
     const oldbalance:object = await select(query);
 
     let newbalance:number = 0
-    Object.entries(oldbalance).map(([key, value]) => (
-       newbalance = parseFloat(value.balance) - parseFloat(data.value)
-    ))
+    Object.entries(oldbalance).map(([key, value]) => {
+      if(key) {
+        newbalance =  parseFloat(value.balance) - parseFloat(data.value)
+      }
+    })
 
     const updatequery = {
         table : 'Account',

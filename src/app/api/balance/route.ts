@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
         where : 'account_id = "' + accountid  + '"'
       }
 
-        var arr:any = []
+        let arr:any = []
         const results = await select(query);
         arr = results;
 

@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No data provided' }, { status: 400 });
   }
 
-  var data:any = decrypt(json.data);
+  let data:any = decrypt(json.data);
   data = JSON.parse(data);
 
   const date = data.date;
@@ -91,7 +91,7 @@ async function validateTransaction(transid: string, accountid: string) {
   } 
 
    const validateRows = await select(validateQuery);
-      var validateRowsArr:any = [];
+      let validateRowsArr:any = [];
       validateRowsArr = validateRows;
       writelog('validateRowsArr is ' + JSON.stringify(validateRowsArr), '------------Transaction-------');
       if (validateRowsArr.length > 0) {
@@ -108,7 +108,7 @@ async function getClientID(clientName: string) {
   }
 
   const rows = await select(query);
-  var rowsarr:any = [];
+  let rowsarr:any = [];
   rowsarr = rows;
   
   if (rowsarr.length > 0) {
@@ -125,7 +125,7 @@ async function getCatID(catName: string) {
   }
 
   const rows = await select(query);
-  var rowsarr:any = [];
+  let rowsarr:any = [];
   rowsarr = rows;
   
   if (rowsarr.length > 0) {

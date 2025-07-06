@@ -1,7 +1,6 @@
 'use client'
 import { convertToNiceDate, formatDouble } from "@/common/common" 
 import Link from 'next/link'
-import {encrypt} from '@/common/crypt'
 
 interface Props {
     transId: string,
