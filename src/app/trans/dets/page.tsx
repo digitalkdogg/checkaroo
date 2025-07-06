@@ -15,9 +15,9 @@ export default async function page({
   searchParams: {[key: string]: string | string[] | Promise<any>}
 }) {
     const id:any = (await searchParams).id;
-    var session = ''
+    let session = ''
     const cookiename:any = process.env.NEXT_PUBLIC_cookiestr;
-    var sessionCookie = await readCookie(cookiename);
+    let sessionCookie = await readCookie(cookiename);
 
     if (sessionCookie) {
         session = sessionCookie

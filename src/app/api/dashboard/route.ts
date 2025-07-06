@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({'results': {'err': {'message' : 'Not Authorized'}}})
     }
 
-    var query = {
+    const query = {
       select : '*',
       from : 'Transactions',
       where : 'Transactions.account_id = "' + accountid  + '"',

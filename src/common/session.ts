@@ -25,14 +25,14 @@ export const checkValidSession = async (session:any) => {
           limit: 1
       }
     
-    var isValid = false;
+    let isValid = false;
     
-    var rowsarr:any = []
+    let rowsarr:any = []
     const rows = await select(query);
     rowsarr = rows;
     for (let x =0; x<rowsarr.length; x++) {
-      var expireDT = moment(rowsarr[x].ExpireDT)
-      var now = moment()
+      let expireDT = moment(rowsarr[x].ExpireDT)
+      let now = moment()
       if (expireDT > now) {
         isValid = true;
       }
@@ -77,7 +77,7 @@ export const getAccountIDSession = async (session:string) => {
           limit: 1
       }
 
-      var rowsarr:any = []
+      let rowsarr:any = []
       const rows = await select(query);
       rowsarr = rows;
 
@@ -100,7 +100,7 @@ export const checkUserForActiveSession = async (user:any)=> {
         limit : 10,
     }
 
-    var sessionsArray:any = []
+    let sessionsArray:any = []
     const sessions = await select(sessionQuery);
     sessionsArray = sessions;
 
@@ -126,7 +126,7 @@ export const doesSessionExists = async (session:string, user:string) => {
         where : 'Logins.session_hash = "' + session + '" and user_id = "' + user + '"' 
     }
 
-    var sessionsArray:any = []
+    let sessionsArray:any = []
     const sessions = await select(sessionQuery);
     sessionsArray = sessions;
 
@@ -156,7 +156,7 @@ export const validateUser = async (user:string, word:string) => {
         where: 'user_id = "' + user + '" and password_hash = "' + word + '"' 
     }
   
-      var rowsarr:any = []
+      let rowsarr:any = []
       try {
           const rows = await select(query)
           rowsarr=rows

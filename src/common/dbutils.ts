@@ -3,7 +3,7 @@ import {writelog} from '@/common/logs';
 
 
 export const select = async (query:any) => {
-    var querystr = ''
+    let querystr = ''
     querystr = querystr + 'select ' + query.select
     querystr = querystr + ' from ' + query.from
 
@@ -41,7 +41,7 @@ export const select = async (query:any) => {
 }
 
 export const insert = async (query:any) => {
-        var querystr = ''
+        let querystr = ''
         querystr = querystr + 'insert into '
         querystr = querystr + query.table + '('
         
@@ -77,7 +77,7 @@ export const insert = async (query:any) => {
 }
 
 export const update = async (query:any) => {
-    var querystr = '' 
+    let querystr = '' 
     querystr = querystr + 'update '+ query.table
     querystr = querystr + ' set ' + query.fields
 

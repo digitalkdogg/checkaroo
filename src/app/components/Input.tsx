@@ -14,6 +14,18 @@ function Input(props:Props) {
     setInputValue(event.target.value);
   };
 
+  if (inputValue) {
+     return (
+            <input
+                id = {props.id}
+                type="text"
+                name ={props.name}
+                defaultValue = {props.val}
+                onChange={handleInputChange}
+            />
+        );
+  }
+
     if (props.disabled==true) {
         return (
             <input

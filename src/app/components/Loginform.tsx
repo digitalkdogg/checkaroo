@@ -33,7 +33,7 @@ export default function LoginPage() {
 
         const json = await response.json()
 
-        var msg = json.msg
+        let msg = json.msg
 
         const loginerror = document.querySelector('.login-error')
         if (json.status == 'success' ) {
@@ -78,7 +78,7 @@ export default function LoginPage() {
 
 const showSubmitSpinner = (type:string) => {
 
-    var submit = document.getElementById('submit')
+    let submit = document.getElementById('submit')
     if (submit) { 
       const child = submit.querySelector('span#loadingspan');
       if (child) {

@@ -41,13 +41,13 @@ export const getDataFromCookie = (cookiestr:any) => {
       return '';
     }
 
-    var fieldnames = cookiestr.split('||')
-    var fieldvals = []
-    var returnobj:any = {}
+    let fieldnames = cookiestr.split('||')
+    let fieldvals = []
+    let returnobj:any = {}
     if (fieldnames != undefined) {
       for (let x =0; x<fieldnames.length; x++) {
         fieldvals = fieldnames[x].split(':')
-        var indi = fieldvals[0]
+        let indi = fieldvals[0]
         returnobj[indi] = fieldvals[1]
       }
     }
@@ -56,6 +56,6 @@ export const getDataFromCookie = (cookiestr:any) => {
 }
 
 export const setExpireDT = () => {
-  let now = moment()
+  const now = moment()
   return now.add(12, 'hours').format('Y-MM-DD HH:mm:ss')
 }

@@ -33,8 +33,8 @@ export default async function Page(prop: Props) {
     })
     });
 
-  var trans = await data.json();
-  var transdata: Transaction[] = trans.results
+  const trans = await data.json();
+  const transdata: Transaction[] = trans.results
 
   if (trans.results.err) {
     return <div id = "dash-error"><Error value = {trans.results.err.message} /> </div>

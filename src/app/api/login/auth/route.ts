@@ -42,14 +42,14 @@ export async function POST(request:NextRequest) {
             }
         } else {
             if (await checkUserForActiveSession(user) == false) {
-                var session = uuidv4().trim() + uuidv4().trim();
+                let session = uuidv4().trim() + uuidv4().trim();
                 for (let x=0; x<5; x++) {
                     if (session.length < 96) {
                         session = session + uuidv4().trim();
                     }
                 }
 
-                var sessionencrypted = ''
+                let sessionencrypted = ''
                 sessionencrypted =  moment().format('SSS') + '|||' + session + '|||' + moment().format('SSS');
                 sessionencrypted = encrypt(sessionencrypted)
 
@@ -65,7 +65,9 @@ export async function POST(request:NextRequest) {
                 }
 
                 const login = await insert(insquery);
-                return NextResponse.json({'status': 'success'})
+                if (login) {
+                    return NextResponse.json({'status': 'success'})
+                } else {return NextResponse.json({'status': 'error'})}
             } else {
                 expireSession(user);
                 return NextResponse.json({'status': false, 'msg': 'Hmmmm we can not login in at this time.  Try clearing your cache and try again.'})

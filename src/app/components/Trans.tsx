@@ -7,8 +7,8 @@ export default async function Page() {
         amount: number, 
     }
 
-    var trans = await data.json();
-    var transdata: Transaction[] = trans.results
+    let trans = await data.json();
+    let transdata: Transaction[] = trans.results
 
   return (
     <div>

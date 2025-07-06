@@ -121,6 +121,9 @@ function Dropdown(prop:Props) {
             addRow?.setAttribute('data-value', '');
         }
         setInputValue(val);
+        if (inputValue) {
+            return;
+        }
     };
 
     const hideResultsBox = () => {
@@ -237,7 +240,7 @@ function Dropdown(prop:Props) {
     }
 
     const addItem = async (event:any) => {
-        var target; 
+        let target; 
         if (event.target.nodeName=='svg') {
             target = event.target.parentNode;
         } else if (event.target.nodeName=='path') {

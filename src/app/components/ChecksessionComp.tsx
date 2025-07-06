@@ -24,7 +24,7 @@ export default function ChecksessionComp(props:componentsProps) {
 
     const checkRedirect = async () => {
         const cookiename:any = process.env.NEXT_PUBLIC_cookiestr;
-        var sessionCookie = await readCookie(cookiename);
+        let sessionCookie = await readCookie(cookiename);
 
         if (!sessionCookie) {
             
@@ -34,8 +34,6 @@ export default function ChecksessionComp(props:componentsProps) {
             setIsLoginLoading(false);
             return; // No session cookie, do not redirect
         }
-        
-        var session = sessionCookie
 
         const response = await fetch('/api/login', {
             method: 'POST',
@@ -108,6 +106,7 @@ export default function ChecksessionComp(props:componentsProps) {
             </div>
         )
     }
-
-  return (<div></div>)
+    if (loginData) {
+        return (<div></div>)
+    }
 }

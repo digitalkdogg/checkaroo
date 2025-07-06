@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
         'inner join Category on Category.category_id = Transactions.category_id' 
       ];
 
-      var query = {
+      const query = {
         select : '*',
         from : 'Transactions',
         where : 'Transactions.account_id = "' + accountid + '" and trans_id = "' + transid + '"' ,
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
         limit: 1
       }
 
-        var arr:any = []
+        let arr:any = []
         const results = await select(query);
         arr  = results
         if (arr.length == 0 ) {
