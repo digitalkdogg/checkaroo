@@ -105,7 +105,7 @@ export default function AddForm(prop:Props) {
   return (
   <div >
 
-      <form  onSubmit={saveData} > 
+      <form  onSubmit={saveData} className="max-w-130"> 
         <div className = "flex flex-row justify-between py-5">
             <span>Date :</span>
             <Datepicker id = "date" name = "date" />
