@@ -15,7 +15,7 @@ interface Props {
 
 export default function Page(props: Props) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [data, setData] = useState<any>()
+    const [data, setData] = useState<string>()
     const [isLoading, setIsLoading] = useState(true);
 
     const getBalance = async () => {
@@ -36,14 +36,16 @@ export default function Page(props: Props) {
                         setData(json[0].balance)
                     }
                 } else {
-                    setData(0)
+                    setData('0')
                 }
             } else {
-                setData(0)
+                setIsLoading(false)
+                setData('0')
             }
         } catch(e) {
             if(e) {
-                setData(0)
+                setIsLoading(false);
+                setData('0')
             }
         }
     }

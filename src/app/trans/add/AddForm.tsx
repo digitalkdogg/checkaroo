@@ -106,25 +106,25 @@ export default function AddForm(prop:Props) {
   <div >
 
       <form  onSubmit={saveData} className="max-w-130"> 
-        <div className = "flex flex-row justify-between py-5">
-            <span>Date :</span>
+        <div className = "flex flex-row justify-left py-5">
+            <span className="basis-32">Date :</span>
             <Datepicker id = "date" name = "date" />
         </div>
 
         <div className = {'flex flex-row py-5'}>
-            <span>Company : </span>
+            <span className = "basis-32">Company : </span>
             <div className="flex">
               <Dropdown val = '' api = "../api/clients" type = 'clients' session = {prop.session} />
             </div>
         </div>
 
-        <div className = "flex flex-row justify-between py-5">
-            <span>Amount :</span>
+        <div className = "flex flex-row py-5">
+            <span className = "basis-32">Amount :</span>
             <Input id = "amount" name = "amount" val = '' disabled = {false} />
         </div>
 
         <div className = {'flex flex-row py-5 '}>
-            <span>Category : </span>
+            <span className = "basis-32">Category : </span>
             <div className="flex">
               <Dropdown val = '' api = "../api/categories" type = 'categories' session = {prop.session} />
             </div>

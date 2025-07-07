@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
       const query = {
         select : 'balance',
         from : 'Account',
-        where : 'account_id = "' + accountid  + '"'
+        where : 'account_id = "' + accountid + '"'
       }
 
         let arr:object = {}
