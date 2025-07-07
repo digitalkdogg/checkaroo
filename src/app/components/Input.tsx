@@ -1,30 +1,31 @@
 import React, { useState } from 'react';
 
 interface Props {
-    val: any,
+    val: string,
     id: string,
     name: string,
     disabled: boolean
 }
 
 function Input(props:Props) {
-  const [inputValue, setInputValue] = useState('');
+    const [inputValue, setInputValue] = useState('');
 
-  const handleInputChange = (event:any) => {
-    setInputValue(event.target.value);
-  };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleInputChange = (event:any) => {
+        setInputValue(event.target.value);
+    };
 
-  if (inputValue) {
-     return (
-            <input
-                id = {props.id}
-                type="text"
-                name ={props.name}
-                defaultValue = {props.val}
-                onChange={handleInputChange}
-            />
-        );
-  }
+    if (inputValue) {
+        return (
+                <input
+                    id = {props.id}
+                    type="text"
+                    name ={props.name}
+                    defaultValue = {props.val}
+                    onChange={handleInputChange}
+                />
+            );
+    }
 
     if (props.disabled==true) {
         return (

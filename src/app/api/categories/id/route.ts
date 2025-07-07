@@ -33,13 +33,14 @@ export async function POST(request: NextRequest) {
         where : 'account_id = "' + accountid  + '" and category_id = "' + json.id + '"',
       }
 
-        let arr:any = []
-        const results = await select(query);
-        arr = results;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let arr:any = []
+      const results = await select(query);
+      arr = results;
 
-        if (arr.length == 0 ) {
-          arr = ['no results found here']
-        }
+      if (arr.length == 0 ) {
+        arr = ['no results found here']
+      }
 
-        return NextResponse.json(arr)
+      return NextResponse.json(arr)
 }

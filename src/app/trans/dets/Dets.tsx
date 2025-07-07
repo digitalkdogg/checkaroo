@@ -15,8 +15,10 @@ interface Props {
 
 export default function Dets(props:Props) {
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [data, setData] = useState<any>([])
     const [isLoading, setIsLoading] = useState(true);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [errorTrans, setErrorTrans] = useState<any>(null);
 
     useEffect(() => {
@@ -81,7 +83,7 @@ export default function Dets(props:Props) {
                 </div>
                 <div className = "flex flex-row justify-between py-5">
                     <span>Amount :</span>
-                     <Input name = "amount" id = "amount" val = {formatDouble(data.amount)} disabled = {false} />
+                     <Input name = "amount" id = "amount" val = {formatDouble(data.amount) as string} disabled = {false} />
                 </div>
                 <div className = {'flex flex-row py-5 ' + styles.container}>
                     <span>Company : </span>

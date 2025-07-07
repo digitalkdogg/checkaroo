@@ -13,18 +13,23 @@ interface componentsProps {
     session : string
 }
 
+interface Err {
+    message: string
+}
+
 export default function ChecksessionComp(props:componentsProps) {
+       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const [loginData, setLoginData] = useState<any>(false)
       const [isLoginLoading, setIsLoginLoading] = useState(true);
-      const [loginError, setLoginError] = useState<any>(null);
+      const [loginError, setLoginError] = useState<Err>();
           
     useEffect(() => {
       checkRedirect()
     }, []);
 
     const checkRedirect = async () => {
-        const cookiename:any = process.env.NEXT_PUBLIC_cookiestr;
-        let sessionCookie = await readCookie(cookiename);
+        const cookiename = process.env.NEXT_PUBLIC_cookiestr as string;
+        const sessionCookie = await readCookie(cookiename);
 
         if (!sessionCookie) {
             
@@ -46,7 +51,6 @@ export default function ChecksessionComp(props:componentsProps) {
         if (response.ok) {
             const json = await response.json()
             if(json.valid ==  true) {
-            
                 if (props.reverseLogic) {
                     setLoginData(true);
                     setIsLoginLoading(false);

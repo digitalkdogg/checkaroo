@@ -11,6 +11,7 @@ interface Props {
 export default function Datepicker(props:Props) {
   const [startDate, setStartDate] = useState(new Date());
   
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const changeDate = (date:any) => {
         showbtn();
         setStartDate(date)
@@ -34,6 +35,7 @@ export default function Datepicker(props:Props) {
 
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const triggerCal = (event:any) => {
       console.log(event.target)
       const id = document.getElementById(props.id);

@@ -15,7 +15,7 @@ export default function LoginPage() {
     const password = formData.get('password')
 
 
-    if (validateForm(username, password)) {
+    if (validateForm(username as string, password as string)) {
 
       showSubmitSpinner('show')
 
@@ -23,7 +23,7 @@ export default function LoginPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          user: encrypt(username), pass:encrypt(password)
+          user: encrypt(username as string), pass:encrypt(password as string)
         })
       })
 
@@ -33,7 +33,7 @@ export default function LoginPage() {
 
         const json = await response.json()
 
-        let msg = json.msg
+        const msg = json.msg
 
         const loginerror = document.querySelector('.login-error')
         if (json.status == 'success' ) {
@@ -57,7 +57,7 @@ export default function LoginPage() {
 
 
 
-  function validateForm(username:any, password:any) {
+  function validateForm(username:string, password:string) {
     document.querySelector('.username-error')?.classList.add('notvisible')
     document.querySelector('.password-error')?.classList.add('notvisible')
 
@@ -78,7 +78,7 @@ export default function LoginPage() {
 
 const showSubmitSpinner = (type:string) => {
 
-    let submit = document.getElementById('submit')
+    const submit = document.getElementById('submit')
     if (submit) { 
       const child = submit.querySelector('span#loadingspan');
       if (child) {
@@ -91,6 +91,7 @@ const showSubmitSpinner = (type:string) => {
     }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const hideErrorMsg = (e:any) => {
   const parent = e.currentTarget.getAttribute('data-error');
   document.querySelector('.'+parent)?.classList.add('notvisible')

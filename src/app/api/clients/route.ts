@@ -36,9 +36,10 @@ export async function POST(request: NextRequest) {
       sort: 'company_name asc'
     }
 
-      let arr:any = []
-      const results = await select(query);
-      arr = results;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let arr:any = []
+    const results = await select(query);
+    arr = results;
 
-      return NextResponse.json(arr)
+    return NextResponse.json(arr)
 }

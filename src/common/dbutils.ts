@@ -1,7 +1,7 @@
 import pool from '@/common/db'
 import {writelog} from '@/common/logs';
 
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const select = async (query:any) => {
     let querystr = ''
     querystr = querystr + 'select ' + query.select
@@ -40,6 +40,7 @@ export const select = async (query:any) => {
     }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const insert = async (query:any) => {
         let querystr = ''
         querystr = querystr + 'insert into '
@@ -67,6 +68,7 @@ export const insert = async (query:any) => {
         try { 
             connection = await pool.getConnection();
             writelog('\n' + querystr + ':::' + query.vals.toString() + '\n\n')
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const data:any = await connection.execute(querystr, query.vals);
             return {data} 
         } catch(e) {
@@ -76,6 +78,7 @@ export const insert = async (query:any) => {
         }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const update = async (query:any) => {
     let querystr = '' 
     querystr = querystr + 'update '+ query.table
@@ -97,6 +100,7 @@ export const update = async (query:any) => {
     try {
         connection = await pool.getConnection();
         writelog('\n' + querystr + '\n\n')
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const data:any = await connection.execute(querystr);
         return {data}
     } catch (e) {

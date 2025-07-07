@@ -14,9 +14,9 @@ const geist = Geist({
 
 export default async function page() {
 
-    var session = ''
-    const cookiename:any = process.env.NEXT_PUBLIC_cookiestr;
-    var sessionCookie = await readCookie(cookiename);
+    let session = ''
+    const cookiename = process.env.NEXT_PUBLIC_cookiestr as string;
+    const sessionCookie = await readCookie(cookiename);
 
     if (sessionCookie) {
         session = sessionCookie

@@ -12,14 +12,19 @@ interface Props {
   session: string;
 }
 
+interface Err {
+  message: string
+}
+
 export default function AddForm(prop:Props) {
 
 
-  const [data, setData] = useState<any>('')
+  const [data, setData] = useState<string>('')
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<any>(null);
+  const [error, setError] = useState<Err>();
   //const [amount, setAmount] = useState<any>();
  
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const saveData = async (event:any) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -36,7 +41,7 @@ export default function AddForm(prop:Props) {
     };
 
     setIsLoading(true)
-    setError('');
+    setError({'message':''});
     setData('');
   //  setAmount(data.amount);
 
@@ -57,7 +62,7 @@ export default function AddForm(prop:Props) {
         if (json.status === 'success') {
           setIsLoading(false);
           setData('Transaction added successfully');
-          setBalance(data.amount)
+          setBalance(data.amount as string)
           setTimeout(() => {
             setData('');
           }, 5000); // Clear message after 5 seconds
@@ -69,13 +74,14 @@ export default function AddForm(prop:Props) {
         setIsLoading(false);
         setError({message: 'Failed to add transaction. Please try again.'});
       }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch(err:any) {
       setIsLoading(false);
       setError({message: err.message});
     }
   }  
   
-  const setBalance = async (amount:any) => {
+  const setBalance = async (amount:string) => {
     
     const response = await fetch('/api/balance/update', {
       method: 'POST',
@@ -88,7 +94,6 @@ export default function AddForm(prop:Props) {
 
     if (response.ok) {
       const json = await response.json();
-      console.log(json)
       if (json.status=='success') {
         redirect('/');
       } 

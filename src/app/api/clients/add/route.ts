@@ -50,12 +50,13 @@ export async function POST(request: NextRequest) {
       }
       
     try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const results:any = await insert(insquery).then(async () => {
           const validateRows = await validateClient(data.value, accountid);
           if (await validateRows) {
             return {status: 'completed'};
           } else return {status: 'failed'}
-    
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         }).catch((err:any) => {
 
           return NextResponse.json({ error: 'Error inserting client', msg: err.toString() }, { status: 500 });
@@ -82,6 +83,7 @@ async function validateClient(value: string, accountid: string) {
   } 
 
    const validateRows = await select(validateQuery);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let validateRowsArr:any = [];
       validateRowsArr = validateRows;
 

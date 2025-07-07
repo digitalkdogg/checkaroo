@@ -36,18 +36,19 @@ export const checkbadsqlstr = (str:string) => {
     return false;
 } 
 
-export const getDataFromCookie = (cookiestr:any) => {
+export const getDataFromCookie = (cookiestr:string) => {
     if (checkbadsqlstr(cookiestr)==true) {
       return '';
     }
 
-    let fieldnames = cookiestr.split('||')
+    const fieldnames = cookiestr.split('||')
     let fieldvals = []
-    let returnobj:any = {}
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const returnobj:any = {}
     if (fieldnames != undefined) {
       for (let x =0; x<fieldnames.length; x++) {
         fieldvals = fieldnames[x].split(':')
-        let indi = fieldvals[0]
+        const indi = fieldvals[0]
         returnobj[indi] = fieldvals[1]
       }
     }

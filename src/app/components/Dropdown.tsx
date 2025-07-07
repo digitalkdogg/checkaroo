@@ -6,7 +6,7 @@ import Loading from '@/app/components/Loading'
 import { superEcnrypt } from '@/common/crypt';
 
 interface Props {
-    val: any,
+    val: string,
     api: string, 
     type: string,
     session : string
@@ -15,22 +15,35 @@ interface Props {
 function Dropdown(prop:Props) {
     const [inputValue, setInputValue] = useState('');
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [data, setData] = useState<any>([])
     const [isLoading, setIsLoading] = useState(true);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [errorDropDown, setErrorDropDown] = useState<any>(null);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [addData, setAddData] = useState<any>(false)
     const [isAddLoading, setIsAddLoading] = useState(false);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [errorAddDropDown, setErrorAddDropDown] = useState<any>(null);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [successAddDropDown, setSuccessAddDropDown] = useState<any>(null);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [resultEles, setResultEles] = useState<any>(null);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [addRow, setAddRow] = useState<any>(null);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [results, setResults] = useState<any>(null);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [wrapper, setWrapper] = useState<any>(null);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [arrow, setArrow] = useState<any>(null);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [hidden_input, setHiddenInput] = useState<any>(null);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [dropdownInput, setDropDownInput] = useState<any>(null);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [otherArrow, setOtherArrow] = useState<any>(null);
 
     const fetchData = async () => {
@@ -95,6 +108,7 @@ function Dropdown(prop:Props) {
     const searchResult = (search:string) => {
 
         if (resultEles) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             resultEles.forEach((el: any) => {
                 if (el.classList.contains('donothide') == false) {
                     el.classList.add('hide')
@@ -106,6 +120,7 @@ function Dropdown(prop:Props) {
         }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleInputChange = (event:any) => {
         const val = event.target.value
 
@@ -127,6 +142,7 @@ function Dropdown(prop:Props) {
     };
 
     const hideResultsBox = () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         resultEles.forEach((el: any) => {
             el.classList.remove('hide')
         })
@@ -159,6 +175,7 @@ function Dropdown(prop:Props) {
 
         results?.classList.remove('hide');
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         resultEles.forEach((el: any) => {
             el.classList.remove('hide')
         })
@@ -190,7 +207,7 @@ function Dropdown(prop:Props) {
         }
     }
 
-
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const selectResult = (event:any) => {
         wrapper?.classList.remove('expand');
         const html = event.target.innerHTML;
@@ -204,8 +221,11 @@ function Dropdown(prop:Props) {
         }   
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const arrowclick = (event:any) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const ele:any = event.target
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const dropInput:any = document.getElementById(prop.type + '_dropinput')
         if (dropInput.value.length>0) {
             dropInput.value = ''
@@ -239,6 +259,7 @@ function Dropdown(prop:Props) {
         }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const addItem = async (event:any) => {
         let target; 
         if (event.target.nodeName=='svg') {
@@ -256,14 +277,15 @@ function Dropdown(prop:Props) {
                 setSuccessAddDropDown(false);
                 
                 const val = target.getAttribute('data-value'); 
-
-                const response = await fetch(prop.api + '/add', {
+                await fetch(prop.api+ '/add', {
+                //const response = await fetch(prop.api + '/add', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         session: superEcnrypt(prop.session),
                         data: {value: val}
                     })
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 }).then(async (res:any) => {
                     if (res.ok) {
                         const json = await res.json();
@@ -287,6 +309,7 @@ function Dropdown(prop:Props) {
                         const err = await res.json();
                         throw new Error(err.error);
                     }
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 }).catch((err:any) => {
                     setIsAddLoading(false);
                     setAddData(false);

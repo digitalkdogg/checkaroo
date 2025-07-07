@@ -31,7 +31,7 @@ export async function POST(request:NextRequest) {
 
     if (await validateUser(user, password)) {
 
-        const cookiename:any = process.env.NEXT_PUBLIC_cookiestr
+        const cookiename = process.env.NEXT_PUBLIC_cookiestr as string
         const sessionCookie = await readCookie(cookiename)
 
         if (sessionCookie) {

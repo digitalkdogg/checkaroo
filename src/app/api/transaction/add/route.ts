@@ -33,8 +33,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No data provided' }, { status: 400 });
   }
 
-  let data:any = decrypt(json.data);
-  data = JSON.parse(data);
+  interface Data {
+    date:Date,
+    clients: string,
+    amount: string,
+    categories:string
+  }
+
+  const datastr:string = decrypt(json.data) ;
+  const data:Data = JSON.parse(datastr);
 
   const date = data.date;
   const clients = data.clients;
@@ -56,6 +63,7 @@ export async function POST(request: NextRequest) {
   }
   
   try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const results:any = await insert(insquery).then(async () => {
       const validateRows = await validateTransaction(transid, accountid);
 
@@ -63,7 +71,7 @@ export async function POST(request: NextRequest) {
           return {status: 'completed'};
         
       } else return {status: 'failed'}
-
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }).catch((err:any) => {
       writelog('Error inserting transaction: ' + err, 'Transaction');
       return NextResponse.json({ error: 'Error inserting transaction', msg:err.toString() }, { status: 500 });
@@ -91,6 +99,7 @@ async function validateTransaction(transid: string, accountid: string) {
   } 
 
    const validateRows = await select(validateQuery);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let validateRowsArr:any = [];
       validateRowsArr = validateRows;
       writelog('validateRowsArr is ' + JSON.stringify(validateRowsArr), '------------Transaction-------');
@@ -108,6 +117,7 @@ async function getClientID(clientName: string) {
   }
 
   const rows = await select(query);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let rowsarr:any = [];
   rowsarr = rows;
   
@@ -125,6 +135,7 @@ async function getCatID(catName: string) {
   }
 
   const rows = await select(query);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let rowsarr:any = [];
   rowsarr = rows;
   

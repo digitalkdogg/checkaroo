@@ -43,14 +43,15 @@ export async function POST(request: NextRequest) {
         limit: 1
       }
 
-        let arr:any = []
-        const results = await select(query);
-        arr  = results
-        if (arr.length == 0 ) {
-          arr = ['no results found here']
-        }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let arr:any = []
+      const results = await select(query);
+      arr  = results
+      if (arr.length == 0 ) {
+        arr = ['no results found here']
+      }
 
-        return NextResponse.json(arr[0])
+      return NextResponse.json(arr[0])
     } else {
         return NextResponse.json([{'error' : 'No transid'}])
     }
