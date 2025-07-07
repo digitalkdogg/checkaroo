@@ -33,10 +33,9 @@ export async function POST(request: NextRequest) {
         where : 'account_id = "' + accountid  + '"'
       }
 
-         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        let arr:any = []
+        let arr:object = {}
         const results = await select(query);
-        arr = results;
+        arr = results
 
         return NextResponse.json(arr)
 }
