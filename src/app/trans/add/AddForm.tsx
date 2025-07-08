@@ -106,37 +106,37 @@ export default function AddForm(prop:Props) {
   <div >
 
       <form  onSubmit={saveData} className="max-w-130"> 
-        <div className = "flex flex-row justify-left py-5">
-            <span className="basis-32">Date :</span>
+        <div className = "flex flex-col md:flex-row justify-left py-5">
+            <span className="md:basis-32">Date :</span>
             <Datepicker id = "date" name = "date" />
         </div>
 
-        <div className = {'flex flex-row py-5'}>
-            <span className = "basis-32">Company : </span>
+        <div className = {'flex flex-col md:flex-row py-5'}>
+            <span className = "md:basis-32">Company : </span>
             <div className="flex">
               <Dropdown val = '' api = "../api/clients" type = 'clients' session = {prop.session} />
             </div>
         </div>
 
-        <div className = "flex flex-row py-5">
-            <span className = "basis-32">Amount :</span>
+        <div className = "flex flex-col md:flex-row py-5">
+            <span className = "md:basis-32">Amount :</span>
             <Input id = "amount" name = "amount" val = '' disabled = {false} />
         </div>
 
-        <div className = {'flex flex-row py-5 '}>
-            <span className = "basis-32">Category : </span>
+        <div className = {'flex flex-col md:flex-row py-5 '}>
+            <span className = "md:basis-32">Category : </span>
             <div className="flex">
               <Dropdown val = '' api = "../api/categories" type = 'categories' session = {prop.session} />
             </div>
         </div>
 
-        <div className= "flex justify-center-safe mb-10 mt-10">
-            <button className="inset-shadow-indigo-500 mr-5" 
+        <div className= "flex flex-col sm:flex-row justify-center-safe mb-10 mt-10">
+            <button className="inset-shadow-indigo-500 sm:mr-5" 
                 type="submit">
                    {isLoading && <span className = "inline-flex relative top-1 -left-2" id = "loadingspan"><Loading size={6} /></span>}
                    Submit
                 </button>
-            <button className="ml-5" type="reset">Reset</button>
+            <button className="sm:ml-5" type="reset">Reset</button>
         </div>
         {error && <div className="error mt-5">{error.message}</div>}
         {data && <div className="success mt-5">{data}</div>}
