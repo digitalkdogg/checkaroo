@@ -25,4 +25,6 @@
 .number {
     font-size:26px;
     font-weight: 700;
+    min-width:130px;
+    text-align:center;
 }

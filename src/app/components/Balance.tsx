@@ -18,6 +18,21 @@ export default function Page(props: Props) {
     const [data, setData] = useState<string>()
     const [isLoading, setIsLoading] = useState(true);
 
+    const animateBalance = (amount:number) => {
+        let newamount = 0
+        setData('0.00')
+        const balint = setInterval(() => {
+            if (newamount < amount) {
+                newamount = newamount+100
+                setData(newamount.toString())
+            } else {
+                clearInterval(balint);
+            }
+      
+        },50)
+         setData(amount.toString())
+    }
+
     const getBalance = async () => {
         try {
             const response = await fetch('/api/balance', {
@@ -33,7 +48,7 @@ export default function Page(props: Props) {
                 setIsLoading(false);
                 if (json.length > 0) {
                     if (json[0].balance) {
-                        setData(json[0].balance)
+                        animateBalance(json[0].balance)
                     }
                 } else {
                     setData('0')
@@ -62,7 +77,9 @@ export default function Page(props: Props) {
             <div className={styles.wrap}>
                 <div className = {styles.circle}>
                     <div className = {styles.label}>Balance</div>
-                    <div className = {styles.number}>{data && <span>${data}</span>} {isLoading &&  <Loading size={6} />}</div> 
+                    <div className = {styles.number}>{data && <span>${data}</span>} 
+                    <span className = "relative left-13">{isLoading &&  <Loading size={6} />}</span>
+                    </div> 
                 </div>
             </div>
         )
