@@ -23,6 +23,7 @@ function Input(props:Props) {
                     name ={props.name}
                     defaultValue = {props.val}
                     onChange={handleInputChange}
+                    autoComplete='true'
                 />
             );
     }
@@ -36,6 +37,7 @@ function Input(props:Props) {
                 defaultValue = {props.val}
                 onChange={handleInputChange}
                 disabled = {true}
+                autoComplete='false'
             />
         )    
     } else {
@@ -46,6 +48,7 @@ function Input(props:Props) {
                 name ={props.name}
                 defaultValue = {props.val}
                 onChange={handleInputChange}
+                autoComplete='true'
             />
         );
     }
