@@ -5,7 +5,9 @@ import {convertToNiceDate, formatDouble} from '@/common/common'
 import Dropdown from '@/app/components/Dropdown'
 import Error from '@/app/components/Error'
 import styles from '@/resources/dropdown.module.css'
+import Datepicker from '@/app/components/Datepicker';
 import { encrypt, superEcnrypt } from '@/common/crypt';
+import Loading from '@/app/components/Loading';
 
 
 interface Props {
@@ -13,16 +15,36 @@ interface Props {
     session: string
 }
 
-export default function Dets(props:Props) {
+interface Trans {
+    account_id : number,
+    amount: number,
+    category_id: number,
+    category_name: string,
+    client_id: number,
+    company_name:string, 
+    date: Date,
+    trans_id: string
+}
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [data, setData] = useState<any>([])
+interface Err {
+    message: string
+}
+
+export default function Dets(props:Props) {
+    const [data, setData] = useState<Trans>([])
     const [isLoading, setIsLoading] = useState(true);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [errorTrans, setErrorTrans] = useState<any>(null);
+    const [errorTrans, setErrorTrans] = useState<Err>(null);
+
+    const [saveDate, setSaveDate] = useState();
+    const [isSaveLoading, setIsSaveLoading] = useState(false)
+    const [errorSaveData, setErrorSaveData] = useState<Err>(null)
+
+    const saveData = async (e) => {
+        e.preventDefault()
+        setIsSaveLoading(true)
+    }
 
     useEffect(() => {
-
         const fetchData = async () => {
             try {
 
@@ -70,34 +92,40 @@ export default function Dets(props:Props) {
     }
 
     return (
-        <div >
-            <div className = "flex-3 bg-white flex flex-col my-50 max-w-130" >
-                <div className = "flex flex-row justify-between py-5">
-                    <span>TransID :</span>
+        <div>
+            <form  onSubmit={saveData} className = "flex-3 bg-white flex flex-col my-50 max-w-130 justify-left" >
+                <div className = "flex flex-col md:flex-row py-5">
+                    <span className = "md:basis-32">TransID :</span>
                      <Input name = "transid" id = "transid" val = {data.trans_id} disabled = {true} />
                 </div>
-
-                <div className = "flex flex-row justify-between py-5">
-                    <span>Date :</span>
-                     <Input name = "date" id = "date" val = {convertToNiceDate(data.date)} disabled = {false} />
+                <div className = "flex flex-col md:flex-row py-5">
+                    <span className="md:basis-32">Date :</span>
+                    <Datepicker id = "date" name = "date" val={convertToNiceDate(data.date)} />
                 </div>
-                <div className = "flex flex-row justify-between py-5">
-                    <span>Amount :</span>
+                <div className = "flex flex-col md:flex-row py-5">
+                    <span className = "md:basis-32">Amount :</span>
                      <Input name = "amount" id = "amount" val = {formatDouble(data.amount) as string} disabled = {false} />
                 </div>
-                <div className = {'flex flex-row py-5 ' + styles.container}>
-                    <span>Company : </span>
+                <div className = {'flex flex-col md:flex-row py-5 ' + styles.container}>
+                    <span className = "md:basis-32">Company : </span>
                     <div className="flex">
                         <Dropdown val = {data.company_name} api = "../api/clients" type = 'clients' session = {props.session} />
                     </div>
                 </div>
-                <div className = {'flex flex-row py-5 ' + styles.container}>
-                    <span>Category : </span>
+                <div className = {'flex flex-col md:flex-row py-5 ' + styles.container}>
+                    <span className = "md:basis-32">Category : </span>
                     <div className="flex">
                         <Dropdown val = {data.category_name} api = "../api/categories" type = 'categories' session = {props.session} />
                     </div>
                 </div>
-            </div>
+                <div className= "flex flex-col sm:flex-row justify-center-safe mb-10 mt-10">
+                    <button className="inset-shadow-indigo-500 sm:mr-5" type="submit">
+                        {isSaveLoading && <span className = "inline-flex relative top-1 -left-2" id = "loadingspan"><Loading size={6} /></span>}
+                        Submit
+                    </button>
+                    <button className="sm:ml-5" type="reset">Reset</button>
+                </div>
+            </form>
         </div>
     );
 }

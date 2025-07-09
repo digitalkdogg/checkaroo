@@ -6,16 +6,25 @@ import "react-datepicker/dist/react-datepicker.css";
 
 interface Props {
     id : string,
-    name: string
+    name: string,
+    val?: string
 }
 export default function Datepicker(props:Props) {
-  const [startDate, setStartDate] = useState(new Date());
-  
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const changeDate = (date:any) => {
-        showbtn();
-        setStartDate(date)
+  const getStartDate = () => {
+    if (props.val) {
+      return new Date(props.val)
+    } else {
+      return new Date()
     }
+  }
+  
+  const [startDate, setStartDate] = useState(getStartDate());
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const changeDate = (date:any) => {
+      showbtn();
+      setStartDate(date)
+  }
 
     const showbtn = () => {
       const btn = document.getElementById('calbtn')
@@ -37,7 +46,6 @@ export default function Datepicker(props:Props) {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const triggerCal = (event:any) => {
-      console.log(event.target)
       const id = document.getElementById(props.id);
       event.target.classList.add('hide');
       if (id) {
