@@ -29,11 +29,12 @@ export const select = async (query:any) => {
     let connection;
     try {
         connection = await pool.getConnection();
-        writelog('\n' + querystr + '\n\n')
+        writelog(querystr)
 
         const [rows] = await connection.query(querystr);
         return rows;
     } catch(err) {
+        writelog(err.toString(), '==============database select error ====================')
         return {'err': err}
     } finally {
         if (connection) connection.release()
@@ -67,11 +68,12 @@ export const insert = async (query:any) => {
         let connection
         try { 
             connection = await pool.getConnection();
-            writelog('\n' + querystr + ':::' + query.vals.toString() + '\n\n')
+            writelog(querystr + ':::' + query.vals.toString())
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const data:any = await connection.execute(querystr, query.vals);
             return {data} 
         } catch(e) {
+            writelog(e.toString(), '==============database insert error ====================')
             return {err: e}
         } finally {
             if (connection) connection.release()
@@ -99,11 +101,12 @@ export const update = async (query:any) => {
     let connection
     try {
         connection = await pool.getConnection();
-        writelog('\n' + querystr + '\n\n')
+        writelog(querystr)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const data:any = await connection.execute(querystr);
         return {data}
     } catch (e) {
+        writelog(e.toString(), '---------------database update error ----------------------')
         return {err: e}
     } finally {
          if (connection) connection.release()

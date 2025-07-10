@@ -31,17 +31,43 @@ interface Err {
 }
 
 export default function Dets(props:Props) {
-    const [data, setData] = useState<Trans>([])
+    const [data, setData] = useState<any>([])
     const [isLoading, setIsLoading] = useState(true);
-    const [errorTrans, setErrorTrans] = useState<Err>(null);
+    const [errorTrans, setErrorTrans] = useState<any>(null);
 
     const [saveDate, setSaveDate] = useState();
     const [isSaveLoading, setIsSaveLoading] = useState(false)
-    const [errorSaveData, setErrorSaveData] = useState<Err>(null)
+    const [errorSaveData, setErrorSaveData] = useState<any>(null)
 
-    const saveData = async (e) => {
+    const saveData = async (e:any) => {
         e.preventDefault()
         setIsSaveLoading(true)
+
+        const date = '2025-07-06 00:00:00';
+        const clients = 'Test Client';
+        const amount = 2.01;
+        const categories = 'Test Category'; 
+        const transid = '290470990fa241ab8';
+
+        const data = JSON.stringify({date: date, clients: clients, amount:amount, categories: categories, transid:transid})
+
+        const response = await fetch('/api/transaction/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                session: superEcnrypt(props.session),
+                data: encrypt(data)
+            })
+        })
+
+        console.log(response);
+
+        if (!response.ok) {
+            
+        } else {
+
+        }
+
     }
 
     useEffect(() => {
@@ -68,7 +94,7 @@ export default function Dets(props:Props) {
                     setData(result)
                   }
                 }
-            } catch (err) {
+            } catch (err:any) {
                 setErrorTrans(err);
             } finally {
                 setIsLoading(false);
