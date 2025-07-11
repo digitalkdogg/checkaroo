@@ -5,6 +5,7 @@ import {decrypt} from '@/common/crypt'
 import {v4 as uuidv4} from 'uuid'
 import {writelog} from '@/common/logs'
 import { convertToMySQLDate } from '@/common/common'
+import {ResultSetHeader} from 'mysql2'
 
 
 export async function GET(request: NextRequest) {
@@ -46,12 +47,45 @@ export async function POST(request: NextRequest) {
     client_id: number
   }
 
+  interface Client2 {
+    0 : []
+  }
+
   interface Category {
     client_id: number
   }
 
+  //interface Result {
+  //  status: string
+ // }
+
+// interface Err {
+//   err :{
+//      message?: string,
+//      code?: string,
+//      errno?: number,
+//      sql?: string , 
+//      sqlState?: string,
+//      sqlMessage?: string
+//    }
+// }
+
   interface Result {
-    status: string
+    message?: string,
+    err?: string,
+    status?:string
+  }
+
+  interface Res {
+    err? : {
+      message?: string,
+      code?: string,
+      errno?: number,
+      sql?: string , 
+      sqlState?: string,
+      sqlMessage?: string
+    },
+    data?: {data?: string}
   }
 
 
@@ -80,51 +114,37 @@ export async function POST(request: NextRequest) {
 
   
   try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const results:any = await update(updatequery).then(async () => {
-        return{status: 'completed'}
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    }).catch((err:any) => {
-      writelog('Error update transaction 1: ' + err, 'Transaction');
+      const results:Result = await update(updatequery).then(async (res:Res) => {
+        if (res.err) {
+          throw new Error(res.err.message);
+        } else if (res.data) {
+          return {status: 'completed'}
+        } else {
+          throw new Error('Unknown error')
+        }
+    }).catch((err:Error) => {
       return {status: 'error', err: err.toString()}
-    }).finally(() => {
-        return {status: 'completed'};   
     })
 
-    writelog(results, '------------------results line here ---------------------------')
     if (results && results.status === 'completed') {
-      writelog('Transaction update successfully: ' + JSON.stringify(updatequery), '*********Transaction**********');
       return NextResponse.json({ status: 'success', transid: transid, message: 'Transaction updated successfully' });
-    }  else {
-      writelog('Error update transaction 2: ' + JSON.stringify(updatequery), '*********Transaction**********');
-      return NextResponse.json({ error: 'Error update data 3' }, { status: 500 });
+    }  else if(results.err) {
+      return NextResponse.json({ error: results.err }, { status: 500 });
+    } else {
+      return NextResponse.json({error : 'Update encountered an unknown error'}, {status: 500})
     }
    
   } catch (error) {
-    process.stdout.write('Error upate data: ' + error + '\n');
-    return NextResponse.json({ error: 'Error update data 3' }, { status: 500 });
+    return NextResponse.json({ error: 'Error updating data' }, { status: 500 });
   }
 }
 
-async function validateTransaction(transid: string, accountid: string) {
-  const validateQuery = {
-    select: '*',
-    from: 'Transactions',
-    where: `trans_id = "${transid}" AND account_id = "${accountid}"`
-  } 
-
-   const validateRows = await select(validateQuery);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let validateRowsArr:any = [];
-      validateRowsArr = validateRows;
-      writelog('validateRowsArr is ' + JSON.stringify(validateRowsArr), '------------Transaction-------');
-      if (validateRowsArr.length > 0) {
-        return true;
-      }
-      return false; 
-}
-
 async function getClientID(clientName: string) {
+  interface Client {
+    length?: number,
+    client_id?: number
+  }
+
   const query = {
     select: 'client_id',
     from: 'Clients',
@@ -132,14 +152,15 @@ async function getClientID(clientName: string) {
   }
 
   const rows = await select(query);
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let rowsarr:any = [];
   rowsarr = rows;
-  
+
   if (rowsarr.length > 0) {
     return rowsarr[0].client_id;
   }
-  return null; // Example client ID
+  return null; 
 }
 
 async function getCatID(catName: string) {
@@ -152,6 +173,7 @@ async function getCatID(catName: string) {
   const rows = await select(query);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let rowsarr:any = [];
+  
   rowsarr = rows;
   
   if (rowsarr.length > 0) {

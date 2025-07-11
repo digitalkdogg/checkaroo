@@ -1,8 +1,31 @@
 import pool from '@/common/db'
+import {FieldPacket, QueryResult, ResultSetHeader} from 'mysql2'
 import {writelog} from '@/common/logs';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const select = async (query:any) => {
+interface UpdateQuery {
+    table?: string,
+    fields?: string, 
+    where? : string,
+    sort? : string,
+    limit?:string
+}
+
+interface SelectQuery {
+    select?: string,
+    from?: string,
+    join?: [],
+    where?: string,
+    sort?: string,
+    limit?: string
+}
+
+interface InsertQuery {
+    table?: string,
+    fields: [],
+    vals: []
+}
+
+export const select = async (query:SelectQuery) => {
     let querystr = ''
     querystr = querystr + 'select ' + query.select
     querystr = querystr + ' from ' + query.from
@@ -33,7 +56,7 @@ export const select = async (query:any) => {
 
         const [rows] = await connection.query(querystr);
         return rows;
-    } catch(err) {
+    } catch(err:any) {
         writelog(err.toString(), '==============database select error ====================')
         return {'err': err}
     } finally {
@@ -41,8 +64,7 @@ export const select = async (query:any) => {
     }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const insert = async (query:any) => {
+export const insert = async (query:InsertQuery) => {
         let querystr = ''
         querystr = querystr + 'insert into '
         querystr = querystr + query.table + '('
@@ -70,9 +92,9 @@ export const insert = async (query:any) => {
             connection = await pool.getConnection();
             writelog(querystr + ':::' + query.vals.toString())
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const data:any = await connection.execute(querystr, query.vals);
+            const data = await connection.execute(querystr, query.vals);
             return {data} 
-        } catch(e) {
+        } catch(e:any) {
             writelog(e.toString(), '==============database insert error ====================')
             return {err: e}
         } finally {
@@ -81,7 +103,8 @@ export const insert = async (query:any) => {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const update = async (query:any) => {
+export const update = async (query:UpdateQuery) => {
+
     let querystr = '' 
     querystr = querystr + 'update '+ query.table
     querystr = querystr + ' set ' + query.fields
@@ -104,8 +127,10 @@ export const update = async (query:any) => {
         writelog(querystr)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const data:any = await connection.execute(querystr);
+        
         return {data}
-    } catch (e) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e:any) {
         writelog(e.toString(), '---------------database update error ----------------------')
         return {err: e}
     } finally {

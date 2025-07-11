@@ -45,7 +45,7 @@ export default function Dets(props:Props) {
 
         const date = '2025-07-06 00:00:00';
         const clients = 'Test Client';
-        const amount = 2.01;
+        const amount = 2.02;
         const categories = 'Test Category'; 
         const transid = '290470990fa241ab8';
 
