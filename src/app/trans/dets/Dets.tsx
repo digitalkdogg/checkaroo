@@ -8,6 +8,7 @@ import styles from '@/resources/dropdown.module.css'
 import Datepicker from '@/app/components/Datepicker';
 import { encrypt, superEcnrypt } from '@/common/crypt';
 import Loading from '@/app/components/Loading';
+import { useRouter } from 'next/navigation';
 
 
 interface Props {
@@ -15,34 +16,32 @@ interface Props {
     session: string
 }
 
-//interface Trans {
-//    account_id : number,
-//    amount: number,
-//    category_id: number,
-//    category_name: string,
-//    client_id: number,
-//    company_name:string, 
-//    date: Date,
-//    trans_id: string
-//}
+interface Trans {
+    account_id : number,
+    amount: number,
+    category_id: number,
+    category_name: string,
+    client_id: number,
+    company_name:string, 
+    date: Date,
+    trans_id: string
+}
 
-//interface Err {
-//    message: string
-//}
+interface Err {
+    message: string
+}
 
 export default function Dets(props:Props) {
-     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [data, setData] = useState<any>([])
+    const [data, setData] = useState<Trans>()
     const [isLoading, setIsLoading] = useState(true);
-     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [errorTrans, setErrorTrans] = useState<any>(null);
+    const [errorTrans, setErrorTrans] = useState<Err>();
 
-    //const [saveDate, setSaveDate] = useState();
+    const [saveDataRes, setSaveDataRes] = useState();
     const [isSaveLoading, setIsSaveLoading] = useState(false)
-   // const [errorSaveData, setErrorSaveData] = useState<any>(null)
+    const [errorSaveData, setErrorSaveData] = useState<string>()
+    const router = useRouter();
 
-     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const saveData = async (e:any) => {
+    const saveData = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setIsSaveLoading(true)
 
@@ -55,7 +54,6 @@ export default function Dets(props:Props) {
         const transid = props.transid
 
         const data = JSON.stringify({date: date, clients: clients, amount:amount, categories: categories, transid:transid})
-        console.log(data);
 
         const response = await fetch('/api/transaction/update', {
             method: 'POST',
@@ -66,11 +64,17 @@ export default function Dets(props:Props) {
             })
         })
 
-        console.log(response);
-
+        setIsSaveLoading(false)
         if (!response.ok) {
-            
+            setErrorSaveData('Error saving data')
         } else {
+           const json = await response.json();
+           if (json.status == 'success') {
+                setSaveDataRes(json.message);
+                setTimeout(() => {
+                    router.push('/');
+                },3000)
+           }
 
         }
 
@@ -100,9 +104,8 @@ export default function Dets(props:Props) {
                     setData(result)
                   }
                 }
-                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            } catch (err:any) {
-                setErrorTrans(err);
+            } catch (err: unknown) {
+                setErrorTrans(err as Err);
             } finally {
                 setIsLoading(false);
             }
@@ -124,31 +127,47 @@ export default function Dets(props:Props) {
         );
     }
 
+    const getDate = (date: Date | string | undefined) => {
+        if (!date) return undefined;
+        if (typeof date === 'string') {
+            return convertToNiceDate(date);
+        }
+        // If date is a Date object, convert to ISO string or desired format
+        return convertToNiceDate(date.toISOString());
+    }
+
+    const getAmount = (amount: string) => {
+        if (amount) {
+            return formatDouble(Number(amount));
+        } else {
+            return '';
+        }
+    }
+
     return (
         <div>
             <form  onSubmit={saveData} className = "flex-3 bg-white flex flex-col my-50 max-w-130 justify-left" >
                 <div className = "flex flex-col md:flex-row py-5">
                     <span className = "md:basis-32">TransID :</span>
-                     <Input name = "transid" id = "transid" val = {data.trans_id} disabled = {true} />
+                     <Input name = "transid" id = "transid" val = {data?.trans_id ?? ''} disabled = {true} />
                 </div>
                 <div className = "flex flex-col md:flex-row py-5">
-                    <span className="md:basis-32">Date :</span>
-                    <Datepicker id = "date" name = "date" val={convertToNiceDate(data.date)} />
+                    <Datepicker id = "date" name = "date" val={getDate(data?.date)} />
                 </div>
                 <div className = "flex flex-col md:flex-row py-5">
                     <span className = "md:basis-32">Amount :</span>
-                     <Input name = "amount" id = "amount" val = {formatDouble(data.amount) as string} disabled = {false} />
+                     <Input name = "amount" id = "amount" val = {getAmount(data?.amount !== undefined ? String(data.amount) : '') || ''} disabled = {false} />
                 </div>
                 <div className = {'flex flex-col md:flex-row py-5 ' + styles.container}>
                     <span className = "md:basis-32">Company : </span>
                     <div className="flex">
-                        <Dropdown val = {data.company_name} api = "../api/clients" type = 'clients' session = {props.session} />
+                        <Dropdown val = {data?.company_name ?? ''} api = "../api/clients" type = 'clients' session = {props.session} />
                     </div>
                 </div>
                 <div className = {'flex flex-col md:flex-row py-5 ' + styles.container}>
                     <span className = "md:basis-32">Category : </span>
                     <div className="flex">
-                        <Dropdown val = {data.category_name} api = "../api/categories" type = 'categories' session = {props.session} />
+                        <Dropdown val = {data?.category_name ?? ''} api = "../api/categories" type = 'categories' session = {props.session} />
                     </div>
                 </div>
                 <div className= "flex flex-col sm:flex-row justify-center-safe mb-10 mt-10">
@@ -158,6 +177,11 @@ export default function Dets(props:Props) {
                     </button>
                     <button className="sm:ml-5" type="reset">Reset</button>
                 </div>
+                <div className= "flex flex-col sm:flex-row justify-center-safe mb-10 mt-10">
+                    {saveDataRes && <div className="success mt-5">{saveDataRes}</div>}
+                     {errorSaveData && <div className="error mt-5">{errorSaveData}</div>}
+                </div>
+
             </form>
         </div>
     );
