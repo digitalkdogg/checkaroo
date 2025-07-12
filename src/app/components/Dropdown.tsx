@@ -359,7 +359,7 @@ function Dropdown(prop:Props) {
                     placeholder={getPlaceholder()}
                     onChange={handleInputChange}
                 />
-                <input type = "hidden" id = {prop.type + '_hidden_input'} name = {prop.type} />
+                <input type = "hidden" id = {prop.type + '_hidden_input'} name = {prop.type} value={getPlaceholder()}/>
                 <div className = {'arrow ' + styles.droparrow} id = {prop.type + '_arrow'} onClick={(e) => arrowclick(e)}>
                     <Svg id = {prop.type + '_droparrow'} type = 'downarrow' />
                 </div>
