@@ -40,21 +40,6 @@ export async function POST(request: NextRequest) {
     categories:string
   }
 
-  //interface Result {
-  //  status: string
- // }
-
-// interface Err {
-//   err :{
-//      message?: string,
-//      code?: string,
-//      errno?: number,
-//      sql?: string , 
-//      sqlState?: string,
-//      sqlMessage?: string
-//    }
-// }
-
   interface Result {
     message?: string,
     err?: string,
@@ -125,10 +110,6 @@ export async function POST(request: NextRequest) {
 }
 
 async function getClientID(clientName: string) {
-  //interface Client {
-  //  length?: number,
-  //  client_id?: number
- // }
 
   const query = {
     select: 'client_id',
@@ -138,14 +119,13 @@ async function getClientID(clientName: string) {
 
   const rows = await select(query);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let rowsarr:any = [];
-  rowsarr = rows;
-
-  writelog(rowsarr, 'premsg')
+  let rowsarr: unknown[] = [];
+  if (Array.isArray(rows)) {
+    rowsarr = rows;
+  }
 
   if (rowsarr.length > 0) {
-    return rowsarr[0].client_id;
+    return (rowsarr[0] as { client_id: number }).client_id;
   }
   return null; 
 }
@@ -158,13 +138,12 @@ async function getCatID(catName: string) {
   }
 
   const rows = await select(query);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let rowsarr:any = [];
+  let rowsarr:unknown = [];
   
   rowsarr = rows;
   
-  if (rowsarr.length > 0) {
+  if (Array.isArray(rowsarr) && rowsarr.length > 0) {
     return rowsarr[0].category_id;
   }
-  return null; // Example client ID
+  return null;
 }
