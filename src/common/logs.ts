@@ -2,12 +2,11 @@ export const writelog = (msg:string | object, premsg?:string) => {
 
     try {
         if (typeof msg == 'object') {
-            if (!premsg) {
-                const premsg = '';
+            if (premsg) {
+                process.stdout.write('\n----------------' + premsg + '-----------------');
             }
            const keys = Object.keys(msg)
-           process.stdout.write('\n' + premsg);
-           keys.forEach((val, index)=> {
+           keys.forEach((val)=> {
             process.stdout.write('\n' + val + '\n' )
            })
         } else {
@@ -17,6 +16,8 @@ export const writelog = (msg:string | object, premsg?:string) => {
             process.stdout.write('\n' + msg.toString() + '\n')
         }
     } catch (error) {
-       return;
+        if (error) {
+            return;
+        }
     }
 }

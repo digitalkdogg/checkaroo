@@ -2,11 +2,8 @@ import { NextResponse, NextRequest } from 'next/server'
 import {select, update} from '@/common/dbutils'
 import {getAccountIDSession, headersLegit} from '@/common/session'
 import {decrypt} from '@/common/crypt'
-import {v4 as uuidv4} from 'uuid'
 import {writelog} from '@/common/logs'
 import { convertToMySQLDate } from '@/common/common'
-import {ResultSetHeader} from 'mysql2'
-
 
 export async function GET(request: NextRequest) {
   writelog(request.toString(), '----------invalid request get-----------')
@@ -41,18 +38,6 @@ export async function POST(request: NextRequest) {
     clients: string,
     amount: string,
     categories:string
-  }
-
-  interface Client {
-    client_id: number
-  }
-
-  interface Client2 {
-    0 : []
-  }
-
-  interface Category {
-    client_id: number
   }
 
   //interface Result {
@@ -135,15 +120,15 @@ export async function POST(request: NextRequest) {
     }
    
   } catch (error) {
-    return NextResponse.json({ error: 'Error updating data' }, { status: 500 });
+    return NextResponse.json({ error: 'Error updating data : ' + error}, { status: 500 });
   }
 }
 
 async function getClientID(clientName: string) {
-  interface Client {
-    length?: number,
-    client_id?: number
-  }
+  //interface Client {
+  //  length?: number,
+  //  client_id?: number
+ // }
 
   const query = {
     select: 'client_id',
@@ -156,6 +141,8 @@ async function getClientID(clientName: string) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let rowsarr:any = [];
   rowsarr = rows;
+
+  writelog(rowsarr, 'premsg')
 
   if (rowsarr.length > 0) {
     return rowsarr[0].client_id;

@@ -185,7 +185,6 @@ export const expireSession = async (user:string) => {
   return data
 }
 
-   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const headersLegit = (request:NextRequest, legitrefer:[string] | [string, string] | 
   [string, string, string] | [string, string, string, string]) => {
   const referer = request.headers.get('referer');

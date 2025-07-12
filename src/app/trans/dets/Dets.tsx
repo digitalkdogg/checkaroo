@@ -15,30 +15,33 @@ interface Props {
     session: string
 }
 
-interface Trans {
-    account_id : number,
-    amount: number,
-    category_id: number,
-    category_name: string,
-    client_id: number,
-    company_name:string, 
-    date: Date,
-    trans_id: string
-}
+//interface Trans {
+//    account_id : number,
+//    amount: number,
+//    category_id: number,
+//    category_name: string,
+//    client_id: number,
+//    company_name:string, 
+//    date: Date,
+//    trans_id: string
+//}
 
-interface Err {
-    message: string
-}
+//interface Err {
+//    message: string
+//}
 
 export default function Dets(props:Props) {
+     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [data, setData] = useState<any>([])
     const [isLoading, setIsLoading] = useState(true);
+     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [errorTrans, setErrorTrans] = useState<any>(null);
 
-    const [saveDate, setSaveDate] = useState();
+    //const [saveDate, setSaveDate] = useState();
     const [isSaveLoading, setIsSaveLoading] = useState(false)
-    const [errorSaveData, setErrorSaveData] = useState<any>(null)
+   // const [errorSaveData, setErrorSaveData] = useState<any>(null)
 
+     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const saveData = async (e:any) => {
         e.preventDefault()
         setIsSaveLoading(true)
@@ -97,6 +100,7 @@ export default function Dets(props:Props) {
                     setData(result)
                   }
                 }
+                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (err:any) {
                 setErrorTrans(err);
             } finally {

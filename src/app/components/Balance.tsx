@@ -14,7 +14,6 @@ interface Props {
 
 
 export default function Page(props: Props) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [data, setData] = useState<string>()
     const [isLoading, setIsLoading] = useState(true);
 

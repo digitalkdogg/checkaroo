@@ -1,5 +1,4 @@
 import pool from '@/common/db'
-import {FieldPacket, QueryResult, ResultSetHeader} from 'mysql2'
 import {writelog} from '@/common/logs';
 
 interface UpdateQuery {
@@ -7,22 +6,23 @@ interface UpdateQuery {
     fields?: string, 
     where? : string,
     sort? : string,
-    limit?:string
+    limit?:number | string
 }
 
 interface SelectQuery {
     select?: string,
     from?: string,
-    join?: [],
+    join?: string[] | [],
     where?: string,
     sort?: string,
-    limit?: string
+    limit?: number | string
 }
+
 
 interface InsertQuery {
     table?: string,
-    fields: [],
-    vals: []
+    fields: string[]|[],
+    vals: string[]|[]
 }
 
 export const select = async (query:SelectQuery) => {
@@ -56,6 +56,7 @@ export const select = async (query:SelectQuery) => {
 
         const [rows] = await connection.query(querystr);
         return rows;
+         // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch(err:any) {
         writelog(err.toString(), '==============database select error ====================')
         return {'err': err}
@@ -91,9 +92,10 @@ export const insert = async (query:InsertQuery) => {
         try { 
             connection = await pool.getConnection();
             writelog(querystr + ':::' + query.vals.toString())
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            
             const data = await connection.execute(querystr, query.vals);
             return {data} 
+             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch(e:any) {
             writelog(e.toString(), '==============database insert error ====================')
             return {err: e}
