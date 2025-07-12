@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
   const datastr:string = decrypt(json.data) ;
   const data:Data = JSON.parse(datastr);
 
-  const date = data.date;
+  const date = convertToMySQLDate(data.date);
   const clients = data.clients;
   const amount = data.amount;
   const categories = data.categories; 
