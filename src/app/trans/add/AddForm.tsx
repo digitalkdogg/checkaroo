@@ -22,10 +22,8 @@ export default function AddForm(prop:Props) {
   const [data, setData] = useState<string>('')
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Err>();
-  //const [amount, setAmount] = useState<any>();
- 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const saveData = async (event:any) => {
+
+  const saveData = async (event:React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const date = formData.get('date');
@@ -43,7 +41,6 @@ export default function AddForm(prop:Props) {
     setIsLoading(true)
     setError({'message':''});
     setData('');
-  //  setAmount(data.amount);
 
     try {
 
@@ -74,10 +71,13 @@ export default function AddForm(prop:Props) {
         setIsLoading(false);
         setError({message: 'Failed to add transaction. Please try again.'});
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch(err:any) {
+    } catch(err: unknown) {
       setIsLoading(false);
-      setError({message: err.message});
+      if (err && typeof err === "object" && "message" in err && typeof (err as { message?: unknown }).message === "string") {
+        setError({ message: (err as { message: string }).message });
+      } else {
+        setError({ message: "An unknown error occurred." });
+      }
     }
   }  
   

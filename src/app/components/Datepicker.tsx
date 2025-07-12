@@ -20,10 +20,11 @@ export default function Datepicker(props:Props) {
   
   const [startDate, setStartDate] = useState(getStartDate());
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const changeDate = (date:any) => {
+  const changeDate = (date: Date | null) => {
       showbtn();
-      setStartDate(date)
+      if (date) {
+        setStartDate(date);
+      }
   }
 
     const showbtn = () => {
@@ -44,10 +45,9 @@ export default function Datepicker(props:Props) {
 
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const triggerCal = (event:any) => {
+    const triggerCal = (event: React.MouseEvent<HTMLDivElement>) => {
       const id = document.getElementById(props.id);
-      event.target.classList.add('hide');
+      (event.target as HTMLElement).classList.add('hide');
       if (id) {
         id.focus();
       }

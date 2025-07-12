@@ -1,3 +1,5 @@
+import Link from "next/link"
+
 interface Props {
     enable: boolean,
     link: string,
@@ -7,11 +9,11 @@ interface Props {
 export default function Page(props:Props) {
     if (props.enable) {
     return (
-        <a href = {props.link}>
+        <Link href = {props.link}>
             <li className = "cursor-pointer my-10 ">
                 {props.text}
             </li>
-       </a>
+       </Link>
     )
     } else {
         return (

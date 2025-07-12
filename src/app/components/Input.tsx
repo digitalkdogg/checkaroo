@@ -10,8 +10,7 @@ interface Props {
 function Input(props:Props) {
     const [inputValue, setInputValue] = useState('');
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleInputChange = (event:any) => {
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputValue(event.target.value);
     };
 

@@ -91,8 +91,7 @@ const showSubmitSpinner = (type:string) => {
     }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const hideErrorMsg = (e:any) => {
+const hideErrorMsg = (e: React.FocusEvent<HTMLInputElement>) => {
   const parent = e.currentTarget.getAttribute('data-error');
   document.querySelector('.'+parent)?.classList.add('notvisible')
 }

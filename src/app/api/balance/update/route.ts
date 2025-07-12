@@ -70,34 +70,6 @@ export async function POST(request: NextRequest) {
     } catch (e) {
       return NextResponse.json({status: 'error', error: e})
     }
-   // const insquery = {
-   //     table: 'Account',
-   //     fields: ['category_name', 'account_id'],
-   //     vals: [data.value.trim(), accountid]
-   //   }
-      
-   // try {
-   //     const results:any = await insert(insquery).then(async (res:any) => {
-   //       const validateRows = await validateCategory(data.value, accountid);
-   //       if (await validateRows) {
-   //         return {status: 'completed'};
-   //       } else return {status: 'failed'}
-    
-   //     }).catch((err:any) => {
-
-   //       return NextResponse.json({ error: 'Error inserting category' }, { status: 500 });
-   //     })
-    
-   //     if (results && results.status === 'completed') {
-   //       return NextResponse.json({ status: 'success', message: 'category added successfully' });
-   //     }  else {
-   //       return NextResponse.json({ error: 'Error inserting data' }, { status: 500 });
-   //     }
-
-   //   } catch (error) {
-   //     process.stdout.write('Error inserting data: ' + error + '\n');
-   //     return NextResponse.json({ error: 'Error inserting data here' }, { status: 500 });
-   ///   }
 
 }
 

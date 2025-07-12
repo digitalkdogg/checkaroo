@@ -18,8 +18,7 @@ interface Err {
 }
 
 export default function ChecksessionComp(props:componentsProps) {
-       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const [loginData, setLoginData] = useState<any>(false)
+      const [loginData, setLoginData] = useState(false)
       const [isLoginLoading, setIsLoginLoading] = useState(true);
       const [loginError, setLoginError] = useState<Err>();
           
