@@ -43,13 +43,16 @@ export default function Dets(props:Props) {
         e.preventDefault()
         setIsSaveLoading(true)
 
-        const date = '2025-07-06 00:00:00';
-        const clients = 'Test Client';
-        const amount = 2.02;
-        const categories = 'Test Category'; 
-        const transid = '290470990fa241ab8';
+        const formData = new FormData(e.currentTarget);
+
+        const date = formData.get('date');
+        const clients = formData.get('clients');
+        const amount = formData.get('amount');
+        const categories = formData.get('categories'); 
+        const transid = props.transid
 
         const data = JSON.stringify({date: date, clients: clients, amount:amount, categories: categories, transid:transid})
+        console.log(data);
 
         const response = await fetch('/api/transaction/update', {
             method: 'POST',
