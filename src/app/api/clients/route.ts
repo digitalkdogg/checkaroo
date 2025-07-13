@@ -11,11 +11,10 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
 
-      if (!headersLegit(request, ['trans/add', 'trans/dets'])) {
-        return NextResponse.json({ error: 'Unauthorized request' }, { status: 401 });
-      }
+    if (!headersLegit(request, ['/clients'])) {
+      return NextResponse.json({ error: 'Unauthorized request' }, { status: 401 });
+    }
   
-
     const json = await request.json();
     const session:string = json.session;
 
@@ -36,8 +35,7 @@ export async function POST(request: NextRequest) {
       sort: 'company_name asc'
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let arr:any = []
+    let arr:unknown = []
     const results = await select(query);
     arr = results;
 

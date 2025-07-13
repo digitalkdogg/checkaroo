@@ -34,10 +34,9 @@ export async function POST(request: NextRequest) {
         sort : 'category_name asc'
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let arr:any = []
+      let arr: unknown[] = [];
       const results = await select(query);
-      arr = results;
+      arr = Array.isArray(results) ? results : [];
 
       return NextResponse.json(arr)
 }
