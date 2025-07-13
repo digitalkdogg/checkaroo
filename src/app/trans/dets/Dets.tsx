@@ -108,6 +108,7 @@ export default function Dets(props:Props) {
                 setErrorTrans(err as Err);
             } finally {
                 setIsLoading(false);
+                console.log(data)
             }
         };
         fetchData();

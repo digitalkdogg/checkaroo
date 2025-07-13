@@ -8,6 +8,7 @@ interface Props {
 
 export default function Page(props: Props) {
 
+  console.log('i am the error')
   return (
     <div className = "h-screen bg-white flex justify-center-safe items-center-safe px-20 flex-col">
       <div className="my-20">
