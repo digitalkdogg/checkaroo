@@ -66,10 +66,10 @@ export async function POST(request: NextRequest) {
 
             const delRec = await deleteRec(deleteQuery)
             if (delRec) {
-                return NextResponse.json({message: 'Category Removed Successfully'})
+                return NextResponse.json({message: 'Category Removed Successfully', status: 'success'})
             }
         } else {
-            return NextResponse.json({message: 'Category is tied to one or more transactions'})
+            return NextResponse.json({message: 'Category is tied to one or more transactions', status: 'error'})
         }
         
     

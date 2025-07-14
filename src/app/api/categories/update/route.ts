@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
         });
     } else {
         if (docatexist=='NoUpdate') {
-            return NextResponse.json({})
+            return NextResponse.json({status: true, message: 'Category Update Successful'})
         }
         return NextResponse.json({'message': 'Category already exists'}, {status: 444})
     }

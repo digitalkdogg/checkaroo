@@ -34,13 +34,6 @@ export default function Dets(props:Props) {
     const router = useRouter();
 
     const deleteCat = async () => {
-        //e.preventDefault()
-       // const form = document.getElementById('catForm') as HTMLFormElement | null;
-       // if (form) {
-        //    const formData = new FormData(form)
-
-       // }
-
        const response = await fetch('/api/categories/delete', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -51,9 +44,18 @@ export default function Dets(props:Props) {
         })
 
         if (!response.ok) {
-
+            const json = await response.json();
+            setErrorSaveCat(json.message)
         } else {
-
+            const json = await response.json();
+            if (json.status == 'success') {
+                setSaveDataRes(json.message)
+                setTimeout(()=> {
+                    router.push('/categories')
+                },1000)
+            } else {
+                setErrorSaveCat(json.message);
+            }
         }
     }
 
@@ -88,7 +90,7 @@ export default function Dets(props:Props) {
                 setSaveDataRes(json.message)
                 setTimeout(() => {
                     router.push('/categories')
-                },3000)
+                },1000)
             }
         }
         setIsSaveLoading(false)
