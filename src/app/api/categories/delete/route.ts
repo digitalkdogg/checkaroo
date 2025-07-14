@@ -47,6 +47,7 @@ export async function POST(request: NextRequest) {
             where : 'account_id = "' + accountid + '" and category_id="'  + id + '"'
         }
 
+         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const dotransexist = await select(selectQuery).then((res:any)=> {
             if (res.length >0) {
                 return true;
@@ -72,51 +73,9 @@ export async function POST(request: NextRequest) {
         }
         
     
-    } catch (err:any) {
+    } catch (err:unknown) {
         return NextResponse.json({message: err, 'status': 'error'}, {status: 444})
     }
 
-//    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//    const docatexist = await select(selectQuery).then((res: any) => {
-//        if (res && res[0]) {
-//            if (res[0].category_id == data.catid) {
-//                return 'NoUpdate'
-//            }
-//            return 'true';
-//        } else {
-//            return 'false'
-//        }
-//    }).catch((err: Err) => {
-//        return null;
-//    });
-
-   
-//    let results: string | undefined;
-
-//    if (docatexist =='false') {
-//        const updateQuery = {
-//            table: 'Category',
-//            fields : 'category_name="' + data.catname + '"',  
-//            where : 'account_id = "' + accountid + '"and category_id="' + data.catid + '"',
-//           limit: 1
-//        }
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//        results = await update(updateQuery).then((res: any) => {
-//            if (res) {
-//                return 'Category Update Successful'
-//           }
-//            return 'Error Update Category';
-//        }).catch((err: Err) => {
-//            return 'Error Updating Category';
-//        });
-//    } else {
-//        if (docatexist=='NoUpdate') {
-//            return NextResponse.json({})
-//        }
-//       return NextResponse.json({'message': 'Category already exists'}, {status: 444})
-//    }
-
-//   return NextResponse.json({message: results, status: results == 'Category Update Successful' ? true : false})
 return NextResponse.json({})
 }

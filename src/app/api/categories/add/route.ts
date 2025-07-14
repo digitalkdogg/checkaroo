@@ -11,10 +11,14 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
 
-      if (!headersLegit(request, ['trans/add', 'trans/dets', 'categories/add', 'categories/dets'])) {
-        writelog(request.toString(), '----------invalid request get-----------')
-        return NextResponse.json({ error: 'Unauthorized request' }, { status: 401 });
-      }
+    if (!headersLegit(request, ['trans/add', 'trans/dets', 'categories/add', 'categories/dets'])) {
+      writelog(request.toString(), '----------invalid request get-----------')
+      return NextResponse.json({ error: 'Unauthorized request' }, { status: 401 });
+    }
+
+    interface Err {
+      message?: string
+    }
   
 
     const json = await request.json();
@@ -58,7 +62,7 @@ export async function POST(request: NextRequest) {
             return {status: 'completed'};
           } else return {status: 'failed'}
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        }).catch((err:any) => {
+        }).catch((err:Err) => {
 
           return NextResponse.json({ error: 'Error inserting category', msg: err.toString()}, { status: 500 });
         })
