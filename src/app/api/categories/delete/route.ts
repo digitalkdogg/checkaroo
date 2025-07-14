@@ -12,70 +12,70 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
 
-    interface Err {
-        message? : string
+    interface Trans {
+        length: number
     }
 
     if (!headersLegit(request, ['trans/add', 'trans/dets', 'categories/add', 'categories/dets'])) {
         writelog(request.toString(), '----------invalid request get-----------')
-        return NextResponse.json({ error: 'Unauthorized request' }, { status: 401 });
+        return NextResponse.json({ error: 'Unauthorized request' }, { status: 401 })
     }
-  
-    const json = await request.json();
-    const session:string = json.session;
+
+    const json = await request.json()
+    const session: string = json.session
 
     if (!session) {
-        return NextResponse.json({ error: 'Unauthorized Session' }, { status: 401 });
+        return NextResponse.json({ error: 'Unauthorized Session' }, { status: 401 })
     }
 
-    const accountid = await getAccountIDSession(session) 
+    const accountid = await getAccountIDSession(session)
 
     if (!accountid) {
-      return NextResponse.json({ error: 'Unauthorized Account' }, { status: 401 });
+        return NextResponse.json({ error: 'Unauthorized Account' }, { status: 401 })
     }
 
     const id = decrypt(json.id)
 
     if (!id) {
-        return NextResponse.json({ error: 'No data provided' }, { status: 400 });
+        return NextResponse.json({ error: 'No data provided' }, { status: 400 })
     }
 
     try {
-        const selectQuery = {
-            select : '*',
-            from : 'Transactions',
-            where : 'account_id = "' + accountid + '" and category_id="'  + id + '"'
+        const transactions = await select({
+            select: '*',
+            from: 'Transactions',
+            where: `account_id = "${accountid}" AND category_id = "${id}"`
+        }) as Trans[]
+
+        const categoryHasTransactions = transactions.length > 0
+
+        if (categoryHasTransactions) {
+            return NextResponse.json({
+                message: 'Category is tied to one or more transactions',
+                status: 'error'
+            })
         }
 
-         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const dotransexist = await select(selectQuery).then((res:any)=> {
-            if (res.length >0) {
-                return true;
-            }
-            return false
-        }).catch((err:Err)=>{
-            throw new Error(err.message)
-        }) 
+        const deleted = await deleteRec({
+            from: 'Category',
+            where: `account_id = "${accountid}" AND category_id = "${id}"`,
+            limit: 1
+        })
 
-        if (dotransexist == false ) {
-            const deleteQuery = {
-                from : 'Category',
-                where: 'account_id = "' + accountid + '" and category_id="'  + id + '"',
-                limit: 1
-            }
-
-            const delRec = await deleteRec(deleteQuery)
-            if (delRec) {
-                return NextResponse.json({message: 'Category Removed Successfully', status: 'success'})
-            }
-        } else {
-            return NextResponse.json({message: 'Category is tied to one or more transactions', status: 'error'})
+        if (deleted) {
+            return NextResponse.json({
+                message: 'Category Removed Successfully',
+                status: 'success'
+            })
         }
-        
-    
-    } catch (err:unknown) {
-        return NextResponse.json({message: err, 'status': 'error'}, {status: 444})
+
+        return NextResponse.json({
+            message: 'Category could not be deleted',
+            status: 'error'
+        })
+
+    } catch (err) {
+        const message = err instanceof Error ? err.message : 'Unexpected error'
+        return NextResponse.json({ message, status: 'error' }, { status: 444 })
     }
-
-return NextResponse.json({})
 }

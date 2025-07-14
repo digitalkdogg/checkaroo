@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 interface Props {
     catid : string,
     session: string
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 interface Cat {
@@ -21,8 +22,7 @@ interface Err {
     message: string
 }
 
-
-export default function Dets(props:Props) {
+export default function Dets({ catid, session }: Props) {
     const [data, setData] = useState<any>()
     const [isLoading, setIsLoading] = useState(true);
     const [errorClient, setErrorClient] = useState<Err>();
@@ -33,13 +33,76 @@ export default function Dets(props:Props) {
 
     const router = useRouter();
 
+    const encryptedSession = superEcnrypt(session);
+    const encryptedId = encrypt(catid);
+
+    const fetchCats = async () => {
+        try {
+            const res = await fetch('/api/categories/id', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ session: encryptedSession, id: encryptedId }),
+            });
+
+            const json = await res.json();
+
+            if (!res.ok || json.error) {
+                setErrorClient({message: json.error || 'Error fetching category'});
+            } else {
+                setData(json);
+            }
+        } catch (err) {
+             setErrorClient({ message: (err as Error).message });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const saveData = async (e:React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        const formData = new FormData(e.currentTarget);
+        const catname = formData.get('catname');
+        const data = JSON.stringify({catid: catid, catname: catname})
+
+        const input = document.getElementById('catname')
+       // if (input?.classList.contains('haschanged')) {
+            setIsSaveLoading(true);
+            setErrorSaveCat(null)
+            setSaveDataRes(null)
+            const response = await fetch('/api/categories/update', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    session: superEcnrypt(session),
+                    data: encrypt(data)
+                })
+            })
+
+            if (!response.ok) {
+                if (response.status == 444) {
+                    const json = await response.json();
+                    setErrorSaveCat(json.message);
+                }
+            } else {
+                const json = await response.json();
+                if (json.status) {
+                    setSaveDataRes(json.message)
+                    setTimeout(() => {
+                        router.push('/categories')
+                    },1000)
+                }
+            }
+            setIsSaveLoading(false)
+       // }
+    }   
+
     const deleteCat = async () => {
        const response = await fetch('/api/categories/delete', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                session: superEcnrypt(props.session),
-                id: encrypt(props.catid)
+                session: superEcnrypt(session),
+                id: encrypt(catid)
             })
         })
 
@@ -59,79 +122,22 @@ export default function Dets(props:Props) {
         }
     }
 
-    const saveData = async (e:React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        setIsSaveLoading(true);
-        setErrorSaveCat(null)
-        setSaveDataRes(null)
-        const formData = new FormData(e.currentTarget);
-        const catid = props.catid;
-        const catname = formData.get('catname');
-        const data = JSON.stringify({catid: catid, catname: catname})
-
-        const response = await fetch('/api/categories/update', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                session: superEcnrypt(props.session),
-                data: encrypt(data)
-            })
-        })
-
-        if (!response.ok) {
-            if (response.status == 444) {
-                const json = await response.json();
-                setErrorSaveCat(json.message);
-            }
-        } else {
-            const json = await response.json();
-            if (json.status) {
-
-                setSaveDataRes(json.message)
-                setTimeout(() => {
-                    router.push('/categories')
-                },1000)
-            }
-        }
-        setIsSaveLoading(false)
-}
-
     useEffect(() => {
-
-        const fetchCats = async() => {
-            const response = await fetch('/api/categories/id', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    session: superEcnrypt(props.session),
-                    id: encrypt(props.catid)
-                })
-            })
-
-            if (!response.ok) {
-                setErrorClient({message: 'error'})
-            } else {
-                const json = await response.json();
-                if (json.category_id) {
-                    setData(json);
-                } else {
-                    setErrorClient({message: json[0].error})
-                }
-
-                setTimeout(()=> {
-                    console.log(data)
-                },2000)
-            }
-
-            setIsLoading(false);
-        };
-
         fetchCats();
     },[]);
 
+    const inputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+        const input = e.currentTarget;
+        if (input) {
+            if (input.classList.contains('haschanged')==false) {
+                input.classList.add('haschanged')
+            }
+        }
+    }
+
     if (isLoading) {
         return (
-            <div>loading</div>
+           <Loading />
         )
     }
 

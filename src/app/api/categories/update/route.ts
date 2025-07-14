@@ -10,84 +10,73 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized method' }, { status: 401 });
 }
 
+
 export async function POST(request: NextRequest) {
 
-    interface Err {
-        message? : string
+    interface CategoryRow {
+        category_id: string
+        category_name: string
+        account_id: string
     }
 
-    if (!headersLegit(request, ['trans/add', 'trans/dets', 'categories/add', 'categories/dets'])) {
-        writelog(request.toString(), '----------invalid request get-----------')
-        return NextResponse.json({ error: 'Unauthorized request' }, { status: 401 });
-    }
-  
+  if (!headersLegit(request, ['trans/add', 'trans/dets', 'categories/add', 'categories/dets'])) {
+    writelog(request.toString(), '----------invalid request get-----------')
+    return NextResponse.json({ error: 'Unauthorized request' }, { status: 401 })
+  }
 
-    const json = await request.json();
-    const session:string = json.session;
+  const json = await request.json()
+  const { session, data: encryptedData } = json
 
-    if (!session) {
-        return NextResponse.json({ error: 'Unauthorized Session' }, { status: 401 });
-    }
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized Session' }, { status: 401 })
+  }
 
-    const accountid = await getAccountIDSession(session) 
+  const accountid = await getAccountIDSession(session)
 
-    if (!accountid) {
-      return NextResponse.json({ error: 'Unauthorized Account' }, { status: 401 });
-    }
+  if (!accountid) {
+    return NextResponse.json({ error: 'Unauthorized Account' }, { status: 401 })
+  }
 
-    const data = JSON.parse(decrypt(json.data))
+  let data
+  try {
+    data = JSON.parse(decrypt(encryptedData))
+  } catch (err) {
+    return NextResponse.json({ error: 'Invalid encrypted data' }, { status: 400 })
+  }
 
-    if (!data) {
-        return NextResponse.json({ error: 'No data provided' }, { status: 400 });
-    }
+  if (!data || !data.catname || !data.catid) {
+    return NextResponse.json({ error: 'Invalid category data' }, { status: 400 })
+  }
 
-    const selectQuery = {
-        select : '*',
-        from : 'Category',
-        where : 'account_id = "' + accountid + '" and category_name="'  + data.catname + '"'
-    }
+  try {
+    const existing:CategoryRow[] = await select({
+      select: '*',
+      from: 'Category',
+      where: `account_id = "${accountid}" AND category_name = "${data.catname}"`
+    }) as CategoryRow[]
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const docatexist = await select(selectQuery).then((res: any) => {
-        if (res && res[0]) {
-            if (res[0].category_id == data.catid) {
-                return 'NoUpdate'
-            }
-            return 'true';
-        } else {
-            return 'false'
-        }
-    }).catch((err: Err) => {
-        return null;
-    });
-
-   
-    let results: string | undefined;
-
-    if (docatexist =='false') {
-        const updateQuery = {
-            table: 'Category',
-            fields : 'category_name="' + data.catname + '"',  
-            where : 'account_id = "' + accountid + '"and category_id="' + data.catid + '"',
-            limit: 1
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        results = await update(updateQuery).then((res: any) => {
-            if (res) {
-                return 'Category Update Successful'
-            }
-            return 'Error Update Category';
-        }).catch((err: Err) => {
-            return 'Error Updating Category';
-        });
-    } else {
-        if (docatexist=='NoUpdate') {
-            return NextResponse.json({status: true, message: 'Category Update Successful'})
-        }
-        return NextResponse.json({'message': 'Category already exists'}, {status: 444})
+    if (existing?.[0]) {
+      const match = existing[0]
+      if (match.category_id === data.catid) {
+        return NextResponse.json({ status: true, message: 'Category Update Successful' })
+      }
+      return NextResponse.json({ message: 'Category already exists' }, { status: 444 })
     }
 
-   return NextResponse.json({message: results, status: results == 'Category Update Successful' ? true : false})
+    const updateResult = await update({
+      table: 'Category',
+      fields: `category_name="${data.catname}"`,
+      where: `account_id = "${accountid}" AND category_id = "${data.catid}"`,
+      limit: 1
+    })
 
+    const success = !!updateResult
+    return NextResponse.json({
+      status: success,
+      message: success ? 'Category Update Successful' : 'Error Update Category'
+    })
+
+  } catch (err) {
+    return NextResponse.json({ error: 'Unexpected server error' }, { status: 500 })
+  }
 }

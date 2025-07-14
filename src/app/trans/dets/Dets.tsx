@@ -153,6 +153,7 @@ export default function Dets(props:Props) {
                      <Input name = "transid" id = "transid" val = {data?.trans_id ?? ''} disabled = {true} />
                 </div>
                 <div className = "flex flex-col md:flex-row py-5">
+                    <span className = "md:basis-32">Date :</span>
                     <Datepicker id = "date" name = "date" val={getDate(data?.date)} />
                 </div>
                 <div className = "flex flex-col md:flex-row py-5">
