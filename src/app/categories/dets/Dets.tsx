@@ -22,7 +22,6 @@ interface Err {
 }
 
 
-
 export default function Dets(props:Props) {
     const [data, setData] = useState<any>()
     const [isLoading, setIsLoading] = useState(true);
@@ -33,6 +32,30 @@ export default function Dets(props:Props) {
     const [errorSaveCat, setErrorSaveCat] = useState<string|null>();
 
     const router = useRouter();
+
+    const deleteCat = async () => {
+        //e.preventDefault()
+       // const form = document.getElementById('catForm') as HTMLFormElement | null;
+       // if (form) {
+        //    const formData = new FormData(form)
+
+       // }
+
+       const response = await fetch('/api/categories/delete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                session: superEcnrypt(props.session),
+                id: encrypt(props.catid)
+            })
+        })
+
+        if (!response.ok) {
+
+        } else {
+
+        }
+    }
 
     const saveData = async (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -120,7 +143,7 @@ export default function Dets(props:Props) {
 
     return (
         <div>
-            <form onSubmit={saveData} className = "flex-3 bg-white flex flex-col my-50 max-w-130 justify-left" >
+            <form id = "catForm" onSubmit={saveData} className = "flex-3 bg-white flex flex-col my-50 max-w-130 justify-left" >
                 <div className = "flex flex-col md:flex-row py-5">
                     <span className = "md:basis-32">CatID :</span>
                         <Input name = "catid" id = "catid" val = {data.category_id} disabled = {true} />
@@ -134,7 +157,7 @@ export default function Dets(props:Props) {
                         {isSaveLoading && <span className = "inline-flex relative top-1 -left-2" id = "loadingspan"><Loading size={6} /></span>}
                         Update
                     </button>
-                    <button className="sm:ml-5 btn">Delete</button>
+                    <button type = "button" className="sm:ml-0 btn" onClick={deleteCat}>Delete</button>
                     <button className="sm:ml-5" type="reset">Reset</button>
                 </div>
                 {errorSaveCat && <div className = "error">{errorSaveCat}</div>}

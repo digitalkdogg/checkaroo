@@ -25,6 +25,12 @@ interface InsertQuery {
     vals: string[]|[]
 }
 
+interface DeleteQeury {
+    from: string,
+    where: string,
+    limit?: number | string
+}
+
 export const select = async (query:SelectQuery) => {
     let querystr = ''
     querystr = querystr + 'select ' + query.select
@@ -104,7 +110,6 @@ export const insert = async (query:InsertQuery) => {
         }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const update = async (query:UpdateQuery) => {
 
     let querystr = '' 
@@ -135,6 +140,30 @@ export const update = async (query:UpdateQuery) => {
     } catch (e:any) {
         writelog(e.toString(), '---------------database update error ----------------------')
         return {err: e}
+    } finally {
+         if (connection) connection.release()
+    }
+}
+
+export const deleteRec = async (query:DeleteQeury) => {
+    
+    //DELETE FROM Customers
+    //WHERE Country = 'Mexico';
+    let querystr = '' 
+    querystr = 'DELETE FROM ' + query.from
+    querystr = querystr + ' where ' + query.where
+
+    if (query.limit) {
+        querystr = querystr + ' limit ' + query.limit
+    }
+
+    let connection
+    try {
+        connection = await pool.getConnection();
+        const data:any = await connection.execute(querystr)
+        return true;
+    } catch(e:any) {
+        return false;
     } finally {
          if (connection) connection.release()
     }
