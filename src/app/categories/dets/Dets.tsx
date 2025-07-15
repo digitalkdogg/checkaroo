@@ -64,36 +64,33 @@ export default function Dets({ catid, session }: Props) {
         const catname = formData.get('catname');
         const data = JSON.stringify({catid: catid, catname: catname})
 
-        const input = document.getElementById('catname')
-       // if (input?.classList.contains('haschanged')) {
-            setIsSaveLoading(true);
-            setErrorSaveCat(null)
-            setSaveDataRes(null)
-            const response = await fetch('/api/categories/update', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    session: superEcnrypt(session),
-                    data: encrypt(data)
-                })
+        setIsSaveLoading(true);
+        setErrorSaveCat(null)
+        setSaveDataRes(null)
+        const response = await fetch('/api/categories/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                session: superEcnrypt(session),
+                data: encrypt(data)
             })
+        })
 
-            if (!response.ok) {
-                if (response.status == 444) {
-                    const json = await response.json();
-                    setErrorSaveCat(json.message);
-                }
-            } else {
+        if (!response.ok) {
+            if (response.status == 444) {
                 const json = await response.json();
-                if (json.status) {
-                    setSaveDataRes(json.message)
-                    setTimeout(() => {
-                        router.push('/categories')
-                    },1000)
-                }
+                setErrorSaveCat(json.message);
             }
-            setIsSaveLoading(false)
-       // }
+        } else {
+            const json = await response.json();
+            if (json.status) {
+                setSaveDataRes(json.message)
+                setTimeout(() => {
+                    router.push('/categories')
+                },1000)
+            }
+        }
+        setIsSaveLoading(false)
     }   
 
     const deleteCat = async () => {
@@ -126,15 +123,6 @@ export default function Dets({ catid, session }: Props) {
         fetchCats();
     },[]);
 
-    const inputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-        const input = e.currentTarget;
-        if (input) {
-            if (input.classList.contains('haschanged')==false) {
-                input.classList.add('haschanged')
-            }
-        }
-    }
-
     if (isLoading) {
         return (
            <Loading />
@@ -158,7 +146,7 @@ export default function Dets({ catid, session }: Props) {
                 </div>
                 <div className = "flex flex-col md:flex-row py-5">
                     <span className = "md:basis-32">Category Name :</span>
-                        <Input name = "catname" id = "catnasme" val = {data.category_name} disabled = {false} />
+                        <Input name = "catname" id = "catname" val = {data.category_name} disabled = {false} />
                 </div>
                 <div className= "flex flex-col sm:flex-row justify-center-safe mb-10 mt-10">
                     <button className="inset-shadow-indigo-500 sm:mr-5" type="submit">

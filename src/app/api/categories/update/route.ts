@@ -10,14 +10,13 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized method' }, { status: 401 });
 }
 
-
 export async function POST(request: NextRequest) {
 
-    interface CategoryRow {
-        category_id: string
-        category_name: string
-        account_id: string
-    }
+  interface CategoryRow {
+    category_id: string
+    category_name: string
+    account_id: string
+  }
 
   if (!headersLegit(request, ['trans/add', 'trans/dets', 'categories/add', 'categories/dets'])) {
     writelog(request.toString(), '----------invalid request get-----------')
@@ -55,10 +54,14 @@ export async function POST(request: NextRequest) {
       where: `account_id = "${accountid}" AND category_name = "${data.catname}"`
     }) as CategoryRow[]
 
+    const matchcheck = (match:string, data:string) => {
+        if(match == data) {return true;} else {return false;}
+    }
+
     if (existing?.[0]) {
       const match = existing[0]
-      if (match.category_id === data.catid) {
-        return NextResponse.json({ status: true, message: 'Category Update Successful' })
+      if (matchcheck(match.category_id, data.catid)) {
+          return NextResponse.json({ status: true, message: 'Category Update Successful' })
       }
       return NextResponse.json({ message: 'Category already exists' }, { status: 444 })
     }
