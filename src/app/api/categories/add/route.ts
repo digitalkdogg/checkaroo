@@ -21,7 +21,6 @@ export async function POST(request: NextRequest) {
       message?: string
     }
   
-
     const json = await request.json();
     const session:string = json.session;
 
@@ -50,8 +49,6 @@ export async function POST(request: NextRequest) {
     if (validateRows) {
         return NextResponse.json({ error: 'Category already exists' }, { status: 400 });
     }
-
-    writelog('kevin bollman was here');
 
     const insquery = {
         table: 'Category',
@@ -86,7 +83,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'Error inserting data' }, { status: 500 });
       }
     } catch (error) {
-      process.stdout.write('Error inserting data: ' + error + '\n');
+      writelog('Error inserting data: ' + error);
       return NextResponse.json({ error: 'Error inserting data here' }, { status: 500 });
     }
 }

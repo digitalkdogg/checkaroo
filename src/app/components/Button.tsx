@@ -1,73 +1,75 @@
-    'use client';
+'use client';
 
-  import { useState, useEffect } from 'react';
-  import Loading from '@/app/components/Loading';
-  import { superEcnrypt, encrypt } from '@/common/crypt';
+import { useState, useEffect } from 'react';
+import Loading from '@/app/components/Loading';
+import { superEcnrypt, encrypt } from '@/common/crypt';
 
-    interface props {
-      onSubmit: (data: FormData) => void;
-      text: string
-      session: string
-      url: string
-      payload: any
+interface props {
+    id: string
+    onSubmit: (data: FormData) => void;
+    text: string
+    session: string
+    url: string
+    payload: [string]
+    callBack: (data: {msg:string, status: string}) => void
+}
+
+interface Err {
+    message?: string
+}
+
+export default function CustomSubmitButton({id, onSubmit, text, session, url, payload, callBack}: props) {
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        setIsLoading(false)
+    }, []);
+
+    const createDataObj = (formData:FormData):string => {
+        const dataobj: Record<string, FormDataEntryValue | null> = {};
+        payload.forEach((item:string, index:number) => {
+            dataobj[item] = formData.get(item)
+        })
+        return JSON.stringify(dataobj);
     }
 
-    interface Err {
-        message?: string
-    }
+    const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault()
+        const formData = new FormData(event.currentTarget.form as HTMLFormElement);
+        setIsLoading(true)
 
-   export default function CustomSubmitButton({ onSubmit, text, session, url, payload }: props) {
-       // const [data, setData] = useState<any>()
-        const [isLoading, setIsLoading] = useState(true);
-      //  const [errorClient, setErrorClient] = useState<Err>();
+        const data = createDataObj(formData);
 
-     
-        useEffect(() => {
-            setIsLoading(false)
-        }, []);
-
-        const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
-            const formData = new FormData(event.currentTarget.form as HTMLFormElement);
-            setIsLoading(true)
-
-            //console.log(formData.get(payload[0]))
-            let dataobj:any = {}
-
-            payload.forEach((item:string, index:number) => {
-                console.log(`Element at index ${index}: ${item}`);
-                dataobj[item] = formData.get(item)
-                // Perform other side effects here
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                session: superEcnrypt(session),
+                data: encrypt(data)
             })
-          //  payload.array.forEach(element:[] => {
-            //    dataobj[element] = 'test' 
-          //  });
+        })
 
-
-     
-            const data = JSON.stringify(dataobj)
-            console.log(data);
-
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    session: superEcnrypt(session),
-                    data: encrypt(data)
-                })
-            })
-    
-            if (!response.ok) {
-
+        if (!response.ok) {
+            const json = await response.json();
+            callBack({status:'error', msg: json.error})
+            
+        } else {
+            const json = await response.json();
+            if (json.status == 'success') {
+                callBack({status: 'success', msg: json.message})
             } else {
-                console.log(response);
+                callBack({status:'error', 'msg': json.message})
             }
-           // onSubmit(formData);
-        };
+        }
+        setIsLoading(false);
+    };
 
       return (
-        <button className = "btn" type="button" onClick={handleClick}>
+        <div>
+        <button id = {id} className = "btn" type="button" onClick={handleClick}>
             {isLoading && <span className = "inline-flex relative top-1 -left-2" id = "loadingspan"><Loading size={6} /></span>}
             {text}
         </button>
+        </div>
       );
     }
