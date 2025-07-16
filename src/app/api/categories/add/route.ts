@@ -59,31 +59,36 @@ export async function POST(request: NextRequest) {
         vals: [data.CategoryName.trim(), accountid]
       }
       
+    type InsertResult = { status: 'completed' | 'failed' };
     try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-     //   const results:any = await insert(insquery).then(async () => {
-     //     const validateRows = await validateCategory(data.value, accountid);
-     //     if (await validateRows) {
-     //       return {status: 'completed'};
-     //     } else return {status: 'failed'}
-     //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-     //   }).catch((err:Err) => {
+      const results: InsertResult | NextResponse = await insert(insquery)
+        .then(async (): Promise<InsertResult> => {
+          const validateRows = await validateCategory(data.CategoryName, accountid);
+          if (validateRows) {
+            return { status: 'completed' };
+          } else {
+            return { status: 'failed' };
+          }
+        })
+        .catch((err: Err) => {
+          return NextResponse.json(
+            { error: 'Error validating category insert ', msg: err.toString() },
+            { status: 500 }
+          );
+        });
 
-     //     return NextResponse.json({ error: 'Error inserting category', msg: err.toString()}, { status: 500 });
-     //   })
-    
-     //   if (results && results.status === 'completed') {
-     //     return NextResponse.json({ status: 'success', message: 'category added successfully' });
-     //   }  else {
-     //     return NextResponse.json({ error: 'Error inserting data' }, { status: 500 });
-     //   }
-
-      } catch (error) {
-        process.stdout.write('Error inserting data: ' + error + '\n');
-        return NextResponse.json({ error: 'Error inserting data here' }, { status: 500 });
+      if ('status' in results && results.status === 'completed') {
+        return NextResponse.json({
+          status: 'success',
+          message: 'category added successfully',
+        });
+      } else {
+        return NextResponse.json({ error: 'Error inserting data' }, { status: 500 });
       }
-
-      return NextResponse.json({'testing':'test'})
+    } catch (error) {
+      process.stdout.write('Error inserting data: ' + error + '\n');
+      return NextResponse.json({ error: 'Error inserting data here' }, { status: 500 });
+    }
 }
 
 async function validateCategory(value: string, accountid: string): Promise<boolean> {
