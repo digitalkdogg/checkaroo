@@ -22,7 +22,7 @@ export default function page(props: Props) {
     const [data, setData] = useState<Clients[]>([])
     const [errorClient, setErrorClient] = useState<string>();
 
-    const getClients = async() => {
+    const getClient = async() => {
     
 
         const response = await fetch('/api/clients', {
@@ -47,7 +47,7 @@ export default function page(props: Props) {
     }
 
     useEffect(() => {
-        getClients()
+        getClient()
     }, []);
 
     if (errorClient) {
@@ -61,7 +61,7 @@ export default function page(props: Props) {
             <div className = "bg-gray-200 h-dvh overflow-y-scroll">
                 <div className = "header flex py-2 px-4 shadow-md shadow-lg shadow-green-light/30 bg-white text-black">
                     <div className="flex-1 font-bold text-green indent-5">ClientID</div>
-                    <div className="flex-1 font-bold text-green indent-10">Company Name</div>
+                    <div className="flex-1 font-bold text-green indent-10">Client Name</div>
                 </div>
                 {data.map(client => (
                     <Link  key={client.client_id} className="flex p-4 shadow-sm shadow-stone-400 no-scale-hover"

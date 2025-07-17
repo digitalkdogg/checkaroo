@@ -3,6 +3,7 @@ import {select} from '@/common/dbutils'
 import {getAccountIDSession} from '@/common/session'
 import {headersLegit} from '@/common/session'
 import { writelog } from '@/common/logs'
+import { decrypt } from '@/common/crypt'
 
 export async function GET(request: NextRequest) {
   writelog(request.toString(), '----------invalid request get-----------')
@@ -32,7 +33,7 @@ export async function POST(request: NextRequest) {
     const query = {
       select : '*',
       from : 'Clients',
-      where : 'account_id = "' + accountid  + '" and client_id = "' + json.id + '"',
+      where : 'account_id = "' + accountid  + '" and client_id = "' + decrypt(json.id) + '"',
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

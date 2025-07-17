@@ -2,6 +2,7 @@ import { NextResponse, NextRequest } from 'next/server'
 import {select, insert} from '@/common/dbutils'
 import {getAccountIDSession} from '@/common/session'
 import {headersLegit} from '@/common/session'
+import { decrypt } from '@/common/crypt'
 import { writelog } from '@/common/logs'
 
 export async function GET(request: NextRequest) {
@@ -36,12 +37,12 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'No data provided' }, { status: 400 });
     }
 
-    const data = json.data;
-    if (!data.value) {
+    const data = JSON.parse(decrypt(json.data));
+    if (!data.ClientName) {
         return NextResponse.json({ error: 'Invalid data format' }, { status: 400 });
     }
 
-    const validateRows = await validateClient(data.value, accountid);
+    const validateRows = await validateClient(data.ClientName, accountid);
     if (validateRows) {
         return NextResponse.json({ error: 'Client already exists' }, { status: 400 });
     }
@@ -49,13 +50,13 @@ export async function POST(request: NextRequest) {
     const insquery = {
         table: 'Clients',
         fields: ['company_name', 'account_id'],
-        vals: [data.value.trim(), accountid]
+        vals: [data.ClientName.trim(), accountid]
       }
       
     try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const results:any = await insert(insquery).then(async () => {
-          const validateRows = await validateClient(data.value, accountid);
+          const validateRows = await validateClient(data.ClientName, accountid);
           if (await validateRows) {
             return {status: 'completed'};
           } else return {status: 'failed'}
@@ -84,13 +85,13 @@ async function validateClient(value: string, accountid: string) {
     where: `company_name = "${value}" AND account_id = "${accountid}"`
   } 
 
-   const validateRows = await select(validateQuery);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let validateRowsArr:any = [];
-      validateRowsArr = validateRows;
+  const validateRows = await select(validateQuery);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let validateRowsArr:any = [];
+    validateRowsArr = validateRows;
 
-      if (validateRowsArr.length > 0) {
-        return true;
-      }
-      return false; 
+    if (validateRowsArr.length > 0) {
+      return true;
+    }
+    return false; 
 }

@@ -1,7 +1,7 @@
 import {readCookie} from '@/common/cookieServer'
 import Leftside from '@/app/components/Leftside'
 import ChecksessionComp from '@/app/components/ChecksessionComp';
-import Dets from '@/app/clients/dets/Dets'
+import AddForm from '@/app/clients/add/addform'
 import { Geist } from 'next/font/google'
 
 const geist = Geist({
@@ -28,8 +28,8 @@ export default async function Page({searchParams}: {searchParams: SearchParams }
             <ChecksessionComp reverseLogic = {true} session ={session} />
             <main className = "flex">
                 <Leftside enable = {true} session={session} />
-                <div className = "flex-3 bg-white flex px-20 flex-col items-center justify-center" >
-                    <Dets session = {session} clientid={id} />
+                <div className = "flex-3 bg-white flex flex-col items-center justify-center" >
+                   <AddForm session = {session} />
                 </div>
             </main>
         </div>

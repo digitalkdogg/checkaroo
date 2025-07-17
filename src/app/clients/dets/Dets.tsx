@@ -8,14 +8,14 @@ import { useRouter } from 'next/navigation';
 import Button from '@/app/components/Button'
 
 interface Props {
-    catid : string,
+    clientid : string,
     session: string
 }
 
-interface Cat {
+interface Client {
     account_id : number,
-    category_id: string,
-    category_name: string
+    client_id: string,
+    client_name: string
 }
 
 interface Err {
@@ -27,19 +27,20 @@ interface Callback {
     status: string
 }
 
-export default function Dets({ catid, session }: Props) {
+export default function Dets({ clientid, session }: Props) {
     const [data, setData] = useState<any>()
     const [isLoading, setIsLoading] = useState(true);
     const [errorClient, setErrorClient] = useState<Err>();
 
+
     const router = useRouter();
 
     const encryptedSession = superEcnrypt(session);
-    const encryptedId = encrypt(catid);
+    const encryptedId = encrypt(clientid);
 
-    const fetchCats = async () => {
+    const fetchClients = async () => {
         try {
-            const res = await fetch('/api/categories/id', {
+            const res = await fetch('/api/clients/id', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ session: encryptedSession, id: encryptedId }),
@@ -50,7 +51,14 @@ export default function Dets({ catid, session }: Props) {
             if (!res.ok || json.error) {
                 setErrorClient({message: json.error || 'Error fetching category'});
             } else {
-                setData(json);
+                if (json.length > 0) {
+                    if (json[0] == 'no results found here') {
+                       setErrorClient({message: json[0]})
+                    } else {
+                        console.log(json)
+                        setData(json[0]);
+                    }
+                }
             }
         } catch (err) {
              setErrorClient({ message: (err as Error).message });
@@ -68,7 +76,7 @@ export default function Dets({ catid, session }: Props) {
         } else if (callbackdata.status == 'success') {
             setSuccessEvent(callbackdata.msg)
             setTimeout(() => {
-                router.push('/categories')
+                router.push('/clients')
             },1000)
         } else {
             setErrorEvent('There was an unknown error that occured')
@@ -81,7 +89,7 @@ export default function Dets({ catid, session }: Props) {
 
 
     useEffect(() => {
-        fetchCats();
+        fetchClients();
     },[]);
 
     if (isLoading) {
@@ -98,37 +106,34 @@ export default function Dets({ catid, session }: Props) {
         )
     }
 
-    const testing = '<button type = "button" className="sm:ml-0 btn" onClick={deleteCat}>Delete</button>'
-    const testing2 = '{errorSaveCat && <div className = "error">{errorSaveCat}</div>}{saveDataRes && <div className = "success">{saveDataRes}</div>}'
-
     return (
         <div>
             <form id = "catForm"  className = "flex-3 bg-white flex flex-col my-50 max-w-130 justify-left" >
                 <div className = "flex flex-col md:flex-row py-5">
-                    <span className = "md:basis-32">CatID :</span>
-                        <Input name = "catid" id = "catid" val = {data.category_id} disabled = {true} />
+                    <span className = "md:basis-32">ClientID :</span>
+                        <Input name = "clientid" id = "clientid" val = {data.client_id} disabled = {true} />
                 </div>
                 <div className = "flex flex-col md:flex-row py-5">
-                    <span className = "md:basis-32">Category Name :</span>
-                        <Input name = "catname" id = "catname" val = {data.category_name} disabled = {false} />
+                    <span className = "md:basis-32">Client Name :</span>
+                        <Input name = "clientname" id = "clientname" val = {data.company_name} disabled = {false} />
                 </div>
                 <div className= "flex flex-col sm:flex-row justify-center-safe mb-10 mt-10">
                     <Button 
-                        id = "updateCat"
+                        id = "updateClient"
                         onSubmit={handleClick} 
                         text = "Update" 
                         session={session} 
-                        url="/api/categories/update" 
-                        payload = {['catid','catname']}
+                        url="/api/clients/update" 
+                        payload = {['clientid','clientname']}
                         callBack= {handleCallBack} />
 
                     <Button 
-                        id = "delCat"
+                        id = "delClient"
                         onSubmit={handleClick} 
                         text = "Delete" 
                         session={session} 
-                        url="/api/categories/delete" 
-                        payload = {['catid']}
+                        url="/api/clients/delete" 
+                        payload = {['clientid']}
                         callBack= {handleCallBack} />
                     <button className="sm:ml-5" type="reset">Reset</button>
                 </div>

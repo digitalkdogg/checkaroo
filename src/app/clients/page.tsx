@@ -2,6 +2,7 @@
 import {readCookie} from '@/common/cookieServer'
 import Leftside from '@/app/components/Leftside'
 import Getall from '@/app/clients/Getall'
+import Addbutton from '@/app/components/Addbutton';
 
 import { Geist } from 'next/font/google'
 import '@/app/globals.css'
@@ -35,6 +36,7 @@ export default async function page() {
                 <div className = "flex-3">
                     <Getall session = {session} />
                 </div>
+                <Addbutton url = '/clients/add' />
             </main>
         </div>
     )
