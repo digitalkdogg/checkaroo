@@ -34,8 +34,8 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'Unauthorized Account' }, { status: 401 })
     }
 
-    const id = decrypt(json.id)
-
+    const id = JSON.parse(decrypt(json.data)).catid
+    
     if (!id) {
         return NextResponse.json({ error: 'No data provided' }, { status: 400 })
     }

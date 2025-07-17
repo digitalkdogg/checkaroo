@@ -66,7 +66,7 @@ export default function Dets({ catid, session }: Props) {
     const [errorEvent, setErrorEvent] = useState<string>();
     const [successEvent, setSuccessEvent] = useState<string>();
     
-    const handleClickUpdate = (callbackdata: Callback) => {
+    const handleCallBack = (callbackdata: Callback) => {
         if (callbackdata.status == 'error'){
             setErrorEvent(callbackdata.msg);
         } else if (callbackdata.status == 'success') {
@@ -79,35 +79,10 @@ export default function Dets({ catid, session }: Props) {
         }
     }
 
-     const handleUpdate = (formData: FormData) => {
+     const handleClick = () => {
         return
     };
 
-    const deleteCat = async () => {
-       const response = await fetch('/api/categories/delete', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                session: superEcnrypt(session),
-                id: encrypt(catid)
-            })
-        })
-
-        if (!response.ok) {
-            const json = await response.json();
-            setErrorSaveCat(json.message)
-        } else {
-            const json = await response.json();
-            if (json.status == 'success') {
-                setSaveDataRes(json.message)
-                setTimeout(()=> {
-                    router.push('/categories')
-                },1000)
-            } else {
-                setErrorSaveCat(json.message);
-            }
-        }
-    }
 
     useEffect(() => {
         fetchCats();
@@ -127,6 +102,9 @@ export default function Dets({ catid, session }: Props) {
         )
     }
 
+    const testing = '<button type = "button" className="sm:ml-0 btn" onClick={deleteCat}>Delete</button>'
+    const testing2 = '{errorSaveCat && <div className = "error">{errorSaveCat}</div>}{saveDataRes && <div className = "success">{saveDataRes}</div>}'
+
     return (
         <div>
             <form id = "catForm"  className = "flex-3 bg-white flex flex-col my-50 max-w-130 justify-left" >
@@ -141,17 +119,24 @@ export default function Dets({ catid, session }: Props) {
                 <div className= "flex flex-col sm:flex-row justify-center-safe mb-10 mt-10">
                     <Button 
                         id = "updateCat"
-                        onSubmit={handleUpdate} 
+                        onSubmit={handleClick} 
                         text = "Update" 
                         session={session} 
                         url="/api/categories/update" 
                         payload = {['catid','catname']}
-                        callBack= {handleClickUpdate} />
-                    <button type = "button" className="sm:ml-0 btn" onClick={deleteCat}>Delete</button>
+                        callBack= {handleCallBack} />
+
+                    <Button 
+                        id = "delCat"
+                        onSubmit={handleClick} 
+                        text = "Delete" 
+                        session={session} 
+                        url="/api/categories/delete" 
+                        payload = {['catid']}
+                        callBack= {handleCallBack} />
                     <button className="sm:ml-5" type="reset">Reset</button>
                 </div>
-                {errorSaveCat && <div className = "error">{errorSaveCat}</div>}
-                {saveDataRes && <div className = "success">{saveDataRes}</div>}
+
                 {errorEvent && <div className = "error">{errorEvent}</div>}
                 {successEvent && <div className = "success">{successEvent}</div>}
             </form>
