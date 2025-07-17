@@ -5,11 +5,11 @@ import { superEcnrypt, encrypt } from '@/common/crypt';
 import Error  from '@/app/components/Error';
 import Loading from '@/app/components/Loading'
 import { useRouter } from 'next/navigation';
+import Button from '@/app/components/Button'
 
 interface Props {
     catid : string,
     session: string
-    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 interface Cat {
@@ -20,6 +20,11 @@ interface Cat {
 
 interface Err {
     message: string
+}
+
+interface Callback {
+    msg: string
+    status: string
 }
 
 export default function Dets({ catid, session }: Props) {
@@ -58,40 +63,25 @@ export default function Dets({ catid, session }: Props) {
         }
     };
 
-    const saveData = async (e:React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        const formData = new FormData(e.currentTarget);
-        const catname = formData.get('catname');
-        const data = JSON.stringify({catid: catid, catname: catname})
-
-        setIsSaveLoading(true);
-        setErrorSaveCat(null)
-        setSaveDataRes(null)
-        const response = await fetch('/api/categories/update', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                session: superEcnrypt(session),
-                data: encrypt(data)
-            })
-        })
-
-        if (!response.ok) {
-            if (response.status == 444) {
-                const json = await response.json();
-                setErrorSaveCat(json.message);
-            }
+    const [errorEvent, setErrorEvent] = useState<string>();
+    const [successEvent, setSuccessEvent] = useState<string>();
+    
+    const handleClickUpdate = (callbackdata: Callback) => {
+        if (callbackdata.status == 'error'){
+            setErrorEvent(callbackdata.msg);
+        } else if (callbackdata.status == 'success') {
+            setSuccessEvent(callbackdata.msg)
+            setTimeout(() => {
+                router.push('/categories')
+            },1000)
         } else {
-            const json = await response.json();
-            if (json.status) {
-                setSaveDataRes(json.message)
-                setTimeout(() => {
-                    router.push('/categories')
-                },1000)
-            }
+            setErrorEvent('There was an unknown error that occured')
         }
-        setIsSaveLoading(false)
-    }   
+    }
+
+     const handleUpdate = (formData: FormData) => {
+        return
+    };
 
     const deleteCat = async () => {
        const response = await fetch('/api/categories/delete', {
@@ -139,7 +129,7 @@ export default function Dets({ catid, session }: Props) {
 
     return (
         <div>
-            <form id = "catForm" onSubmit={saveData} className = "flex-3 bg-white flex flex-col my-50 max-w-130 justify-left" >
+            <form id = "catForm"  className = "flex-3 bg-white flex flex-col my-50 max-w-130 justify-left" >
                 <div className = "flex flex-col md:flex-row py-5">
                     <span className = "md:basis-32">CatID :</span>
                         <Input name = "catid" id = "catid" val = {data.category_id} disabled = {true} />
@@ -149,15 +139,21 @@ export default function Dets({ catid, session }: Props) {
                         <Input name = "catname" id = "catname" val = {data.category_name} disabled = {false} />
                 </div>
                 <div className= "flex flex-col sm:flex-row justify-center-safe mb-10 mt-10">
-                    <button className="inset-shadow-indigo-500 sm:mr-5" type="submit">
-                        {isSaveLoading && <span className = "inline-flex relative top-1 -left-2" id = "loadingspan"><Loading size={6} /></span>}
-                        Update
-                    </button>
+                    <Button 
+                        id = "updateCat"
+                        onSubmit={handleUpdate} 
+                        text = "Update" 
+                        session={session} 
+                        url="/api/categories/update" 
+                        payload = {['catid','catname']}
+                        callBack= {handleClickUpdate} />
                     <button type = "button" className="sm:ml-0 btn" onClick={deleteCat}>Delete</button>
                     <button className="sm:ml-5" type="reset">Reset</button>
                 </div>
                 {errorSaveCat && <div className = "error">{errorSaveCat}</div>}
                 {saveDataRes && <div className = "success">{saveDataRes}</div>}
+                {errorEvent && <div className = "error">{errorEvent}</div>}
+                {successEvent && <div className = "success">{successEvent}</div>}
             </form>
         </div>
     )

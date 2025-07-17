@@ -10,7 +10,7 @@ interface props {
     text: string
     session: string
     url: string
-    payload: [string]
+    payload: [string] | [string, string]
     callBack: (data: {msg:string, status: string}) => void
 }
 
@@ -40,28 +40,33 @@ export default function CustomSubmitButton({id, onSubmit, text, session, url, pa
 
         const data = createDataObj(formData);
 
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                session: superEcnrypt(session),
-                data: encrypt(data)
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    session: superEcnrypt(session),
+                    data: encrypt(data)
+                })
             })
-        })
 
-        if (!response.ok) {
-            const json = await response.json();
-            callBack({status:'error', msg: json.error})
-            
-        } else {
-            const json = await response.json();
-            if (json.status == 'success') {
-                callBack({status: 'success', msg: json.message})
+            if (!response.ok) {
+                const json = await response.json();
+                callBack({status:'error', msg: json.error})
+                
             } else {
-                callBack({status:'error', 'msg': json.message})
+                const json = await response.json();
+                if (json.status == 'success') {
+                    callBack({status: 'success', msg: json.message})
+                } else {
+                    callBack({status:'error', 'msg': json.message})
+                }
             }
+            setIsLoading(false);
+        } catch (err:unknown) {
+            callBack({status:'error', 'msg': String(err) })
+            setIsLoading(false);
         }
-        setIsLoading(false);
     };
 
       return (

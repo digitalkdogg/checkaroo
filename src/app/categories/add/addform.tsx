@@ -2,6 +2,7 @@
 
 import Input from "@/app/components/Input";
 import Button from '@/app/components/Button'
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 interface Props {
@@ -13,23 +14,26 @@ interface Callback {
     status: string
 }
 
-
 export default function AddForm(prop:Props) {
      const [errorEvent, setErrorEvent] = useState<string>();
      const [successEvent, setSuccessEvent] = useState<string>();
 
-    const handleClick = (data: Callback) => {
-           if (data.status == 'error'){
-                setErrorEvent(data.msg);
-           } else if (data.status == 'success') {
-                setSuccessEvent(data.msg)
+    const router = useRouter();
+
+    const handleClick = (callbackdata: Callback) => {
+           if (callbackdata.status == 'error'){
+                setErrorEvent(callbackdata.msg);
+           } else if (callbackdata.status == 'success') {
+                setSuccessEvent(callbackdata.msg)
+                setTimeout(() => {
+                    router.push('/categories')
+                },1000)
            } else {
                 setErrorEvent('There was an unknown error that occured')
            }
     }
 
     const handleSubmit = (formData: FormData) => {
-        console.log('Form data from custom button:', Object.fromEntries(formData.entries()));
         return
     };
 

@@ -137,7 +137,7 @@ input[type = "text"]:focus, input[type = "password"]:focus, input[type = "select
     border-color:var(--color-green);
 }
 
-input[disabled] {
+input[disabled], input[readonly] {
     background: #eee;
     color: #555;
     cursor: no-drop;

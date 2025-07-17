@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
     if (existing?.[0]) {
       const match = existing[0]
       if (matchcheck(match.category_id, data.catid)) {
-          return NextResponse.json({ status: true, message: 'Category Update Successful' })
+          return NextResponse.json({ status: 'success', message: 'Category Update Successful' })
       }
       return NextResponse.json({ message: 'Category already exists' }, { status: 444 })
     }
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
 
     const success = !!updateResult
     return NextResponse.json({
-      status: success,
+      status: success? 'success': 'error',
       message: success ? 'Category Update Successful' : 'Error Update Category'
     })
 

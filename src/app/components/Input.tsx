@@ -35,7 +35,7 @@ function Input(props:Props) {
                 name={props.name}
                 defaultValue = {props.val}
                 onChange={handleInputChange}
-                disabled = {true}
+                readOnly = {true}
                 autoComplete='false'
             />
         )    
