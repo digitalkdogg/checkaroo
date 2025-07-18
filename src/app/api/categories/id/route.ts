@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
         }
 
         const results = await select(query);
-        let arr: Cat[] = Array.isArray(results) ? results as Cat[] : [];
+        const arr: Cat[] = Array.isArray(results) ? results as Cat[] : [];
         if (arr.length === 0) {
           return NextResponse.json({ error: 'No Results Found' })
         } 

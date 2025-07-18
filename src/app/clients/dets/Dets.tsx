@@ -28,7 +28,7 @@ interface Callback {
 }
 
 export default function Dets({ clientid, session }: Props) {
-    const [data, setData] = useState<any | null>(null)
+    const [data, setData] = useState<Client | null>(null)
     const [isLoading, setIsLoading] = useState(true);
     const [errorClient, setErrorClient] = useState<Err>();
 
@@ -108,6 +108,8 @@ export default function Dets({ clientid, session }: Props) {
             </div>
         )
     }
+
+    if (!data) return null;
 
     return (
         <div>

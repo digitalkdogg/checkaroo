@@ -5,27 +5,22 @@ import {headersLegit} from '@/common/session'
 import { decrypt } from '@/common/crypt'
 import { writelog } from '@/common/logs'
 
-interface Clients {
-  client_id: number
-  company_name: string
-  account_id: number
-}
-
 export async function GET(request: NextRequest) {
-    writelog(request.toString(), '----------invalid request get-----------')
+    writelog(request.toString(), '----------invalid request get----------' )
     return NextResponse.json({ error: 'Unauthorized method' }, { status: 401 });
 }
 
 export async function POST(request: NextRequest) {
 
     if (!headersLegit(request, ['trans/add', 'trans/dets', 'clients/add', 'clients/dets'])) {
+      writelog(request.toString(), '----------invalid request get-----------')
       return NextResponse.json({ error: 'Unauthorized request' }, { status: 401 });
     }
-  
-    interface Err {
-      message?:string
-    }
 
+    interface Err {
+      message?: string
+    }
+  
     const json = await request.json();
     const session:string = json.session;
 
@@ -43,7 +38,9 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'No data provided' }, { status: 400 });
     }
 
-    const data = JSON.parse(decrypt(json.data));
+    const datastr = decrypt(json.data);
+    const data = JSON.parse(datastr);
+
     if (!data.ClientName) {
         return NextResponse.json({ error: 'Invalid data format' }, { status: 400 });
     }
@@ -59,42 +56,51 @@ export async function POST(request: NextRequest) {
         vals: [data.ClientName.trim(), accountid]
       }
       
+    type InsertResult = { status: 'completed' | 'failed' };
     try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const results:any = await insert(insquery).then(async () => {
+      const results: InsertResult | NextResponse = await insert(insquery)
+        .then(async (): Promise<InsertResult> => {
           const validateRows = await validateClient(data.ClientName, accountid);
-          if (await validateRows) {
-            return {status: 'completed'};
-          } else return {status: 'failed'}
-        }).catch((err:Err) => {
-
-          return NextResponse.json({ error: 'Error inserting client', msg: err.toString() }, { status: 500 });
+          if (validateRows) {
+            return { status: 'completed' };
+          } else {
+            return { status: 'failed' };
+          }
         })
-    
-        if (results && results.status === 'completed') {
-          return NextResponse.json({ status: 'success', message: 'client added successfully' });
-        }  else {
-          return NextResponse.json({ error: 'Error inserting data' }, { status: 500 });
-        }
+        .catch((err: Err) => {
+          return NextResponse.json(
+            { error: 'Error validating category insert ', msg: err.toString() },
+            { status: 500 }
+          );
+        });
 
-      } catch (error) {
-        process.stdout.write('Error inserting data: ' + error + '\n');
-        return NextResponse.json({ error: 'Error inserting data here' }, { status: 500 });
+      if ('status' in results && results.status === 'completed') {
+        return NextResponse.json({
+          status: 'success',
+          message: 'Client added successfully',
+        });
+      } else {
+        return NextResponse.json({ error: 'Error inserting data' }, { status: 500 });
       }
-
+    } catch (error) {
+      writelog('Error inserting data: ' + error);
+      return NextResponse.json({ error: 'Error inserting data here' }, { status: 500 });
+    }
 }
 
-async function validateClient(value: string, accountid: string) {
+async function validateClient(value: string, accountid: string): Promise<boolean> {
+  interface ClientRow {
+    id: string;
+    company_name: string;
+    account_id: string;
+  }
+
   const validateQuery = {
     select: '*',
     from: 'Clients',
     where: `company_name = "${value}" AND account_id = "${accountid}"`
   } 
 
-  const validateRows = await select(validateQuery) as Clients[];
-
-    if (validateRows.length > 0) {
-      return true;
-    }
-    return false; 
+  const validateRows = await select(validateQuery) as ClientRow[];
+  return validateRows.length>0;
 }

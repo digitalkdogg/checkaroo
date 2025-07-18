@@ -18,7 +18,7 @@ interface Category {
 }
 
 
-export default function page(props: Props) {
+export default function Page(props: Props) {
     const [data, setData] = useState<Category[]>([])
     const [errorCat, setErrorCat] = useState<string>();
 

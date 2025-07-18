@@ -160,10 +160,14 @@ export const deleteRec = async (query:DeleteQeury) => {
     let connection
     try {
         connection = await pool.getConnection();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const data:any = await connection.execute(querystr)
-        return true;
-    } catch(e:any) {
+        if(data) {
+            return true;
+        } 
         return false;
+    } catch(e:unknown) {
+        if (e) {return false}
     } finally {
          if (connection) connection.release()
     }

@@ -8,11 +8,12 @@ const geist = Geist({
   subsets: ['latin'],
 })
 
-interface SearchParams {
-    id?: string;
-}
+//interface SearchParams {
+ //   id: string;
+//}
 
-export default async function Page({searchParams}: {searchParams: SearchParams }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default async function Page({searchParams}: {searchParams: any }) {
 
     const id = (await searchParams).id as string;
     let session = ''

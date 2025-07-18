@@ -18,7 +18,7 @@ interface Clients {
 }
 
 
-export default function page(props: Props) {
+export default function Page(props: Props) {
     const [data, setData] = useState<Clients[]>([])
     const [errorClient, setErrorClient] = useState<string>();
 

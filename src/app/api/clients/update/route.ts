@@ -40,10 +40,11 @@ export async function POST(request: NextRequest) {
   try {
     data = JSON.parse(decrypt(encryptedData))
   } catch (err) {
-    return NextResponse.json({ error: 'Invalid encrypted data' }, { status: 400 })
+    if (err) {
+      return NextResponse.json({ error: 'Invalid encrypted data' }, { status: 400 })
+    }
   }
 
-  writelog(data, 'client update here')
   if (!data || !data.clientname || !data.clientid) {
     return NextResponse.json({ error: 'Invalid client data' }, { status: 400 })
   }
@@ -81,6 +82,8 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (err) {
-    return NextResponse.json({ error: 'Unexpected server error' }, { status: 500 })
+    if (err) {
+      return NextResponse.json({ error: 'Unexpected server error' }, { status: 500 })
+    }
   }
 }
