@@ -12,9 +12,15 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
 
-      if (!headersLegit(request, ['clients/dets'])) {
-        return NextResponse.json({ error: 'Unauthorized request' }, { status: 401 });
-      }
+    interface Clients {
+      client_id: number
+      account_id: number
+      company_name : string
+    }
+
+    if (!headersLegit(request, ['clients/dets'])) {
+      return NextResponse.json({ error: 'Unauthorized request' }, { status: 401 });
+    }
   
 
     const json = await request.json();
@@ -36,14 +42,13 @@ export async function POST(request: NextRequest) {
       where : 'account_id = "' + accountid  + '" and client_id = "' + decrypt(json.id) + '"',
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let arr:any = []
-    const results = await select(query);
-    arr = results;
+    try {
+      const results = (await select(query)) as Clients[]
+      const response: Clients[] | string[] = 
+        results.length ===0 ? ['no results found here'] : results
 
-    if (arr.length == 0 ) {
-      arr = ['no results found here']
+      return NextResponse.json(response)
+    } catch(err:unknown) {
+      return NextResponse.json(err)
     }
-
-    return NextResponse.json(arr)
 }

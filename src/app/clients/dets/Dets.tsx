@@ -15,7 +15,7 @@ interface Props {
 interface Client {
     account_id : number,
     client_id: string,
-    client_name: string
+    company_name: string
 }
 
 interface Err {
@@ -28,7 +28,7 @@ interface Callback {
 }
 
 export default function Dets({ clientid, session }: Props) {
-    const [data, setData] = useState<any>()
+    const [data, setData] = useState<any | null>(null)
     const [isLoading, setIsLoading] = useState(true);
     const [errorClient, setErrorClient] = useState<Err>();
 
@@ -51,11 +51,14 @@ export default function Dets({ clientid, session }: Props) {
             if (!res.ok || json.error) {
                 setErrorClient({message: json.error || 'Error fetching category'});
             } else {
+                if (json.err) {
+                    setErrorClient(json.err)
+                }
                 if (json.length > 0) {
+              
                     if (json[0] == 'no results found here') {
                        setErrorClient({message: json[0]})
                     } else {
-                        console.log(json)
                         setData(json[0]);
                     }
                 }
@@ -120,6 +123,7 @@ export default function Dets({ clientid, session }: Props) {
                 <div className= "flex flex-col sm:flex-row justify-center-safe mb-10 mt-10">
                     <Button 
                         id = "updateClient"
+                        className = "mr-5"
                         onSubmit={handleClick} 
                         text = "Update" 
                         session={session} 
@@ -129,6 +133,7 @@ export default function Dets({ clientid, session }: Props) {
 
                     <Button 
                         id = "delClient"
+                        className = "danger"
                         onSubmit={handleClick} 
                         text = "Delete" 
                         session={session} 

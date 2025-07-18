@@ -115,6 +115,7 @@ export default function Dets({ catid, session }: Props) {
                 <div className= "flex flex-col sm:flex-row justify-center-safe mb-10 mt-10">
                     <Button 
                         id = "updateCat"
+                        className = "mr-5"
                         onSubmit={handleClick} 
                         text = "Update" 
                         session={session} 
@@ -124,6 +125,7 @@ export default function Dets({ catid, session }: Props) {
 
                     <Button 
                         id = "delCat"
+                        className = "danger"
                         onSubmit={handleClick} 
                         text = "Delete" 
                         session={session} 

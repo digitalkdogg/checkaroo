@@ -5,6 +5,12 @@ import {headersLegit} from '@/common/session'
 import { decrypt } from '@/common/crypt'
 import { writelog } from '@/common/logs'
 
+interface Clients {
+  client_id: number
+  company_name: string
+  account_id: number
+}
+
 export async function GET(request: NextRequest) {
     writelog(request.toString(), '----------invalid request get-----------')
     return NextResponse.json({ error: 'Unauthorized method' }, { status: 401 });
@@ -85,12 +91,9 @@ async function validateClient(value: string, accountid: string) {
     where: `company_name = "${value}" AND account_id = "${accountid}"`
   } 
 
-  const validateRows = await select(validateQuery);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let validateRowsArr:any = [];
-    validateRowsArr = validateRows;
+  const validateRows = await select(validateQuery) as Clients[];
 
-    if (validateRowsArr.length > 0) {
+    if (validateRows.length > 0) {
       return true;
     }
     return false; 

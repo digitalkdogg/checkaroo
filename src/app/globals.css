@@ -20,8 +20,8 @@
   --color-green-medium: var(--green-medium);
   --color-green-ultalight: var(--green-ultalight);
   --color-error: var(--error);
-
   --animate-wiggle: wiggle 1s ease-in-out infinite;
+
   @keyframes wiggle {
     0%,
     100% {
@@ -113,7 +113,7 @@ a, ul.menu li {
 }
 
 a:hover, ul.menu li:hover {
-  transform: translate(14px, 1px);
+  transform: translate(20px, 1px);
   scale: 115%;
   filter: contrast(0.7);
 }
@@ -163,9 +163,14 @@ button[type="submit"],button[type="reset"], button.btn, input[type = "button"] {
   transition-duration : .3s;
 }
 
-button[type="submit"]:hover, button[type="reset"]:hover, button.btn:hover input[type = "button"]:hover {
+button[type="submit"]:hover, button[type="reset"]:hover, button.btn:hover, input[type = "button"]:hover {
     scale: 110%;
     filter: contrast(0.5);
+}
+
+button.danger {
+  background-color: var(--error);
+  color:white;
 }
 
 .error {

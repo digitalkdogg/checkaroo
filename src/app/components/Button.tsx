@@ -6,6 +6,7 @@ import { superEcnrypt, encrypt } from '@/common/crypt';
 
 interface props {
     id: string
+    className?: string
     onSubmit: (data: FormData) => void;
     text: string
     session: string
@@ -14,11 +15,7 @@ interface props {
     callBack: (data: {msg:string, status: string}) => void
 }
 
-interface Err {
-    message?: string
-}
-
-export default function CustomSubmitButton({id, onSubmit, text, session, url, payload, callBack}: props) {
+export default function CustomButton({id, className, onSubmit, text, session, url, payload, callBack}: props) {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -27,7 +24,7 @@ export default function CustomSubmitButton({id, onSubmit, text, session, url, pa
 
     const createDataObj = (formData:FormData):string => {
         const dataobj: Record<string, FormDataEntryValue | null> = {};
-        payload.forEach((item:string, index:number) => {
+        payload.forEach((item:string) => {
             dataobj[item] = formData.get(item)
         })
         return JSON.stringify(dataobj);
@@ -69,9 +66,17 @@ export default function CustomSubmitButton({id, onSubmit, text, session, url, pa
         }
     };
 
+    const getClassName = () => {
+        if (className) {
+            return 'btn ' + className
+        } else {
+            return 'btn'
+        }
+    }
+
       return (
         <div>
-        <button id = {id} className = "btn" type="button" onClick={handleClick}>
+        <button id = {id} className = {getClassName()} type="button" onClick={handleClick}>
             {isLoading && <span className = "inline-flex relative top-1 -left-2" id = "loadingspan"><Loading size={6} /></span>}
             {text}
         </button>
