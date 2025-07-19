@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, ReactHTMLElement } from 'react';
+import { useState, useEffect } from 'react';
 import Input from '@/app/components/Input';
 import { superEcnrypt, encrypt } from '@/common/crypt';
 import Error  from '@/app/components/Error';
@@ -85,11 +85,6 @@ export default function Dets({ clientid, session }: Props) {
             setErrorEvent('There was an unknown error that occured')
         }
     }
-
-     const handleClick = () => {
-        return
-    };
-
 
     useEffect(() => {
         fetchClients();

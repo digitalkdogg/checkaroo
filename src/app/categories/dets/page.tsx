@@ -12,6 +12,7 @@ const geist = Geist({
 //    id: string;
 //}
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default async function Page({searchParams}: {searchParams: any }) {
 
     const id = (await searchParams).id as string;

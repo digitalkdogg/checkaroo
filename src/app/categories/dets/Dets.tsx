@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, ReactHTMLElement } from 'react';
+import { useState, useEffect } from 'react';
 import Input from '@/app/components/Input';
 import { superEcnrypt, encrypt } from '@/common/crypt';
 import Error  from '@/app/components/Error';
@@ -28,7 +28,7 @@ interface Callback {
 }
 
 export default function Dets({ catid, session }: Props) {
-    const [data, setData] = useState<any>()
+    const [data, setData] = useState<Cat>()
     const [isLoading, setIsLoading] = useState(true);
     const [errorClient, setErrorClient] = useState<Err>();
 
@@ -75,11 +75,6 @@ export default function Dets({ catid, session }: Props) {
         }
     }
 
-     const handleClick = () => {
-        return
-    };
-
-
     useEffect(() => {
         fetchCats();
     },[]);
@@ -90,6 +85,10 @@ export default function Dets({ catid, session }: Props) {
         )
     }
 
+    if (!data) {
+        return
+    }
+
     if (errorClient) {
         return (
             <div className = "flex-3 bg-white flex flex-col my-50 max-w-130 justify-center" >
@@ -97,9 +96,6 @@ export default function Dets({ catid, session }: Props) {
             </div>
         )
     }
-
-    const testing = '<button type = "button" className="sm:ml-0 btn" onClick={deleteCat}>Delete</button>'
-    const testing2 = '{errorSaveCat && <div className = "error">{errorSaveCat}</div>}{saveDataRes && <div className = "success">{saveDataRes}</div>}'
 
     return (
         <div>
