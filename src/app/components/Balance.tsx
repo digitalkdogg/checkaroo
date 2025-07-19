@@ -18,7 +18,6 @@ export default function Page(props: Props) {
     const [isLoading, setIsLoading] = useState(true);
 
     const animateBalance = (amount:number) => {
-        console.log(amount);
         let newamount = 0
         setData('0.00')
         const balint = setInterval(() => {

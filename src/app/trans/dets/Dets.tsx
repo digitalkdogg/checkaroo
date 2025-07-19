@@ -9,11 +9,18 @@ import Datepicker from '@/app/components/Datepicker';
 import { encrypt, superEcnrypt } from '@/common/crypt';
 import Loading from '@/app/components/Loading';
 import { useRouter } from 'next/navigation';
+import CustomButton from '@/app/components/Button'
 
 
 interface Props {
     transid : string,
     session: string
+}
+
+
+interface Callback {
+    msg: string
+    status: string
 }
 
 interface Trans {
@@ -36,49 +43,25 @@ export default function Dets(props:Props) {
     const [isLoading, setIsLoading] = useState(true);
     const [errorTrans, setErrorTrans] = useState<Err>();
 
-    const [saveDataRes, setSaveDataRes] = useState();
-    const [isSaveLoading, setIsSaveLoading] = useState(false)
-    const [errorSaveData, setErrorSaveData] = useState<string>()
+    const [saveDataRes, setSaveDataRes] = useState<string|null>();
+    const [errorSaveData, setErrorSaveData] = useState<string|null>()
     const router = useRouter();
 
-    const saveData = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        setIsSaveLoading(true)
+    const handleCallBack = (callbackdata: Callback) => {
+      setErrorSaveData(null)
+      setSaveDataRes(null)
+      if (callbackdata.status == 'error'){
+          setErrorSaveData(callbackdata.msg);
+      } else if (callbackdata.status == 'success') {
+          setSaveDataRes(callbackdata.msg)
+          setTimeout(()=> {
+            router.push('/')
+          },1000)
+      } else {
+          setErrorSaveData('There was an unknown error that occured')
+      }
+  }
 
-        const formData = new FormData(e.currentTarget);
-
-        const date = formData.get('date');
-        const clients = formData.get('clients');
-        const amount = formData.get('amount');
-        const categories = formData.get('categories'); 
-        const transid = props.transid
-
-        const data = JSON.stringify({date: date, clients: clients, amount:amount, categories: categories, transid:transid})
-
-        const response = await fetch('/api/transaction/update', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                session: superEcnrypt(props.session),
-                data: encrypt(data)
-            })
-        })
-
-        setIsSaveLoading(false)
-        if (!response.ok) {
-            setErrorSaveData('Error saving data')
-        } else {
-           const json = await response.json();
-           if (json.status == 'success') {
-                setSaveDataRes(json.message);
-                setTimeout(() => {
-                    router.push('/');
-                },3000)
-           }
-
-        }
-
-    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -133,7 +116,6 @@ export default function Dets(props:Props) {
         if (typeof date === 'string') {
             return convertToNiceDate(date);
         }
-        // If date is a Date object, convert to ISO string or desired format
         return convertToNiceDate(date.toISOString());
     }
 
@@ -147,7 +129,7 @@ export default function Dets(props:Props) {
 
     return (
         <div>
-            <form  onSubmit={saveData} className = "flex-3 bg-white flex flex-col my-50 max-w-130 justify-left" >
+            <form className = "flex-3 bg-white flex flex-col my-50 max-w-130 justify-left" >
                 <div className = "flex flex-col md:flex-row py-5">
                     <span className = "md:basis-32">TransID :</span>
                      <Input name = "transid" id = "transid" val = {data?.trans_id ?? ''} disabled = {true} />
@@ -173,13 +155,17 @@ export default function Dets(props:Props) {
                     </div>
                 </div>
                 <div className= "flex flex-col sm:flex-row justify-center-safe mb-10 mt-10">
-                    <button className="inset-shadow-indigo-500 sm:mr-5" type="submit">
-                        {isSaveLoading && <span className = "inline-flex relative top-1 -left-2" id = "loadingspan"><Loading size={6} /></span>}
-                        Submit
-                    </button>
+                     <CustomButton 
+                        id = "updateTrans"
+                        className = "mr-5"
+                        text = "Update Trans" 
+                        session={props.session} 
+                        url="/api/transaction/update" 
+                        payload = {['date','clients', 'amount', 'categories', 'transid']}
+                        callBack= {handleCallBack} />
                     <button className="sm:ml-5" type="reset">Reset</button>
                 </div>
-                <div className= "flex flex-col sm:flex-row justify-center-safe mb-10 mt-10">
+                <div className= "flex flex-col sm:flex-row justify-center-safe">
                     {saveDataRes && <div className="success mt-5">{saveDataRes}</div>}
                      {errorSaveData && <div className="error mt-5">{errorSaveData}</div>}
                 </div>

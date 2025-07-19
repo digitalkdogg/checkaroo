@@ -127,7 +127,7 @@ async function getClientID(clientName: string) {
   if (rowsarr.length > 0) {
     return (rowsarr[0] as { client_id: number }).client_id;
   }
-  return null; 
+  return []; 
 }
 
 async function getCatID(catName: string) {
