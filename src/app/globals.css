@@ -169,8 +169,11 @@ button[type="submit"]:hover, button[type="reset"]:hover, button.btn:hover, input
 }
 
 button.danger {
-  background-color: var(--error);
-  color:white;
+  background-color: transparent;
+  color: var(--error);
+  font-weight: 500;
+  box-shadow: none;
+  border:2px solid var(--error);
 }
 
 .error {
