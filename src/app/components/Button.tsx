@@ -7,15 +7,14 @@ import { superEcnrypt, encrypt } from '@/common/crypt';
 interface props {
     id: string
     className?: string
-    onSubmit: (data: FormData) => void;
+    //onSubmit: (data: FormData) => void;
     text: string
     session: string
     url: string
     payload: [string] | [string, string]
     callBack: (data: {msg:string, status: string}) => void
 }
-
-export default function CustomButton({id, className, onSubmit, text, session, url, payload, callBack}: props) {
+export default function CustomButton({id, className, text, session, url, payload, callBack}: props) {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {

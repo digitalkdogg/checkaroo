@@ -33,9 +33,6 @@ export default function AddForm(prop:Props) {
            }
     }
 
-    const handleSubmit = (formData: FormData) => {
-        return
-    };
 
     const formSubmit = (event:React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -55,7 +52,6 @@ export default function AddForm(prop:Props) {
                  <div className= "flex flex-col sm:flex-row justify-center-safe mb-10 mt-10">
                     <Button 
                         id = "addCat"
-                        onSubmit={handleSubmit} 
                         text = "Add Category" 
                         session={prop.session} 
                         url="/api/categories/add" 

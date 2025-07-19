@@ -126,7 +126,6 @@ export default function Dets({ clientid, session }: Props) {
                     <Button 
                         id = "updateClient"
                         className = "mr-5"
-                        onSubmit={handleClick} 
                         text = "Update" 
                         session={session} 
                         url="/api/clients/update" 
@@ -136,7 +135,6 @@ export default function Dets({ clientid, session }: Props) {
                     <Button 
                         id = "delClient"
                         className = "danger"
-                        onSubmit={handleClick} 
                         text = "Delete" 
                         session={session} 
                         url="/api/clients/delete" 
