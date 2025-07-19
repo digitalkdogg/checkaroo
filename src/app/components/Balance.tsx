@@ -18,13 +18,15 @@ export default function Page(props: Props) {
     const [isLoading, setIsLoading] = useState(true);
 
     const animateBalance = (amount:number) => {
+        console.log(amount);
         let newamount = 0
         setData('0.00')
         const balint = setInterval(() => {
-            if (newamount < amount) {
+            if ((newamount + 100) < amount) {
                 newamount = newamount+100
                 setData(newamount.toString())
             } else {
+                setData(amount.toString())
                 clearInterval(balint);
             }
       
