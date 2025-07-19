@@ -8,13 +8,9 @@ const geist = Geist({
   subsets: ['latin'],
 })
 
-//interface SearchParams {
-//    id: string;
-//}
+export default async function Page ({searchParams}: {searchParams: Promise<{ id: string }> }) {
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default async function Page({searchParams}: {searchParams: any }) {
-
+  console.log(await searchParams)
     const id = (await searchParams).id as string;
     let session = ''
     const cookiename = process.env.NEXT_PUBLIC_cookiestr as string;

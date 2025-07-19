@@ -31,6 +31,8 @@ export default function Dets({ clientid, session }: Props) {
     const [data, setData] = useState<Client | null>(null)
     const [isLoading, setIsLoading] = useState(true);
     const [errorClient, setErrorClient] = useState<Err>();
+    const [errorEvent, setErrorEvent] = useState<string>();
+    const [successEvent, setSuccessEvent] = useState<string>();
 
 
     const router = useRouter();
@@ -69,11 +71,10 @@ export default function Dets({ clientid, session }: Props) {
             setIsLoading(false);
         }
     };
-
-    const [errorEvent, setErrorEvent] = useState<string>();
-    const [successEvent, setSuccessEvent] = useState<string>();
     
     const handleCallBack = (callbackdata: Callback) => {
+        setErrorEvent('')
+        setSuccessEvent('')
         if (callbackdata.status == 'error'){
             setErrorEvent(callbackdata.msg);
         } else if (callbackdata.status == 'success') {
