@@ -187,9 +187,11 @@ function Dropdown(prop:Props) {
                 }
             } else {
                 if (arrow.classList.contains('rotate-270') == false) {
-                     otherArrow.classList.add('sendtoback');
-                   
+                    if (otherArrow) {
+                        otherArrow.classList.add('sendtoback');
+                    }    
                     arrow.classList.add('rotate-270')
+                    
                 }
             }
         }

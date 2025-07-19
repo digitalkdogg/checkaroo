@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-      if (!headersLegit(request, ['/categories', '/trans/dets'])) {
+      if (!headersLegit(request, ['/categories', '/trans/dets', '/trans/add'])) {
         return NextResponse.json({ error: 'Unauthorized request' }, { status: 401 });
       }
 

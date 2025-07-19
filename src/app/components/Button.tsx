@@ -11,7 +11,7 @@ interface props {
     text: string
     session: string
     url: string
-    payload: [string] | [string, string]
+    payload: Array<string> 
     callBack: (data: {msg:string, status: string}) => void
 }
 export default function CustomButton({id, className, text, session, url, payload, callBack}: props) {

@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
 
     if (results && results.status === 'completed') {
       writelog('Transaction added successfully: ' + JSON.stringify(insquery), '*********Transaction**********');
-      return NextResponse.json({ status: 'success', transid: transid, message: 'Transaction added successfully' });
+      return NextResponse.json({ status: 'success', transid: transid, amount: amount ,message: 'Transaction added successfully' });
     }  else {
       writelog('Error inserting transaction: ' + JSON.stringify(insquery), '*********Transaction**********');
       return NextResponse.json({ error: 'Error inserting data' }, { status: 500 });

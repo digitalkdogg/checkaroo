@@ -7,6 +7,7 @@ import { encrypt, superEcnrypt } from "@/common/crypt";
 import { useState } from 'react';
 import Loading from '@/app/components/Loading';
 import { redirect } from 'next/navigation'
+import CustomButton from "@/app/components/Button";
 
 interface Props {
   session: string;
@@ -16,6 +17,11 @@ interface Err {
   message: string
 }
 
+interface Callback {
+    msg: string
+    status: string
+}
+
 export default function AddForm(prop:Props) {
 
 
@@ -23,89 +29,55 @@ export default function AddForm(prop:Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Err>();
 
-  const saveData = async (event:React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const date = formData.get('date');
-    const clients = formData.get('clients');
-    const amount = formData.get('amount');
-    const categories = formData.get('categories');  
-    const data = {
-      date: date,
-      clients: clients,
-      amount: amount,
-      categories: categories,
-      session: prop.session
-    };
+  const handleCallBack = (callbackdata: Callback) => {
+      setError({message:''})
+      setData('')
+      if (callbackdata.status == 'error'){
+          setError({message:callbackdata.msg});
+      } else if (callbackdata.status == 'success') {
+          setData(callbackdata.msg)
+          setBalance()
+      } else {
+          setError({message:'There was an unknown error that occured'})
+      }
+  }
 
-    setIsLoading(true)
-    setError({'message':''});
-    setData('');
-
-    try {
-
-      const response = await fetch('/api/transaction/add', {
+  const getAmountVal = () => {
+    const el = document.getElementById('amount') as HTMLInputElement | null;
+    if (el) {
+      return el.value;
+    } else {
+      return '0';
+    }
+  }
+  
+  const setBalance = async () => {
+    const amount = getAmountVal();
+    if (amount != '0') {
+      const response = await fetch('/api/balance/update', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          session: superEcnrypt(data.session),
-          data : encrypt(JSON.stringify(data))
+          session: superEcnrypt(prop.session),
+          data : JSON.stringify({value: amount})
         })
       })
 
       if (response.ok) {
         const json = await response.json();
-
-        if (json.status === 'success') {
-          setIsLoading(false);
-          setData('Transaction added successfully');
-          setBalance(data.amount as string)
-          setTimeout(() => {
-            setData('');
-          }, 5000); // Clear message after 5 seconds
-        } else {
-            setIsLoading(false);
-            setError({message: json.message});
+        if (json.status=='success') {
+          redirect('/');
         }
       } else {
-        setIsLoading(false);
-        setError({message: 'Failed to add transaction. Please try again.'});
+        
       }
-    } catch(err: unknown) {
-      setIsLoading(false);
-      if (err && typeof err === "object" && "message" in err && typeof (err as { message?: unknown }).message === "string") {
-        setError({ message: (err as { message: string }).message });
-      } else {
-        setError({ message: "An unknown error occurred." });
-      }
-    }
-  }  
-  
-  const setBalance = async (amount:string) => {
-    
-    const response = await fetch('/api/balance/update', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        session: superEcnrypt(prop.session),
-        data : JSON.stringify({value: amount})
-      })
-    })
-
-    if (response.ok) {
-      const json = await response.json();
-      if (json.status=='success') {
-        redirect('/');
-      } 
-    } else {
-
     }
   }
 
   return (
   <div >
 
-      <form  onSubmit={saveData} className="max-w-130"> 
+      <form  className="max-w-130"> 
         <div className = "flex flex-col md:flex-row justify-left py-5">
             <span className="md:basis-32">Date :</span>
             <Datepicker id = "date" name = "date" />
@@ -130,12 +102,16 @@ export default function AddForm(prop:Props) {
             </div>
         </div>
 
-        <div className= "flex flex-col sm:flex-row justify-center-safe mb-10 mt-10">
-            <button className="inset-shadow-indigo-500 sm:mr-5" 
-                type="submit">
-                   {isLoading && <span className = "inline-flex relative top-1 -left-2" id = "loadingspan"><Loading size={6} /></span>}
-                   Submit
-                </button>
+        <div className= "flex flex-col sm:flex-row justify-center-safe mb-10 mt-10"> 
+          <CustomButton 
+              id = "addTrans"
+              className = "mr-5"
+              text = "Add Trans" 
+              session={prop.session} 
+              url="/api/transaction/add" 
+              payload = {['date','clients', 'amount', 'categories']}
+              callBack= {handleCallBack} />
+            
             <button className="sm:ml-5" type="reset">Reset</button>
         </div>
         {error && <div className="error mt-5">{error.message}</div>}
