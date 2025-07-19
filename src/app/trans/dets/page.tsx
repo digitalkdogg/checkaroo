@@ -9,14 +9,8 @@ const geist = Geist({
   subsets: ['latin'],
 })
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default async function Page({searchParams}:{searchParams:any }) {
-//export default async function page({
-//  searchParams,
-//}: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//  searchParams: {[key: string]: string | string[] | Promise<any>}
-//}) {
+export default async function Page ({searchParams}: {searchParams: Promise<{ id: string }> }) {
+
     const id = (await searchParams).id as string;
     let session = ''
     const cookiename = process.env.NEXT_PUBLIC_cookiestr as string;

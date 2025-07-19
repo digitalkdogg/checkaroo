@@ -10,7 +10,6 @@ const geist = Geist({
 
 export default async function Page ({searchParams}: {searchParams: Promise<{ id: string }> }) {
 
-  console.log(await searchParams)
     const id = (await searchParams).id as string;
     let session = ''
     const cookiename = process.env.NEXT_PUBLIC_cookiestr as string;
