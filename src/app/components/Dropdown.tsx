@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import styles from '@/resources/dropdown.module.css'
 import Svg from '@/app/components/Svg'
 import Loading from '@/app/components/Loading'
-import { superEcnrypt } from '@/common/crypt';
+import { superEcnrypt, encrypt } from '@/common/crypt';
 
 interface Props {
     val: string,
@@ -261,6 +261,14 @@ function Dropdown(prop:Props) {
         }
     }
 
+    const getAddItemValue = (val:string | undefined) => {
+        if (prop.type=='clients') {
+            return JSON.stringify({ClientName: val})
+        } else {
+            return JSON.stringify({CategoryName: val})
+        }
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const addItem = async (event:any) => {
         let target; 
@@ -279,13 +287,13 @@ function Dropdown(prop:Props) {
                 setSuccessAddDropDown(false);
                 
                 const val = target.getAttribute('data-value'); 
+
                 await fetch(prop.api+ '/add', {
-                //const response = await fetch(prop.api + '/add', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         session: superEcnrypt(prop.session),
-                        data: {value: val}
+                        data: encrypt(getAddItemValue(val))
                     })
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 }).then(async (res:any) => {
