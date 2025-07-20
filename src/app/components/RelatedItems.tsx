@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { superEcnrypt, encrypt } from '@/common/crypt';
+import {convertToNiceDate} from '@/common/common'
 
 interface Props {
   session: string
@@ -12,6 +13,7 @@ interface Props {
 interface Item {
     account_id : number,
     trans_id: string,
+    date: string,
     amount: string,
     client_id: string,
     company_name?: string,
@@ -65,16 +67,16 @@ export default function Page(props: Props) {
 
   if (data) {
   return (
-    <div className = "bg-white justify-center-safe w-4xl max-w-full border-b-1 border-[var(--green)] mb-10 pb-1 rounded-bl-lg rounded-br-lg">
+    <div className = "justify-center w-4xl max-w-full overflow-y-scroll max-h-132 border-b-1 border-[var(--green)] mb-10 pb-1 rounded-bl-lg rounded-br-lg">
       <div className = "flex flex-row p-4 no-scale-hover border-1 border-[var(--green)] rounded-tl-lg rounded-tr-lg">
-        <div className = "indent-5 basis-1/3"><b>Trans ID</b></div>
+        <div className = "indent-5 basis-1/3"><b>Date</b></div>
         <div className = "indent-5 basis-1/4"><b>Company Name</b></div>
         <div className = "indent-5 basis-1/5"><b>Amount</b></div>
         <div className = "indent-5 basis-1/4"><b>Category Name</b></div>
       </div>
       {data.map(trans => (
           <div  key={trans.trans_id} className="flex flex-row p-4 border-r-1 border-l-1 border-[var(--green)]">
-              <div className = "indent-5 basis-1/3">{trans.trans_id}</div>
+              <div className = "indent-5 basis-1/3">{convertToNiceDate(trans.date)}</div>
               <div className = "indent-5 basis-1/4">{trans.company_name}</div>
               <div className = "indent-5 basis-1/5">{trans.amount}</div>
               <div className = "indent-5 basis-1/4">{trans.category_name}</div>
