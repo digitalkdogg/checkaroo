@@ -1,5 +1,6 @@
 import pool from '@/common/db'
 import {writelog} from '@/common/logs';
+import { ResultSetHeader, FieldPacket } from 'mysql2/promise';
 
 interface UpdateQuery {
     table?: string,
@@ -62,9 +63,8 @@ export const select = async (query:SelectQuery) => {
 
         const [rows] = await connection.query(querystr);
         return rows;
-         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch(err:any) {
-        writelog(err.toString(), '==============database select error ====================')
+    } catch(err:unknown) {
+        writelog(String(err), '==============database select error ====================')
         return {'err': err}
     } finally {
         if (connection) connection.release()
@@ -72,103 +72,95 @@ export const select = async (query:SelectQuery) => {
 }
 
 export const insert = async (query:InsertQuery) => {
-        let querystr = ''
-        querystr = querystr + 'insert into '
-        querystr = querystr + query.table + '('
+    let querystr = ''
+    querystr = querystr + 'insert into '
+    querystr = querystr + query.table + '('
+    
+    for (let x =0; x<query.fields.length; x++) {
+        querystr = querystr + query.fields[x]
+        if (x<query.fields.length-1) {
+            querystr = querystr + ','
+        }
+    }
+
+    querystr = querystr + ')values('
+
+    for (let x=0; x<query.vals.length; x++) {
+        querystr = querystr + '?'
+        if (x<query.vals.length-1) {
+            querystr = querystr + ','
+        } else {
+            querystr = querystr + ')'
+        }
+    }
+
+    let connection
+    try { 
+        connection = await pool.getConnection();
+        writelog(querystr + ':::' + query.vals.toString())
         
-        for (let x =0; x<query.fields.length; x++) {
-            querystr = querystr + query.fields[x]
-            if (x<query.fields.length-1) {
-                querystr = querystr + ','
-            }
-        }
-
-        querystr = querystr + ')values('
-
-        for (let x=0; x<query.vals.length; x++) {
-            querystr = querystr + '?'
-            if (x<query.vals.length-1) {
-                querystr = querystr + ','
-            } else {
-                querystr = querystr + ')'
-            }
-        }
-
-        let connection
-        try { 
-            connection = await pool.getConnection();
-            writelog(querystr + ':::' + query.vals.toString())
+        const data = await connection.execute(querystr, query.vals);
+        return {data} 
             
-            const data = await connection.execute(querystr, query.vals);
-            return {data} 
-             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch(e:any) {
-            writelog(e.toString(), '==============database insert error ====================')
-            return {err: e}
-        } finally {
-            if (connection) connection.release()
-        }
+    } catch(e:unknown) {
+        writelog(String(e), '==============database insert error ====================')
+        return {err: e}
+    } finally {
+        if (connection) connection.release()
+    }
 }
 
-export const update = async (query:UpdateQuery) => {
-
-    let querystr = '' 
-    querystr = querystr + 'update '+ query.table
-    querystr = querystr + ' set ' + query.fields
+export const update = async (query: UpdateQuery) => {
+    let querystr = '';
+    querystr += 'update ' + query.table;
+    querystr += ' set ' + query.fields;
 
     if (query.where) {
-        querystr = querystr + ' where ' + query.where
+        querystr += ' where ' + query.where;
     }
 
     if (query.sort) {
-        querystr = querystr + ' order by ' + query.sort
+        querystr += ' order by ' + query.sort;
     }
 
     if (query.limit) {
-        querystr = querystr + ' limit ' + query.limit
+        querystr += ' limit ' + query.limit;
     }
 
-    let connection
+    let connection;
     try {
         connection = await pool.getConnection();
-        writelog(querystr)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const data:any = await connection.execute(querystr);
+        writelog(querystr);
+
+        const [result, _fields]: [ResultSetHeader, FieldPacket[]] = await connection.execute(querystr);
+        return { data: result };
+    } catch (e: unknown) {
+        writelog(String(e), '---------------database update error ----------------------');
+        return { err: e };
+    } finally {
+        if (connection) connection.release();
+    }
+}
+
+export const deleteRec = async (query: DeleteQeury): Promise<boolean> => {
+    let querystr = 'DELETE FROM ' + query.from;
+    querystr += ' where ' + query.where;
+
+    if (query.limit) {
+        querystr += ' limit ' + query.limit;
+    }
+
+    let connection;
+    try {
+        connection = await pool.getConnection();
+        const [result, _fields]: [ResultSetHeader, FieldPacket[]] = await connection.execute(querystr);
         
-        return {data}
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (e:any) {
-        writelog(e.toString(), '---------------database update error ----------------------')
-        return {err: e}
-    } finally {
-         if (connection) connection.release()
-    }
-}
-
-export const deleteRec = async (query:DeleteQeury) => {
-    
-    //DELETE FROM Customers
-    //WHERE Country = 'Mexico';
-    let querystr = '' 
-    querystr = 'DELETE FROM ' + query.from
-    querystr = querystr + ' where ' + query.where
-
-    if (query.limit) {
-        querystr = querystr + ' limit ' + query.limit
-    }
-
-    let connection
-    try {
-        connection = await pool.getConnection();
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const data:any = await connection.execute(querystr)
-        if(data) {
-            return true;
-        } 
+        // You can check affectedRows to confirm delete
+        return result.affectedRows > 0;
+    } catch (e: unknown) {
+        writelog(String(e), '---------------database delete error ----------------------');
         return false;
-    } catch(e:unknown) {
-        if (e) {return false}
     } finally {
-         if (connection) connection.release()
+        if (connection) connection.release();
     }
-}
+};
