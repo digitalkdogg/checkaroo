@@ -60,8 +60,7 @@ export default function Dets(props:Props) {
       } else {
           setErrorSaveData('There was an unknown error that occured')
       }
-  }
-
+    }
 
     useEffect(() => {
         const fetchData = async () => {
