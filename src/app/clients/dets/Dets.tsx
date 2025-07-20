@@ -137,7 +137,8 @@ export default function Dets({ clientid, session }: Props) {
                         url="/api/clients/delete" 
                         payload = {['clientid']}
                         callBack= {handleCallBack} />
-                    <button className="sm:ml-5" type="reset">Reset</button>
+                   
+                    <button className="sm:ml-5" type = "reset">Reset</button>
                 </div>
 
                 {errorEvent && <div className = "error">{errorEvent}</div>}

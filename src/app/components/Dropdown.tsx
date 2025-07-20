@@ -108,8 +108,7 @@ function Dropdown(prop:Props) {
     const searchResult = (search:string) => {
 
         if (resultEles) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            resultEles.forEach((el: any) => {
+            resultEles.forEach((el: HTMLElement) => {
                 if (el.classList.contains('donothide') == false) {
                     el.classList.add('hide')
                 }
@@ -120,30 +119,30 @@ function Dropdown(prop:Props) {
         }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleInputChange = (event:any) => {
-        const val = event.target.value
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const val = event.target.value;
 
         if (val.length > 0) {
-            searchResult(val)
-            addRow?.classList.remove('notvisible')
+            searchResult(val);
+            addRow?.classList.remove('notvisible');
             addRow?.setAttribute('data-value', val);
             setAddData(true);
         } else {
-            showResultsBox()
+            showResultsBox();
             setAddData(false);
-            addRow?.classList.add('notvisible')
+            addRow?.classList.add('notvisible');
             addRow?.setAttribute('data-value', '');
         }
+
         setInputValue(val);
+
         if (inputValue) {
             return;
         }
     };
 
     const hideResultsBox = () => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        resultEles.forEach((el: any) => {
+        resultEles.forEach((el: HTMLElement) => {
             el.classList.remove('hide')
         })
 
@@ -175,8 +174,7 @@ function Dropdown(prop:Props) {
 
         results?.classList.remove('hide');
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        resultEles.forEach((el: any) => {
+        resultEles.forEach((el: HTMLElement) => {
             el.classList.remove('hide')
         })
 
@@ -209,41 +207,43 @@ function Dropdown(prop:Props) {
         }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const selectResult = (event:any) => {
+    const selectResult = (event: React.MouseEvent<HTMLDivElement>) => {
         wrapper?.classList.remove('expand');
-        const html = event.target.innerHTML;
-        if (html.length > 0 ) {
-            if (dropdownInput) {
-                dropdownInput.placeholder = html;
-                hidden_input.value = html
-                dropdownInput.value = ''
-            }
-            hideResultsBox();
-        }   
-    }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const arrowclick = (event:any) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const ele:any = event.target
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const dropInput:any = document.getElementById(prop.type + '_dropinput')
-        if (dropInput.value.length>0) {
-            dropInput.value = ''
+        const target = event.target;
+        if (target instanceof HTMLElement) {
+            const html = target.innerHTML;
+
+            if (html.length > 0) {
+                if (dropdownInput) {
+                    dropdownInput.placeholder = html;
+                    hidden_input.value = html;
+                    dropdownInput.value = '';
+                }
+                hideResultsBox();
+            }
+        }
+    };
+
+
+    const arrowclick = (event: React.MouseEvent<HTMLDivElement>) => {
+        const ele = event.target as HTMLElement;
+        const dropInput = document.getElementById(`${prop.type}_dropinput`) as HTMLInputElement | null;
+
+        if (dropInput && dropInput.value.length > 0) {
+            dropInput.value = '';
         }
 
         if (ele.classList.contains('rotate-270')) {
-            setTimeout(function () {
-                ele.classList.remove('rotate-270')
+            setTimeout(() => {
+                ele.classList.remove('rotate-270');
                 otherArrow.classList.remove('sendtoback');
                 if (results) {
-                    results.classList.add('hide')
+                    results.classList.add('hide');
                 }
-            },301)
+            }, 301);
         }
-
-    }
+    };
 
     const getPlaceholder = () => {
         if (prop.val == '') {
