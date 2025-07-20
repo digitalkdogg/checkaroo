@@ -6,6 +6,7 @@ import Error  from '@/app/components/Error';
 import Loading from '@/app/components/Loading'
 import { useRouter } from 'next/navigation';
 import Button from '@/app/components/Button'
+import Relateditems from '@/app/components/RelatedItems'
 
 interface Props {
     clientid : string,
@@ -108,8 +109,8 @@ export default function Dets({ clientid, session }: Props) {
     if (!data) return null;
 
     return (
-        <div>
-            <form id = "catForm"  className = "flex-3 bg-white flex flex-col my-50 max-w-130 justify-left" >
+        <div className="flex flex-col items-center">
+            <form id = "catForm"  className = "flex-3 bg-white flex flex-col my-10 max-w-130 justify-left" >
                 <div className = "flex flex-col md:flex-row py-5">
                     <span className = "md:basis-32">ClientID :</span>
                         <Input name = "clientid" id = "clientid" val = {data.client_id} disabled = {true} />
@@ -142,6 +143,7 @@ export default function Dets({ clientid, session }: Props) {
                 {errorEvent && <div className = "error">{errorEvent}</div>}
                 {successEvent && <div className = "success">{successEvent}</div>}
             </form>
+            <Relateditems session={session} id = {clientid} api = "/api/clients/related" />
         </div>
     )
 }
