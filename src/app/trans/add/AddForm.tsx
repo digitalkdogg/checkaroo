@@ -3,9 +3,8 @@
 import Input from "@/app/components/Input";
 import Dropdown from '@/app/components/Dropdown'
 import Datepicker from '@/app/components/Datepicker'
-import { encrypt, superEcnrypt } from "@/common/crypt";
+import { superEcnrypt } from "@/common/crypt";
 import { useState } from 'react';
-import Loading from '@/app/components/Loading';
 import { redirect } from 'next/navigation'
 import CustomButton from "@/app/components/Button";
 
@@ -26,7 +25,7 @@ export default function AddForm(prop:Props) {
 
 
   const [data, setData] = useState<string>('')
-  const [isLoading, setIsLoading] = useState(false);
+
   const [error, setError] = useState<Err>();
 
   const handleCallBack = (callbackdata: Callback) => {

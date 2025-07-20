@@ -100,7 +100,7 @@ export default function Dets(props:Props) {
     if (isLoading) {
         return (
             <div className = "flex-3 bg-white flex px-20 flex-col my-50 items-center">
-                Loading...
+                <Loading />
             </div>
         );
     }

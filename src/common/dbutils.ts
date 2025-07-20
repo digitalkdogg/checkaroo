@@ -132,7 +132,7 @@ export const update = async (query: UpdateQuery) => {
         connection = await pool.getConnection();
         writelog(querystr);
 
-        const [result, _fields]: [ResultSetHeader, FieldPacket[]] = await connection.execute(querystr);
+        const [result]: [ResultSetHeader, FieldPacket[]] = await connection.execute(querystr);
         return { data: result };
     } catch (e: unknown) {
         writelog(String(e), '---------------database update error ----------------------');
@@ -153,7 +153,7 @@ export const deleteRec = async (query: DeleteQeury): Promise<boolean> => {
     let connection;
     try {
         connection = await pool.getConnection();
-        const [result, _fields]: [ResultSetHeader, FieldPacket[]] = await connection.execute(querystr);
+        const [result]: [ResultSetHeader, FieldPacket[]] = await connection.execute(querystr);
         
         // You can check affectedRows to confirm delete
         return result.affectedRows > 0;

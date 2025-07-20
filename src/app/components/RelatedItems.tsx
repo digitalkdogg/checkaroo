@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { superEcnrypt, encrypt } from '@/common/crypt';
 import {convertToNiceDate} from '@/common/common'
+import Loading from '@/app/components/Loading'
 
 interface Props {
   session: string
@@ -43,7 +44,7 @@ export default function Page(props: Props) {
       });
 
       const json = await res.json();
-
+      setIsLoading(false)
       if (!res.ok || json.err) {
         setError({message: json.err.message})
       } else {
@@ -60,6 +61,12 @@ export default function Page(props: Props) {
   useEffect(() => {
       fetchRelated();
   },[]);
+
+  if (isLoading) {
+    return (
+      <Loading />
+    )
+  }
 
   if (!data) {
     return;
