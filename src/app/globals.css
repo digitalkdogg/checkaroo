@@ -7,6 +7,7 @@
   --green-light: #297F54;
   --green-medium : #c8ffdd;
   --green-ultalight: #edfff4;
+  --light-grey: #f2f8f0;
   --error: #b90707;
 }
 
@@ -19,6 +20,7 @@
   --color-green-light : var(--green-light);
   --color-green-medium: var(--green-medium);
   --color-green-ultalight: var(--green-ultalight);
+  --color-light-grey: var(--light-grey);
   --color-error: var(--error);
   --animate-wiggle: wiggle 1s ease-in-out infinite;
 

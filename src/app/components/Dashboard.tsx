@@ -41,7 +41,7 @@ export default async function Page(prop: Props) {
   }
 
   return (
-    <div className = "bg-gray-200 h-dvh overflow-y-scroll">
+    <div className = "bg-[var(--color-light-grey)] h-dvh overflow-y-scroll">
       <div className = "header flex py-2 px-4 shadow-md shadow-lg shadow-green-light/30 bg-white text-black">
         <div className="flex-1 font-bold text-green indent-5">Date</div>
         <div className="flex-1 font-bold text-green indent-10">Client</div>
