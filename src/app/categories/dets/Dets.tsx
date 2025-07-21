@@ -100,7 +100,7 @@ export default function Dets({ catid, session }: Props) {
     }
 
     return (
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center w-full">
             <form id = "catForm"  className = "flex-3 bg-white flex flex-col my-10 max-w-130 justify-left" >
                 <div className = "flex flex-col md:flex-row py-5">
                     <span className = "md:basis-32">CatID :</span>
