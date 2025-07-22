@@ -7,7 +7,6 @@ import { superEcnrypt, encrypt } from '@/common/crypt';
 interface props {
     id: string
     className?: string
-    //onSubmit: (data: FormData) => void;
     text: string
     session: string
     url: string
@@ -65,6 +64,11 @@ export default function CustomButton({id, className, text, session, url, payload
         }
     };
 
+    const handleReset = (event: React.MouseEvent<HTMLButtonElement>) => {
+
+        console.log(event.target);
+    }
+
     const getClassName = () => {
         if (className) {
             return 'btn ' + className
@@ -73,12 +77,22 @@ export default function CustomButton({id, className, text, session, url, payload
         }
     }
 
-      return (
+    if (url = '#reset') {
+        return (
         <div>
-        <button id = {id} className = {getClassName()} type="button" onClick={handleClick}>
-            {isLoading && <span className = "inline-flex relative top-1 -left-2" id = "loadingspan"><Loading size={6} /></span>}
-            {text}
-        </button>
+            <button id = {id} className = {getClassName()} type="button" onClick={handleReset}>
+                {text}
+            </button>
         </div>
-      );
+        )
+    }
+
+    return (
+    <div>
+    <button id = {id} className = {getClassName()} type="button" onClick={handleClick}>
+        {isLoading && <span className = "inline-flex relative top-1 -left-2" id = "loadingspan"><Loading size={6} /></span>}
+        {text}
+    </button>
+    </div>
+    );
     }

@@ -56,6 +56,7 @@ export default function AddForm(prop:Props) {
                         url="/api/clients/add" 
                         payload = {['ClientName']}
                         callBack= {handleClick} />
+                    <button className="sm:ml-5" type="reset" >Reset</button>
                 </div>
                 {successEvent && <span className="success">{successEvent}</span>}
                 {errorEvent && <span className="error">{errorEvent}</span>}

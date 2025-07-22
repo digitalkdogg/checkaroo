@@ -77,6 +77,14 @@ export default function Dets({ catid, session }: Props) {
         }
     }
 
+    const handleResetCallBack = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        const catname = document.getElementById('catname') as HTMLInputElement | null;
+        if (catname) {
+            catname.value = data?.category_name ?? '';
+        }
+    };
+
     useEffect(() => {
         fetchCats();
     },[]);
@@ -128,7 +136,7 @@ export default function Dets({ catid, session }: Props) {
                         url="/api/categories/delete" 
                         payload = {['catid']}
                         callBack= {handleCallBack} />
-                    <button className="sm:ml-5" type="reset">Reset</button>
+                    <button className="sm:ml-5" type="reset" onClick={handleResetCallBack}>Reset</button>
                 </div>
 
                 {errorEvent && <div className = "error">{errorEvent}</div>}

@@ -88,6 +88,14 @@ export default function Dets({ clientid, session }: Props) {
         }
     }
 
+    const handleResetCallBack = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        const clientname = document.getElementById('clientname') as HTMLInputElement | null;
+        if (clientname) {
+            clientname.value = data?.company_name ?? '';
+        }
+    };
+
     useEffect(() => {
         fetchClients();
     },[]);
@@ -110,7 +118,7 @@ export default function Dets({ clientid, session }: Props) {
 
     return (
         <div className="flex flex-col items-center w-full">
-            <form id = "catForm"  className = "flex-3 bg-white flex flex-col my-10 max-w-130 justify-left" >
+            <form id = "clientForm"  className = "flex-3 bg-white flex flex-col my-10 max-w-130 justify-left" >
                 <div className = "flex flex-col md:flex-row py-5">
                     <span className = "md:basis-32">ClientID :</span>
                         <Input name = "clientid" id = "clientid" val = {data.client_id} disabled = {true} />
@@ -131,14 +139,15 @@ export default function Dets({ clientid, session }: Props) {
 
                     <Button 
                         id = "delClient"
-                        className = "danger"
+                        className = "danger mr-5"
                         text = "Delete" 
                         session={session} 
                         url="/api/clients/delete" 
                         payload = {['clientid']}
                         callBack= {handleCallBack} />
-                   
-                    <button className="sm:ml-5" type = "reset">Reset</button>
+
+                    <button type = "reset" onClick={handleResetCallBack}>Reset</button>
+
                 </div>
 
                 {errorEvent && <div className = "error">{errorEvent}</div>}

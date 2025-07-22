@@ -41,37 +41,63 @@ export default function AddForm(prop:Props) {
       }
   }
 
-  const getAmountVal = () => {
-    const el = document.getElementById('amount') as HTMLInputElement | null;
-    if (el) {
-      return el.value;
-    } else {
-      return '0';
-    }
-  }
-  
-  const setBalance = async () => {
-    const amount = getAmountVal();
-    if (amount != '0') {
-      const response = await fetch('/api/balance/update', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          session: superEcnrypt(prop.session),
-          data : JSON.stringify({value: amount})
-        })
-      })
-
-      if (response.ok) {
-        const json = await response.json();
-        if (json.status=='success') {
-          redirect('/');
+  const handleResetCallBack = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        const date = document.getElementById('date') as HTMLInputElement | null;
+        if (date) {
+            //date.value = convertToNiceDate(data?.date.toString()) ?? '';
         }
+        const amount = document.getElementById('amount') as HTMLInputElement | null;
+        if (amount) {
+            amount.value = '';
+        }
+
+        const client = document.getElementById('clients_dropinput') as HTMLInputElement | null;
+        const clienthidden = document.getElementById('clients_hidden_input') as HTMLInputElement | null;
+        if (client && clienthidden) {
+            client.placeholder = 'Select Text';
+            clienthidden.value = '';
+        }
+
+        const cat = document.getElementById('categories_dropinput') as HTMLInputElement | null;
+        const cathidden = document.getElementById('categories_hidden_input') as HTMLInputElement | null;
+        if (cat && cathidden) {
+            cat.placeholder = 'Select Text';
+            cathidden.value = '';
+        }
+    };
+
+    const getAmountVal = () => {
+      const el = document.getElementById('amount') as HTMLInputElement | null;
+      if (el) {
+        return el.value;
       } else {
-        
+        return '0';
       }
     }
-  }
+    
+    const setBalance = async () => {
+      const amount = getAmountVal();
+      if (amount != '0') {
+        const response = await fetch('/api/balance/update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            session: superEcnrypt(prop.session),
+            data : JSON.stringify({value: amount})
+          })
+        })
+
+        if (response.ok) {
+          const json = await response.json();
+          if (json.status=='success') {
+            redirect('/');
+          }
+        } else {
+          
+        }
+      }
+    }
 
   return (
   <div >
@@ -111,7 +137,7 @@ export default function AddForm(prop:Props) {
               payload = {['date','clients', 'amount', 'categories']}
               callBack= {handleCallBack} />
             
-            <button className="sm:ml-5" type="reset">Reset</button>
+            <button className="sm:ml-5" type="reset" onClick={handleResetCallBack}>Reset</button>
         </div>
         {error && <div className="error mt-5">{error.message}</div>}
         {data && <div className="success mt-5">{data}</div>}

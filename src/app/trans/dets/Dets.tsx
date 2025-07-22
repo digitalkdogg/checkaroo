@@ -96,6 +96,32 @@ export default function Dets(props:Props) {
         fetchData();
     }, []);
 
+    const handleResetCallBack = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        const date = document.getElementById('date') as HTMLInputElement | null;
+        if (date) {
+            //date.value = convertToNiceDate(data?.date.toString()) ?? '';
+        }
+        const amount = document.getElementById('amount') as HTMLInputElement | null;
+        if (amount) {
+            amount.value = data?.amount.toString() ?? '';
+        }
+
+        const client = document.getElementById('clients_dropinput') as HTMLInputElement | null;
+        const clienthidden = document.getElementById('clients_hidden_input') as HTMLInputElement | null;
+        if (client && clienthidden) {
+            client.placeholder = data?.company_name ?? '';
+            clienthidden.value = data?.company_name ?? '';
+        }
+
+        const cat = document.getElementById('categories_dropinput') as HTMLInputElement | null;
+        const cathidden = document.getElementById('categories_hidden_input') as HTMLInputElement | null;
+        if (cat && cathidden) {
+            cat.placeholder = data?.category_name ?? '';
+            cathidden.value = data?.category_name ?? '';
+        }
+    };
+
     if (isLoading) {
         return (
             <div className = "flex-3 bg-white flex px-20 flex-col my-50 items-center">
@@ -162,7 +188,7 @@ export default function Dets(props:Props) {
                         url="/api/transaction/update" 
                         payload = {['date','clients', 'amount', 'categories', 'transid']}
                         callBack= {handleCallBack} />
-                    <button className="sm:ml-5" type="reset">Reset</button>
+                    <button className="sm:ml-5" type="reset" onClick={handleResetCallBack}>Reset</button>
                 </div>
                 <div className= "flex flex-col sm:flex-row justify-center-safe">
                     {saveDataRes && <div className="success mt-5">{saveDataRes}</div>}

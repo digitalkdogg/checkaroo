@@ -52,11 +52,13 @@ export default function AddForm(prop:Props) {
                  <div className= "flex flex-col sm:flex-row justify-center-safe mb-10 mt-10">
                     <Button 
                         id = "addCat"
+                        className = "mr-5"
                         text = "Add Category" 
                         session={prop.session} 
                         url="/api/categories/add" 
                         payload = {['CategoryName']}
                         callBack= {handleClick} />
+                        <button className="sm:ml-5" type="reset" >Reset</button>
                 </div>
                 {successEvent && <span className="success">{successEvent}</span>}
                 {errorEvent && <span className="error">{errorEvent}</span>}
