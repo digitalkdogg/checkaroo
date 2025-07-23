@@ -1,87 +1,99 @@
-'use client'
+'use client';
 
 import { useState, useEffect } from 'react';
 import { superEcnrypt } from '@/common/crypt';
-import Loading from '@/app/components/Loading'
-import styles from '@/resources/balance.module.css'
-import '@/app/globals.css'
-
+import Loading from '@/app/components/Loading';
+import { writeCookie, readCookie } from '@/common/cookieServer';
+import styles from '@/resources/balance.module.css';
 
 interface Props {
-    enable?: boolean,
-    session: string
+  enable?: boolean;
+  session: string;
+}
+
+interface BalanceResponse {
+  balance: number;
 }
 
 
-export default function Page(props: Props) {
-    const [data, setData] = useState<string>()
-    const [isLoading, setIsLoading] = useState(true);
 
-    const animateBalance = (amount:number) => {
-        let newamount = 0
-        setData('0.00')
-        const balint = setInterval(() => {
-            if ((newamount + 100) < amount) {
-                newamount = newamount+100
-                setData(newamount.toString())
-            } else {
-                setData(amount.toString())
-                clearInterval(balint);
-            }
-      
-        },50)
-         setData(amount.toString())
-    }
+export default function Page({ enable = true, session }: Props) {
+  const [balance, setBalance] = useState<number>();
+  const [isLoading, setIsLoading] = useState(true);
 
-    const getBalance = async () => {
-        try {
-            const response = await fetch('/api/balance', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    session: superEcnrypt(props.session)
-                })
-            })
-        
-            if (response.ok) {
-                const json = await response.json();
-                setIsLoading(false);
-                if (json.length > 0) {
-                    if (json[0].balance) {
-                        animateBalance(json[0].balance)
-                    }
-                } else {
-                    setData('0')
-                }
-            } else {
-                setIsLoading(false)
-                setData('0')
-            }
-        } catch(e) {
-            if(e) {
-                setIsLoading(false);
-                setData('0')
-            }
+  useEffect(() => {
+    if (!session) return;
+
+    const fetchBalance = async () => {
+      try {
+        const response = await fetch('/api/balance', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ session: superEcnrypt(session) }),
+        });
+
+        const json: BalanceResponse[] = await response.json();
+
+        if (response.ok && Array.isArray(json) && json.length > 0) {
+          setBalance( await getCookieBalance())
+          animateBalance(json[0].balance)
+        } else {
+          setBalance(0);
         }
-    }
+      } catch (error) {
 
-    useEffect(() => {
-        if (props.session) {
-            getBalance();
-        }
-        
-    }, [])
+        setBalance(0);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-    if (props.enable) {
-        return (
-            <div className={styles.wrap}>
-                <div className = {styles.circle}>
-                    <div className = {styles.label}>Balance</div>
-                    <div className = {styles.number}>{data && <span>${data}</span>} 
-                    <span className = "relative left-13">{isLoading &&  <Loading size={6} />}</span>
-                    </div> 
-                </div>
+    const getCookieBalance = async (): Promise<number> => {
+      const cookieBalance = await readCookie('balance');
+      if (cookieBalance) {
+        const parsed = parseFloat(cookieBalance);
+        return isNaN(parsed) ? 0 : parsed;
+      } else {
+        return 0;
+      }
+    };
+
+    const animateBalance = async (endBalance: number) => {
+        let newBalance = await getCookieBalance(); 
+        setBalance(newBalance);
+
+        const balinterval = setInterval(() => {
+            if ((newBalance + 100) < endBalance) {
+                newBalance += 100;
+                setBalance(newBalance);
+            } else {
+                setBalance(endBalance);
+                clearInterval(balinterval);
+            }
+        }, 100);
+    };
+
+    fetchBalance();
+  }, [session]);
+
+  if (!enable) return null;
+
+  return (
+    <div className={styles.wrap}>
+      <div className={styles.circle}>
+        {isLoading ? (
+          <span className="relative size-30 left-3 top-3">
+            <Loading />
+          </span>
+        ) : (
+          <>
+            <div className={styles.label}>Balance</div>
+            <div className={styles.number}>
+              <span>${(balance ?? 0).toFixed(2)}</span>
             </div>
-        )
-    }
+          </>
+        )}
+      </div>
+    </div>
+  );
 }

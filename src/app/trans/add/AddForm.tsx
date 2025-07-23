@@ -7,6 +7,7 @@ import { superEcnrypt } from "@/common/crypt";
 import { useState } from 'react';
 import { redirect } from 'next/navigation'
 import CustomButton from "@/app/components/Button";
+import { writeCookie } from "@/common/cookieServer";
 
 interface Props {
   session: string;
@@ -91,6 +92,11 @@ export default function AddForm(prop:Props) {
         if (response.ok) {
           const json = await response.json();
           if (json.status=='success') {
+              writeCookie('balance', amount, {
+                secure: true,
+                  maxAge: 200,
+              });
+
             redirect('/');
           }
         } else {

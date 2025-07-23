@@ -64,27 +64,12 @@ export default function CustomButton({id, className, text, session, url, payload
         }
     };
 
-    const handleReset = (event: React.MouseEvent<HTMLButtonElement>) => {
-
-        console.log(event.target);
-    }
-
     const getClassName = () => {
         if (className) {
             return 'btn ' + className
         } else {
             return 'btn'
         }
-    }
-
-    if (url = '#reset') {
-        return (
-        <div>
-            <button id = {id} className = {getClassName()} type="button" onClick={handleReset}>
-                {text}
-            </button>
-        </div>
-        )
     }
 
     return (
