@@ -92,7 +92,8 @@ export default function AddForm(prop:Props) {
         if (response.ok) {
           const json = await response.json();
           if (json.status=='success') {
-              writeCookie('balance', amount, {
+              const oldbalance = json.newbalance.toFixed(2) - amount
+              writeCookie('balance', oldbalance, {
                 secure: true,
                   maxAge: 200,
               });

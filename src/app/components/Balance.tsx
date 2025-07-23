@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { superEcnrypt } from '@/common/crypt';
 import Loading from '@/app/components/Loading';
-import { writeCookie, readCookie } from '@/common/cookieServer';
+import { writeCookie, readCookie, deleteCookie } from '@/common/cookieServer';
 import styles from '@/resources/balance.module.css';
 
 interface Props {
@@ -48,18 +48,18 @@ export default function Page({ enable = true, session }: Props) {
       }
     };
 
-    const getCookieBalance = async (): Promise<number> => {
+    const getCookieBalance = async (bal:number): Promise<number> => {
       const cookieBalance = await readCookie('balance');
       if (cookieBalance) {
         const parsed = parseFloat(cookieBalance);
         return isNaN(parsed) ? 0 : parsed;
       } else {
-        return 0;
+        return bal;
       }
     };
 
     const animateBalance = async (endBalance: number) => {
-        let newBalance = await getCookieBalance(); 
+        let newBalance = await getCookieBalance(endBalance); 
         setBalance(newBalance);
 
         const balinterval = setInterval(() => {
@@ -69,6 +69,7 @@ export default function Page({ enable = true, session }: Props) {
             } else {
                 setBalance(endBalance);
                 clearInterval(balinterval);
+                deleteCookie('balance')
             }
         }, 100);
     };

@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
     try {
      
       const balance = await update(updatequery);
-      return NextResponse.json({status: 'success', balance: balance})
+      return NextResponse.json({status: 'success', balance: balance, newbalance : newbalance})
     } catch (e) {
       return NextResponse.json({status: 'error', error: e})
     }
