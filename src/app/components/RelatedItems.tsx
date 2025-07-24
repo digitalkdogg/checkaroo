@@ -15,7 +15,7 @@ interface Item {
     account_id : number,
     trans_id: string,
     date: string,
-    amount: string,
+    amount: number,
     client_id: string,
     company_name?: string,
     category_id: string, 
@@ -74,19 +74,19 @@ export default function Page(props: Props) {
 
   if (data) {
   return (
-    <div className = "justify-center w-full overflow-y-scroll scrollbar-hidden  max2-h-174 mt-20 mb-0 bg-[var(--color-light-grey)] h-1/3 absolute bottom-0 left-1/4">
+    <div className = "justify-center w-3/4 overflow-y-scroll scrollbar-hidden mt-20 mb-0 bg-[var(--color-light-grey)] h-1/3 absolute bottom-0 left-1/4">
       <div className = "flex flex-row p-4 fixed w-full -mt-15 shadow-md shadow-lg shadow-green-light/30">
-        <div className = "indent-10 w-1/6"><b>Date</b></div>
-        <div className = "indent-5 w-1/5"><b>Company Name</b></div>
-        <div className = "indent-5 w-1/5"><b>Amount</b></div>
+        <div className = "indent-10 w-1/7"><b>Date</b></div>
+        <div className = "indent-5 w-5/17"><b>Company Name</b></div>
+        <div className = "indent-5 w-1/9"><b>Amount</b></div>
         <div className = "indent-5 w-1/5"><b>Category Name</b></div>
       </div>
       {data.map(trans => (
           <div  key={trans.trans_id} className="flex flex-row p-4">
-              <div className = "indent-5 w-2/11">{convertToNiceDate(trans.date)}</div>
-              <div className = "indent-5 w-1/5">{trans.company_name}</div>
-              <div className = "indent-5 w-1/5">{trans.amount}</div>
-              <div className = "indent-5 w-1/5">{trans.category_name}</div>
+              <div className = "indent-5 w-1/5">{convertToNiceDate(trans.date)}</div>
+              <div className = "w-2/5">{trans.company_name}</div>
+              <div className = "indent-5 w-1/7">{trans.amount.toFixed(2)}</div>
+              <div className = "w-1/5">{trans.category_name}</div>
           </div>
       ))}  
     {error && <div className = "error">{error.message}</div>}

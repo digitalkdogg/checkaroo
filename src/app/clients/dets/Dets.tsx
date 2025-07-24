@@ -119,7 +119,9 @@ export default function Dets({ clientid, session }: Props) {
     return (
         <div className="flex flex-col items-center w-full">
             <div className = "top-container flex justify-center w-full bg-white h-1/2">
-                <form id = "clientForm"  className = "flex-3 bg-white flex flex-col my-10 max-w-180 justify-left min-h-[350px]" >
+                <form 
+                    id = "clientForm"  
+                    className = "flex-3 bg-white flex flex-col my-10 max-w-180 justify-left min-h-[350px]" >
                     <div className = "flex flex-col md:flex-row py-5">
                         <span className = "md:basis-32">ClientID :</span>
                             <Input name = "clientid" id = "clientid" val = {data.client_id} disabled = {true} />
@@ -128,7 +130,7 @@ export default function Dets({ clientid, session }: Props) {
                         <span className = "md:basis-32">Client Name :</span>
                             <Input name = "clientname" id = "clientname" val = {data.company_name} disabled = {false} />
                     </div>
-                    <div className= "flex flex-col sm:flex-row justify-center-safe mb-10 mt-10">
+                    <div className= "flex flex-col sm:flex-row justify-center mb-10 mt-10 border-t-1 border-green-900/50 pt-10 w-[118%] -ml-[50px]">
                         <Button 
                             id = "updateClient"
                             className = "mr-5"
