@@ -119,7 +119,7 @@ export default function Dets({ clientid, session }: Props) {
     return (
         <div className="flex flex-col items-center w-full">
             <div className = "top-container flex justify-center w-full bg-white h-1/2">
-                <form id = "clientForm"  className = "flex-3 bg-white flex flex-col my-10 max-w-180 justify-left max-h-[350px]" >
+                <form id = "clientForm"  className = "flex-3 bg-white flex flex-col my-10 max-w-180 justify-left min-h-[350px]" >
                     <div className = "flex flex-col md:flex-row py-5">
                         <span className = "md:basis-32">ClientID :</span>
                             <Input name = "clientid" id = "clientid" val = {data.client_id} disabled = {true} />
