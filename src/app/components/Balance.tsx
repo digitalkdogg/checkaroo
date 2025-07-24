@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { superEcnrypt } from '@/common/crypt';
 import Loading from '@/app/components/Loading';
-import { writeCookie, readCookie, deleteCookie } from '@/common/cookieServer';
+import {readCookie, deleteCookie } from '@/common/cookieServer';
 import styles from '@/resources/balance.module.css';
 
 interface Props {
@@ -35,12 +35,11 @@ export default function Page({ enable = true, session }: Props) {
         const json: BalanceResponse[] = await response.json();
 
         if (response.ok && Array.isArray(json) && json.length > 0) {
-          setBalance( await getCookieBalance())
           animateBalance(json[0].balance)
         } else {
           setBalance(0);
         }
-      } catch (error) {
+      } catch {
 
         setBalance(0);
       } finally {

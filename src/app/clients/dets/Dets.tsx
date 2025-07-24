@@ -102,7 +102,7 @@ export default function Dets({ clientid, session }: Props) {
 
     if (isLoading) {
         return (
-           <Loading />
+           <Loading className = "size-24 relative top-1/2 left-1/2" />
         )
     }
 
@@ -118,41 +118,43 @@ export default function Dets({ clientid, session }: Props) {
 
     return (
         <div className="flex flex-col items-center w-full">
-            <form id = "clientForm"  className = "flex-3 bg-white flex flex-col my-10 max-w-130 justify-left" >
-                <div className = "flex flex-col md:flex-row py-5">
-                    <span className = "md:basis-32">ClientID :</span>
-                        <Input name = "clientid" id = "clientid" val = {data.client_id} disabled = {true} />
-                </div>
-                <div className = "flex flex-col md:flex-row py-5">
-                    <span className = "md:basis-32">Client Name :</span>
-                        <Input name = "clientname" id = "clientname" val = {data.company_name} disabled = {false} />
-                </div>
-                <div className= "flex flex-col sm:flex-row justify-center-safe mb-10 mt-10">
-                    <Button 
-                        id = "updateClient"
-                        className = "mr-5"
-                        text = "Update" 
-                        session={session} 
-                        url="/api/clients/update" 
-                        payload = {['clientid','clientname']}
-                        callBack= {handleCallBack} />
+            <div className = "top-container flex justify-center w-full bg-white h-1/2">
+                <form id = "clientForm"  className = "flex-3 bg-white flex flex-col my-10 max-w-180 justify-left max-h-[350px]" >
+                    <div className = "flex flex-col md:flex-row py-5">
+                        <span className = "md:basis-32">ClientID :</span>
+                            <Input name = "clientid" id = "clientid" val = {data.client_id} disabled = {true} />
+                    </div>
+                    <div className = "flex flex-col md:flex-row py-5">
+                        <span className = "md:basis-32">Client Name :</span>
+                            <Input name = "clientname" id = "clientname" val = {data.company_name} disabled = {false} />
+                    </div>
+                    <div className= "flex flex-col sm:flex-row justify-center-safe mb-10 mt-10">
+                        <Button 
+                            id = "updateClient"
+                            className = "mr-5"
+                            text = "Update" 
+                            session={session} 
+                            url="/api/clients/update" 
+                            payload = {['clientid','clientname']}
+                            callBack= {handleCallBack} />
 
-                    <Button 
-                        id = "delClient"
-                        className = "danger mr-5"
-                        text = "Delete" 
-                        session={session} 
-                        url="/api/clients/delete" 
-                        payload = {['clientid']}
-                        callBack= {handleCallBack} />
+                        <Button 
+                            id = "delClient"
+                            className = "danger mr-5"
+                            text = "Delete" 
+                            session={session} 
+                            url="/api/clients/delete" 
+                            payload = {['clientid']}
+                            callBack= {handleCallBack} />
 
-                    <button type = "reset" onClick={handleResetCallBack}>Reset</button>
+                        <button type = "reset" onClick={handleResetCallBack}>Reset</button>
 
-                </div>
+                    </div>
 
-                {errorEvent && <div className = "error">{errorEvent}</div>}
-                {successEvent && <div className = "success">{successEvent}</div>}
-            </form>
+                    {errorEvent && <div className = "error">{errorEvent}</div>}
+                    {successEvent && <div className = "success">{successEvent}</div>}
+                </form>
+            </div>
             <Relateditems session={session} id = {clientid} api = "/api/clients/related" />
         </div>
     )

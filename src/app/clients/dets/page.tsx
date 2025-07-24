@@ -24,7 +24,7 @@ export default async function Page ({searchParams}: {searchParams: Promise<{ id:
             <ChecksessionComp reverseLogic = {true} session ={session} />
             <main className = "flex">
                 <Leftside enable = {true} session={session} />
-                <div className = "flex-3 bg-white flex flex-col items-center justify-center" >
+                <div className = "flex-3 bg-white flex flex-col max-h-full overflow-y-hidden" >
                     <Dets session = {session} clientid={id} />
                 </div>
             </main>
