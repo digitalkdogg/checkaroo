@@ -43,13 +43,13 @@ export default function AddForm(prop:Props) {
 
   return (
         <div>
-            <form className="max-w-280" onSubmit={formSubmit}> 
-                <div className = "flex flex-col md:flex-row justify-left py-5">
-                    <span className="md:basis-32">Client Name :</span>
+            <form className="flex flex-col my-10 max-w-180 justify-left min-h-[250px]" onSubmit={formSubmit}> 
+                <div className = "flex flex-col md:flex-row justify-left py-5 items-center">
+                    <span className="md:basis-32 mr-3">Client Name :</span>
                     <Input val = '' id = 'ClientName' name = 'ClientName' disabled = {false} />
                 </div>
-                 <div className= "flex flex-col sm:flex-row justify-center-safe mb-10 mt-10">
-                    <Button 
+                  <div className= "flex flex-col sm:flex-row justify-center mb-10 mt-10 border-t-1 border-green-900/50 pt-10 w-[130%] -ml-[50px]">
+                       <Button 
                         id = "addClient"
                         text = "Add Client" 
                         session={prop.session} 

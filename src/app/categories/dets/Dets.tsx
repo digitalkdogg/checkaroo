@@ -91,7 +91,7 @@ export default function Dets({ catid, session }: Props) {
 
     if (isLoading) {
         return (
-           <Loading />
+           <Loading className = "size-24 relative top-1/2 left-1/2" />
         )
     }
 
@@ -109,39 +109,42 @@ export default function Dets({ catid, session }: Props) {
 
     return (
         <div className="flex flex-col items-center w-full">
-            <form id = "catForm"  className = "flex-3 bg-white flex flex-col my-10 max-w-130 justify-left" >
-                <div className = "flex flex-col md:flex-row py-5">
-                    <span className = "md:basis-32">CatID :</span>
-                        <Input name = "catid" id = "catid" val = {data.category_id} disabled = {true} />
-                </div>
-                <div className = "flex flex-col md:flex-row py-5">
-                    <span className = "md:basis-32">Category Name :</span>
-                        <Input name = "catname" id = "catname" val = {data.category_name} disabled = {false} />
-                </div>
-                <div className= "flex flex-col sm:flex-row justify-center-safe mb-10 mt-10">
-                    <Button 
-                        id = "updateCat"
-                        className = "mr-5"
-                        text = "Update" 
-                        session={session} 
-                        url="/api/categories/update" 
-                        payload = {['catid','catname']}
-                        callBack= {handleCallBack} />
+            <div className = "top-container flex justify-center w-full bg-white h-1/2">
+                <form 
+                    id = "catForm"  
+                    className = "flex-3 bg-white flex flex-col my-10 max-w-180 justify-left min-h-[350px]" >
+                    <div className = "flex flex-col md:flex-row justify-center py-5">
+                        <span className = "md:basis-40">CatID :</span>
+                            <Input name = "catid" id = "catid" val = {data.category_id} disabled = {true} />
+                    </div>
+                    <div className = "flex flex-col md:flex-row justify-center py-5">
+                        <span className = "md:basis-40">Category Name :</span>
+                            <Input name = "catname" id = "catname" val = {data.category_name} disabled = {false} />
+                    </div>
+                     <div className= "flex flex-col sm:flex-row justify-center mb-10 mt-10 border-t-1 border-green-900/50 pt-10 w-[118%] -ml-[50px]">
+                        <Button 
+                            id = "updateCat"
+                            className = "mr-5"
+                            text = "Update" 
+                            session={session} 
+                            url="/api/categories/update" 
+                            payload = {['catid','catname']}
+                            callBack= {handleCallBack} />
+                        <Button 
+                            id = "delCat"
+                            className = "danger"
+                            text = "Delete" 
+                            session={session} 
+                            url="/api/categories/delete" 
+                            payload = {['catid']}
+                            callBack= {handleCallBack} />
+                        <button className="sm:ml-5" type="reset" onClick={handleResetCallBack}>Reset</button>
+                    </div>
 
-                    <Button 
-                        id = "delCat"
-                        className = "danger"
-                        text = "Delete" 
-                        session={session} 
-                        url="/api/categories/delete" 
-                        payload = {['catid']}
-                        callBack= {handleCallBack} />
-                    <button className="sm:ml-5" type="reset" onClick={handleResetCallBack}>Reset</button>
-                </div>
-
-                {errorEvent && <div className = "error">{errorEvent}</div>}
-                {successEvent && <div className = "success">{successEvent}</div>}
-            </form>
+                    {errorEvent && <div className = "error">{errorEvent}</div>}
+                    {successEvent && <div className = "success">{successEvent}</div>}
+                </form>
+            </div>
             <Relateditems session={session} id = {catid} api = "/api/categories/related" />
         </div>
     )

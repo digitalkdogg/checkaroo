@@ -23,7 +23,10 @@ export default function CustomButton({id, className, text, session, url, payload
     const createDataObj = (formData:FormData):string => {
         const dataobj: Record<string, FormDataEntryValue | null> = {};
         payload.forEach((item:string) => {
-            dataobj[item] = formData.get(item)
+           // if (dataobj[item])
+           if (formData.get(item)) {
+                dataobj[item] = formData.get(item)
+           } 
         })
         return JSON.stringify(dataobj);
     }
@@ -36,25 +39,27 @@ export default function CustomButton({id, className, text, session, url, payload
         const data = createDataObj(formData);
 
         try {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    session: superEcnrypt(session),
-                    data: encrypt(data)
+            if (data != '{}') { 
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session: superEcnrypt(session),
+                        data: encrypt(data)
+                    })
                 })
-            })
 
-            if (!response.ok) {
-                const json = await response.json();
-                callBack({status:'error', msg: json.error})
-                
-            } else {
-                const json = await response.json();
-                if (json.status == 'success') {
-                    callBack({status: 'success', msg: json.message})
+                if (!response.ok) {
+                    const json = await response.json();
+                    callBack({status:'error', msg: json.error})
+                    
                 } else {
-                    callBack({status:'error', 'msg': json.message})
+                    const json = await response.json();
+                    if (json.status == 'success') {
+                        callBack({status: 'success', msg: json.message})
+                    } else {
+                        callBack({status:'error', 'msg': json.message})
+                    }
                 }
             }
             setIsLoading(false);
