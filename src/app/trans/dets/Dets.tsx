@@ -153,8 +153,8 @@ export default function Dets(props:Props) {
     }
 
     return (
-        <div>
-            <form className = "flex-3 bg-white flex flex-col my-50 max-w-130 justify-left" >
+        <div className = "flex justify-center w-1/3">
+            <form className = "bg-white flex flex-col my-10 max-w-220 w-full justify-left min-h-[350px]" >
                 <div className = "flex flex-col md:flex-row py-5">
                     <span className = "md:basis-32">TransID :</span>
                      <Input name = "transid" id = "transid" val = {data?.trans_id ?? ''} disabled = {true} />
@@ -179,7 +179,7 @@ export default function Dets(props:Props) {
                         <Dropdown val = {data?.category_name ?? ''} api = "../api/categories" type = 'categories' session = {props.session} />
                     </div>
                 </div>
-                <div className= "flex flex-col sm:flex-row justify-center-safe mb-10 mt-10">
+                <div className= "flex flex-col sm:flex-row justify-center mb-10 mt-10 border-t-1 border-green-900/50 pt-10 w-[122%] -ml-[50px]">
                      <CustomButton 
                         id = "updateTrans"
                         className = "mr-5"
