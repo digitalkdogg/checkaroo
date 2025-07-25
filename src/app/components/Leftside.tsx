@@ -8,7 +8,7 @@ interface Props {
 
 export default function Page(props: Props) {
   return (
-    <div className = "flex-1 bg-gradient-to-b from-green to-green-light text-white py-8 px-4 z-20">
+    <div className = "flex-1 bg-gradient-to-b from-green to-green-light text-white py-8 px-4 z-20 h-lvh">
       <div className = "logotext text-4xl font-bold">Checkaroo</div>
         <Balance enable = {props.enable} session={props.session} />
         <ul role = "menu" className="text-lg font-semibold py-4 menu">
