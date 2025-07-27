@@ -121,7 +121,7 @@ export default function Dets({ clientid, session }: Props) {
             <div className = "top-container flex justify-center w-full bg-white h-1/2">
                 <form 
                     id = "clientForm"  
-                    className = "flex-3 bg-white flex flex-col my-10 max-w-180 justify-left min-h-[350px]" >
+                    className = "flex-3 bg-white flex flex-col my-10 max-w-180 justify-left min-h-[380px]" >
                     <div className = "flex flex-col md:flex-row justify-center py-5">
                         <span className = "md:basis-32">ClientID :</span>
                             <Input name = "clientid" id = "clientid" val = {data.client_id} disabled = {true} />
@@ -130,7 +130,7 @@ export default function Dets({ clientid, session }: Props) {
                         <span className = "md:basis-32">Client Name :</span>
                             <Input name = "clientname" id = "clientname" val = {data.company_name} disabled = {false} />
                     </div>
-                    <div className= "flex flex-col sm:flex-row justify-center mb-10 mt-10 border-t-1 border-green-900/50 pt-10 w-[118%] -ml-[50px]">
+                    <div className= "flex flex-col sm:flex-row justify-center mb-5 mt-15 border-t-1 border-green-900/50 pt-10 w-[118%] -ml-[50px]">
                         <Button 
                             id = "updateClient"
                             className = "mr-5"
@@ -153,8 +153,8 @@ export default function Dets({ clientid, session }: Props) {
 
                     </div>
 
-                    {errorEvent && <div className = "error">{errorEvent}</div>}
-                    {successEvent && <div className = "success">{successEvent}</div>}
+                    {errorEvent && <div className = "error flex justify-center">{errorEvent}</div>}
+                    {successEvent && <div className = "success flex justify-center">{successEvent}</div>}
                 </form>
             </div>
             <Relateditems session={session} id = {clientid} api = "/api/clients/related" />
