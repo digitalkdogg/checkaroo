@@ -8,7 +8,9 @@
   --green-medium : #c8ffdd;
   --green-ultalight: #edfff4;
   --light-grey: #f2f8f0;
+  --bright-green: #1bff72;
   --error: #b90707;
+  --light-red: #d3bfbf;
 }
 
 @theme inline {
@@ -22,6 +24,8 @@
   --color-green-ultalight: var(--green-ultalight);
   --color-light-grey: var(--light-grey);
   --color-error: var(--error);
+  --color-light-red: var(--light-red);
+  --color-bright-green: var(--bright-green);
   --animate-wiggle: wiggle 1s ease-in-out infinite;
 
   @keyframes wiggle {

@@ -3,19 +3,31 @@
     margin-top:3em;
 }
 
+
 .circle {
     border-radius: 100%;
     border: 1px solid var(--color-green-light);
-    width: 180px;
-    height: 180px;
+    min-width: 200px;
+    width:30%;
+    aspect-ratio: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     box-shadow: inset 0px 0px 7px #26312a;
-    background-color: var(--color-green-medium);
+    background-color: var(--color-green-medium); 
     color:var(--color-green);
+    overflow:hidden;
 }
+
+.neg {
+    background-color:var(--color-light-red);
+}
+
+.pos {
+    background-color:var(--color-bright-green);
+}
+
 
 .label {
     font-size:24px;

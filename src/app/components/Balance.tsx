@@ -18,6 +18,7 @@ interface BalanceResponse {
 export default function Page({ enable = true, session }: Props) {
     const [balance, setBalance] = useState<number|undefined>();
     const [isLoading, setIsLoading] = useState(true);
+    const [className, setClassName] = useState<string|null>()
 
     const fetchBalance = async(startBalance?:number) => {
         try {
@@ -31,7 +32,11 @@ export default function Page({ enable = true, session }: Props) {
             
             if (response.ok && Array.isArray(json) && json.length > 0) {
                 if (startBalance) {
-                    animateBalance(Number(startBalance), json[0].balance)
+                    if (startBalance < json[0].balance) {
+                        animatePosBalance(Number(startBalance), json[0].balance)
+                    } else {
+                        animateNegBalance(Number(startBalance), json[0].balance)
+                    }
                 } else {
                     setBalance(json[0].balance)
                 }
@@ -54,9 +59,28 @@ export default function Page({ enable = true, session }: Props) {
         }
     };
 
-    const animateBalance = async (startBalance:number, endBalance: number) => {
-        let newBalance = Number(startBalance) 
+    const animateNegBalance = async (startBalance:number, endBalance: number) => {
+        let newBalance = Number(startBalance)
         setBalance(newBalance);
+        setClassName('neg');
+
+        const balinterval = setInterval(() => {
+            if ((newBalance - 50) > endBalance) {
+                newBalance -= 50;
+                setBalance(newBalance);
+            } else {
+                setBalance(endBalance);
+                clearInterval(balinterval);
+                setClassName('')
+                deleteCookie('balance')
+            }
+        }, 100);
+    }
+
+    const animatePosBalance = async (startBalance:number, endBalance: number) => {
+        let newBalance = Number(startBalance)
+        setBalance(newBalance);
+        setClassName('pos');
 
         const balinterval = setInterval(() => {
             if ((newBalance + 50) < endBalance) {
@@ -65,6 +89,7 @@ export default function Page({ enable = true, session }: Props) {
             } else {
                 setBalance(endBalance);
                 clearInterval(balinterval);
+                setClassName('')
                 deleteCookie('balance')
             }
         }, 100);
@@ -76,9 +101,23 @@ export default function Page({ enable = true, session }: Props) {
 
     if (!enable) return null;
 
+    const getClassName = () => {
+        let classstr = styles.circle;
+        if (className == 'neg') {
+            classstr = classstr + ' ' + styles.neg
+        } 
+
+        if (className == 'pos') {
+            classstr = classstr + ' ' + styles.pos
+        }
+        return classstr;
+    }
+
+    const testing = "<div className={`${styles.circle} ${ className === 'neg'? 'bg-red-300'  : className === 'pos'? 'bg-black': 'bg-green-200' }`}>"
+
     return (
-        <div className={styles.wrap}>
-            <div className={styles.circle}>
+        <div id = "balance" className={className? styles.wrap + ' ' + className : styles.wrap}>
+            <div className = {getClassName()} >
                 {isLoading ? (
                 <span className="relative size-30 left-3 top-3">
                     <Loading />
