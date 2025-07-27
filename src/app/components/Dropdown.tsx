@@ -30,7 +30,8 @@ function Dropdown(prop:Props) {
     const [successAddDropDown, setSuccessAddDropDown] = useState<any>(null);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [resultEles, setResultEles] = useState<any>(null);
+    //const [resultEles, setResultEles] = useState<any>(null);
+    const [resultEles, setResultEles] = useState<NodeListOf<HTMLElement> | null>(null);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [addRow, setAddRow] = useState<any>(null);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -40,7 +41,8 @@ function Dropdown(prop:Props) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [arrow, setArrow] = useState<any>(null);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [hidden_input, setHiddenInput] = useState<any>(null);
+   // const [hidden_input, setHiddenInput] = useState<any>(null);
+   const [hiddenValue, setHiddenValue] = useState(prop.val || 'Select Text');
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [dropdownInput, setDropDownInput] = useState<any>(null);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -89,7 +91,7 @@ function Dropdown(prop:Props) {
         setResults(document.querySelector('#' + prop.type + '_results'));
         setWrapper(document.getElementById(prop.type));
         setArrow(document.querySelector('#' + prop.type + '_arrow svg'));
-        setHiddenInput(document.getElementById(prop.type + '_hidden_input'));
+       // setHiddenInput(document.getElementById(prop.type + '_hidden_input'));
         setDropDownInput(document.getElementById(prop.type + '_dropinput'));
         getOtherArrow()
       
@@ -106,7 +108,6 @@ function Dropdown(prop:Props) {
     }
 
     const searchResult = (search:string) => {
-
         if (resultEles) {
             resultEles.forEach((el: HTMLElement) => {
                 if (el.classList.contains('donothide') == false) {
@@ -142,9 +143,13 @@ function Dropdown(prop:Props) {
     };
 
     const hideResultsBox = () => {
-        resultEles.forEach((el: HTMLElement) => {
-            el.classList.remove('hide')
-        })
+       // resultEles.forEach((el: HTMLElement) => {
+       //     el.classList.remove('hide')
+       // })
+
+        resultEles?.forEach((el) => {
+            el.classList.remove('hide');
+        });
 
         if (results && arrow) {
             otherArrow.classList.remove('sendtoback');
@@ -174,9 +179,13 @@ function Dropdown(prop:Props) {
 
         results?.classList.remove('hide');
 
-        resultEles.forEach((el: HTMLElement) => {
-            el.classList.remove('hide')
-        })
+        resultEles?.forEach((el) => {
+            el.classList.remove('hide');
+        });
+
+        //resultEles.forEach((el: HTMLElement) => {
+         //   el.classList.remove('hide')
+        //})
 
         if (results) {
             if (results.classList.contains('hide')) {
@@ -217,7 +226,8 @@ function Dropdown(prop:Props) {
             if (html.length > 0) {
                 if (dropdownInput) {
                     dropdownInput.placeholder = html;
-                    hidden_input.value = html;
+                    setHiddenValue(html);
+                    //hidden_input.value = html;
                     dropdownInput.value = '';
                 }
                 hideResultsBox();
@@ -305,7 +315,8 @@ function Dropdown(prop:Props) {
                             setAddData(false);
                             dropdownInput.value = '';
                             dropdownInput.placeholder = val;
-                            hidden_input.value = val;
+                            setHiddenValue(val);
+                           // hidden_input.value = val;
                             hideResultsBox();
                             fetchData()
                             setTimeout(() => {
@@ -369,7 +380,7 @@ function Dropdown(prop:Props) {
                     placeholder={getPlaceholder()}
                     onChange={handleInputChange}
                 />
-                <input type = "hidden" id = {prop.type + '_hidden_input'} name = {prop.type} value={getPlaceholder()}/>
+                <input type = "hidden" id = {prop.type + '_hidden_input'} name = {prop.type} value={hiddenValue}/>
                 <div className = {'arrow ' + styles.droparrow} id = {prop.type + '_arrow'} onClick={(e) => arrowclick(e)}>
                     <Svg id = {prop.type + '_droparrow'} type = 'downarrow' />
                 </div>
