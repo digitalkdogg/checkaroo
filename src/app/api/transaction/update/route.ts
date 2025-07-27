@@ -40,7 +40,8 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  if (!data || !data.transid || data.date || data.amount || data.clients || data.categories) {
+  writelog(data, 'trans update is here')
+  if (!data || !data.transid || !data.date || !data.amount || !data.clients || !data.categories) {
     return NextResponse.json({ error: 'Invalid trans data' }, { status: 400 })
   }
 
