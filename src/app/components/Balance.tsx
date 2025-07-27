@@ -33,11 +33,13 @@ export default function Page({ enable = true, session }: Props) {
       if (response.ok && json.length > 0) {
         const newBalance = json[0].balance;
         if (typeof startBalance === 'number') {
-          startBalance < newBalance
-            ? animateBalance(startBalance, newBalance, 'pos')
-            : animateBalance(startBalance, newBalance, 'neg');
+            if (startBalance < newBalance) {
+                animateBalance(startBalance, newBalance, 'pos');
+            } else {
+                animateBalance(startBalance, newBalance, 'neg');
+            }
         } else {
-          setBalance(newBalance);
+            setBalance(newBalance);
         }
       } else {
         setBalance(0);
