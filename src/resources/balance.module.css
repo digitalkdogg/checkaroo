@@ -21,11 +21,13 @@
 }
 
 .neg {
-    background-color:var(--color-light-red);
+    color:var(--color-error); 
+    box-shadow: inset 0px 0px 7px var(--color-light-red);
 }
 
 .pos {
-    background-color:var(--color-bright-green);
+    color:var(--color-bright-green);
+    box-shadow: inset 0px 0px 7px var(--color-light-green);
 }
 
 
