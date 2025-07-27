@@ -88,7 +88,6 @@ function Dropdown(prop:Props) {
         setResults(document.querySelector('#' + prop.type + '_results'));
         setWrapper(document.getElementById(prop.type));
         setArrow(document.querySelector('#' + prop.type + '_arrow svg'));
-       // setHiddenInput(document.getElementById(prop.type + '_hidden_input'));
         setDropDownInput(document.getElementById(prop.type + '_dropinput'));
         getOtherArrow()
       
@@ -140,9 +139,6 @@ function Dropdown(prop:Props) {
     };
 
     const hideResultsBox = () => {
-       // resultEles.forEach((el: HTMLElement) => {
-       //     el.classList.remove('hide')
-       // })
 
         resultEles?.forEach((el) => {
             el.classList.remove('hide');
@@ -179,10 +175,6 @@ function Dropdown(prop:Props) {
         resultEles?.forEach((el) => {
             el.classList.remove('hide');
         });
-
-        //resultEles.forEach((el: HTMLElement) => {
-         //   el.classList.remove('hide')
-        //})
 
         if (results) {
             if (results.classList.contains('hide')) {
@@ -313,7 +305,6 @@ function Dropdown(prop:Props) {
                             dropdownInput.value = '';
                             dropdownInput.placeholder = val;
                             setHiddenValue(val);
-                           // hidden_input.value = val;
                             hideResultsBox();
                             fetchData()
                             setTimeout(() => {
