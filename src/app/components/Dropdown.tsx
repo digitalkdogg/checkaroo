@@ -29,19 +29,16 @@ function Dropdown(prop:Props) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [successAddDropDown, setSuccessAddDropDown] = useState<any>(null);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    //const [resultEles, setResultEles] = useState<any>(null);
+
     const [resultEles, setResultEles] = useState<NodeListOf<HTMLElement> | null>(null);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [addRow, setAddRow] = useState<any>(null);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [results, setResults] = useState<any>(null);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [wrapper, setWrapper] = useState<any>(null);
+    const [wrapper, setWrapper] = useState<HTMLElement | null>(null);
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [arrow, setArrow] = useState<any>(null);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-   // const [hidden_input, setHiddenInput] = useState<any>(null);
    const [hiddenValue, setHiddenValue] = useState(prop.val || 'Select Text');
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [dropdownInput, setDropDownInput] = useState<any>(null);
