@@ -5,6 +5,16 @@ import {decrypt} from '@/common/crypt'
 import { headersLegit } from '@/common/session'
 import {writelog} from '@/common/logs'
 
+interface Trans {
+  transid: string
+  date: string
+  client_id: number
+  client_name: string
+  amount: number
+  category_id: number
+  category_name: string
+}
+
 export async function GET(request: NextRequest) {
   writelog(request.toString(), '----------invalid request get-----------')
   return NextResponse.json({ error: 'Unauthorized request' }, { status: 401 }); 
@@ -43,15 +53,12 @@ export async function POST(request: NextRequest) {
         limit: 1
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let arr:any = []
-      const results = await select(query);
-      arr  = results
-      if (arr.length == 0 ) {
-        arr = ['no results found here']
+      let results = await select(query) as Trans[] | String[];
+      if (results.length == 0 ) {
+        results = ['no results found here']
       }
 
-      return NextResponse.json(arr[0])
+      return NextResponse.json(results[0])
     } else {
         return NextResponse.json([{'error' : 'No transid'}])
     }
