@@ -82,7 +82,9 @@ export default function Page({ enable = true, session }: Props) {
   };
 
   useEffect(() => {
-    getBalance();
+    if (session) {
+      getBalance();
+    }
   }, [session]);
 
   if (!enable) return null;

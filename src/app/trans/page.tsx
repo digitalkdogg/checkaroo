@@ -13,12 +13,12 @@ const geist = Geist({
 
 export default async function Page() {
 
-   const cookiename = process.env.NEXT_PUBLIC_cookiestr as string;
-      const sessionCookie = await readCookie(cookiename);
-      let session = ''
-      if (sessionCookie) {
-          session = sessionCookie
-      }
+  const cookiename = process.env.NEXT_PUBLIC_cookiestr as string;
+  const sessionCookie = await readCookie(cookiename);
+  let session = ''
+  if (sessionCookie) {
+      session = sessionCookie
+  }
 
   return (
     <div className = {geist.className}>

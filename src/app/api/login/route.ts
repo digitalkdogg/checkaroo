@@ -19,12 +19,12 @@ export async function POST(request: NextRequest) {
         const sessionstr:string = json.session;
 
         if (!sessionstr) {
-            return NextResponse.json({ error: 'Unauthorized Session' }, { status: 401 });
+            return NextResponse.json({valid:false});
         }
 
         const accountid = await getAccountIDSession(sessionstr)
         if (!accountid) {
-            return NextResponse.json({ error: 'Unauthorized Session' }, { status: 401 });
+            return NextResponse.json({valid: false});
         } else {
             return NextResponse.json({ valid: true })
         }
