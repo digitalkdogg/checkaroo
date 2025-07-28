@@ -41,10 +41,13 @@ export const getDataFromCookie = (cookiestr:string) => {
       return '';
     }
 
+    interface ParsedCookie {
+      [key: string]: string;
+    }
+
     const fieldnames = cookiestr.split('||')
     let fieldvals = []
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const returnobj:any = {}
+    const returnobj:ParsedCookie = {}
     if (fieldnames != undefined) {
       for (let x =0; x<fieldnames.length; x++) {
         fieldvals = fieldnames[x].split(':')
