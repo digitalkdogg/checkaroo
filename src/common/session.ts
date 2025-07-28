@@ -1,48 +1,51 @@
-/* esline-disable @typescript-esline/no-explicit-any */
 import moment from 'moment'
 import {select, update} from '@/common/dbutils'
 import { NextResponse, NextRequest } from 'next/server'
 import { writelog } from '@/common/logs'
 import {decrypt} from '@/common/crypt'
 
-export const checkValidSession = async (session:string) => {
 
-    if (session.length < 89) {
+interface LoginRow {
+  ExpireDT: string;
+  account_id: string;
+  session_hash: string
+}
+
+export const checkValidSession = async (session: string): Promise<boolean> => {
+
+  if (session.length < 89) {
+    return false;
+  }
+
+  const keywords = ['select', 'update', 'insert', 'delete', 'testing', 'password'];
+  for (let x = 0; x < keywords.length; x++) {
+    if (session.includes(keywords[x])) {
       return false;
     }
+  }
 
-    const keywords = ['select', 'update', 'insert', 'delete', 'testing', 'password'];
-    for (let x =0; x<keywords.length; x++) {
-      if (session.indexOf(keywords[x]) >= 0) {
-        return false;
-      }
+  const query = {
+    select: '*',
+    from: 'Logins',
+    where: 'Logins.session_hash = "' + session + '"',
+    sort: 'Logins.loginDT desc',
+    limit: 1,
+  };
+
+  const rows = await select(query) as LoginRow[];
+
+  for (const row of rows) {
+    const expireDT = moment(row.ExpireDT);
+    const now = moment();
+    if (expireDT > now) {
+      writelog(`session for ${session} is true`);
+      return true;
     }
+  }
 
-    const query = {
-          select: '*',
-          from: 'Logins',
-          where: 'Logins.session_hash = "' + session + '"',
-          sort: 'Logins.loginDT desc',
-          limit: 1
-      }
-    
-    let isValid = false;
-    
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let rowsarr:any = []
-    const rows = await select(query);
-    rowsarr = rows;
-    for (let x =0; x<rowsarr.length; x++) {
-      const expireDT = moment(rowsarr[x].ExpireDT)
-      const now = moment()
-      if (expireDT > now) {
-        isValid = true;
-      }
-    }
-
-    writelog('session for ' + session + 'is ' + isValid.valueOf())
-    return  isValid;
-}
+  writelog(`session for ${session} is false`);
+  return false;
+};
 
 export const findSession = (sessionstr:string) => {
     if (sessionstr.indexOf('|||')>=0) {
@@ -79,13 +82,11 @@ export const getAccountIDSession = async (session:string) => {
           limit: 1
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let rowsarr:any = []
-      const rows = await select(query);
-      rowsarr = rows;
+      const rows = await select(query) as LoginRow[];
 
-      if (rowsarr.length == 1) {
-        const account = rowsarr[0].account_id;
+
+      if (rows.length == 1) {
+        const account = rows[0].account_id
         return account;
       }
 
@@ -95,6 +96,7 @@ export const getAccountIDSession = async (session:string) => {
 }
 
 export const checkUserForActiveSession = async (user:string)=> {
+
    const sessionQuery = {
         select: '*',
         from : 'Logins',
@@ -103,23 +105,19 @@ export const checkUserForActiveSession = async (user:string)=> {
         limit : 10,
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let sessionsArray:any = []
-    const sessions = await select(sessionQuery);
-    sessionsArray = sessions;
+    const sessions = await select(sessionQuery) as LoginRow[];
 
-    if (sessionsArray.length > 0) {
-      for(let x = 0; x< sessionsArray.length; x++) {
-        const expireDT = moment(sessionsArray[x].ExpireDT);
+    if (sessions.length>0) {
+      for (let x =0; x< sessions.length; x++) {
+        const expireDT = moment(sessions[x].ExpireDT);
         const now = moment();
         if (expireDT > now) {
-          return sessionsArray[x].session_hash;
+          return sessions[x].session_hash;
         }
       }
     } else {
-      return false
+      return false;
     }
-
   return false
 }
 
@@ -130,14 +128,11 @@ export const doesSessionExists = async (session:string, user:string) => {
         where : 'Logins.session_hash = "' + session + '" and user_id = "' + user + '"' 
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let sessionsArray:any = []
-    const sessions = await select(sessionQuery);
-    sessionsArray = sessions;
+    const sessions = await select(sessionQuery) as LoginRow[];
 
-    if (sessionsArray.length>0) {
-      for (let x =0; x<sessionsArray.length; x++) {
-        const expireDT = moment(sessionsArray[x].expireDT)
+    if (sessions.length>0) {
+      for (let x =0; x<sessions.length; x++) {
+        const expireDT = moment(sessions[x].ExpireDT)
         const now = moment();
         if (expireDT > now) {
           writelog('session for ' + session + 'and ' + user + 'is true')
@@ -161,12 +156,9 @@ export const validateUser = async (user:string, word:string) => {
         where: 'user_id = "' + user + '" and password_hash = "' + word + '"' 
     }
   
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let rowsarr:any = []
       try {
-          const rows = await select(query)
-          rowsarr=rows
-          if (rowsarr.length > 0) {
+          const rows = await select(query) as LoginRow[]
+          if (rows.length > 0) {
             return true;
           } else {return false;}
       } catch (err) {NextResponse.json({'error':err})}
