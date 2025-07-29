@@ -130,7 +130,7 @@ a, ul.menu li {
 }
 
 a:hover, ul.menu li:hover {
-  transform: translate(20px, 1px);
+  transform: translate(50px, 1px);
   scale: 115%;
   filter: contrast(0.7);
 }

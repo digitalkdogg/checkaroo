@@ -122,6 +122,8 @@ export const checkUserForActiveSession = async (user:string)=> {
 }
 
 export const doesSessionExists = async (session:string, user:string) => {
+  writelog(user + ' ' + session, 'username session is this')
+
    const sessionQuery = {
         select: '*',
         from : 'Logins',

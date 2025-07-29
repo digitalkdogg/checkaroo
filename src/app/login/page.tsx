@@ -2,7 +2,7 @@
 
 import { Geist } from 'next/font/google'
 import Leftside from '@/app/components/Leftside'
-import LoginPage from '@/app/components/Loginform'
+import LoginPage from '@/app/login/Loginform'
 import { readCookie } from '@/common/cookieServer'
 import { redirect } from 'next/navigation'
 import ChecksessionComp from '../components/ChecksessionComp';

@@ -1,7 +1,8 @@
 'use client'
 import { FormEvent } from 'react'
 import { encrypt } from '@/common/crypt';
-import {redirect} from 'next/navigation'
+import {redirect} from 'next/navigation';
+import Button from '@/app/components/Button';
 
 import  Loading  from '@/app/components/Loading';
 
@@ -96,6 +97,10 @@ const hideErrorMsg = (e: React.FocusEvent<HTMLInputElement>) => {
   document.querySelector('.'+parent)?.classList.add('notvisible')
 }
 
+const handleCallBack = () => {
+
+}
+
   return (
     <form onSubmit={handleSubmit} className = "max-w-[520px]" >
         <div className = "flex flex-col">
@@ -114,6 +119,7 @@ const hideErrorMsg = (e: React.FocusEvent<HTMLInputElement>) => {
         </div>
         <br />
         <div className= "flex justify-center-safe mb-10">
+            <Button id = "submitbtn" text="Submit2" session = "" url="/api/login/auth2" payload={['username', 'password']} callBack={handleCallBack} />
             <button className="inset-shadow-indigo-500 mr-5 flex flex-row" type="submit" id = "submit">
                 <span id = "loadingspan" className = "notvisible mr-0 ml-2"><Loading size={6} /></span>Submit
             </button>
