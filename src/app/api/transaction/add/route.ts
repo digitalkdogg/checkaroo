@@ -5,6 +5,7 @@ import {decrypt} from '@/common/crypt'
 import {v4 as uuidv4} from 'uuid'
 import {writelog} from '@/common/logs'
 import { convertToMySQLDate } from '@/common/common'
+import { OkPacketParams } from 'mysql2'
 
 
 export async function GET(request: NextRequest) {
@@ -92,55 +93,59 @@ export async function POST(request: NextRequest) {
 }
 
 async function validateTransaction(transid: string, accountid: string) {
+  interface Trans {
+    transid: string
+  }
+
   const validateQuery = {
     select: '*',
     from: 'Transactions',
     where: `trans_id = "${transid}" AND account_id = "${accountid}"`
   } 
 
-   const validateRows = await select(validateQuery);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let validateRowsArr:any = [];
-      validateRowsArr = validateRows;
-      writelog('validateRowsArr is ' + JSON.stringify(validateRowsArr), '------------Transaction-------');
-      if (validateRowsArr.length > 0) {
+   const validateRows = await select(validateQuery) as Trans[];
+      writelog('validateRowsArr is ' + JSON.stringify(validateRows), '------------Transaction-------');
+      if (validateRows.length > 0) {
         return true;
       }
       return false; 
 }
 
 async function getClientID(clientName: string) {
+  interface Clients {
+    client_id: string
+  }
+
   const query = {
     select: 'client_id',
     from: 'Clients',
     where: `company_name = "${clientName}"`
   }
 
-  const rows = await select(query);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let rowsarr:any = [];
-  rowsarr = rows;
+  const rows = await select(query) as Clients[];
+
   
-  if (rowsarr.length > 0) {
-    return rowsarr[0].client_id;
+  if (rows.length > 0) {
+    return rows[0].client_id;
   }
-  return null; // Example client ID
+  return null; 
 }
 
 async function getCatID(catName: string) {
+
   const query = {
     select: 'category_id',
     from: 'Category',
     where: `category_name = "${catName}"`
   }
 
-  const rows = await select(query);
+  const catrows = await select(query);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let rowsarr:any = [];
-  rowsarr = rows;
+  rowsarr = catrows;
   
   if (rowsarr.length > 0) {
     return rowsarr[0].category_id;
   }
-  return null; // Example client ID
+  return null;
 }

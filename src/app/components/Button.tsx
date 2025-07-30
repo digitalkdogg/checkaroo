@@ -61,7 +61,10 @@ export default function CustomButton({id, className, text, session, url, payload
                         callBack({status:'error', 'msg': json.message})
                     }
                 }
+            } else {
+                callBack({status: 'error', 'msg': 'Required fields were not filled out properly'})
             }
+
             setIsLoading(false);
         } catch (err:unknown) {
             callBack({status:'error', 'msg': String(err) })
