@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { insert} from '@/common/dbutils'
 import { convertToMySQLDate, setExpireDT} from '@/common/common'
-import {checkUserForActiveSession, doesSessionExists, validateUser, expireSession, headersLegit, findSession} from '@/common/session'
+import {checkUserForActiveSession, doesSessionExists, validateUser, expireSession, headersLegit} from '@/common/session'
 import { readCookie, writeCookie } from '@/common/cookieServer'
 import {decrypt, encrypt} from '@/common/crypt'
 import crypto from 'crypto-js';
@@ -21,33 +21,27 @@ export async function POST(request:NextRequest) {
     }
 
     const json = await request.json();
-    const data = JSON.parse(decrypt(json.data));
-    if (!data.username || !data.password) {
+    if (!json.user || !json.pass) {
         return NextResponse.json({'status': false, msg : 'The reqired fields are not present'})
     }
-   // const user:string = decrypt(json.user);
-  //  const pass:string = decrypt(json.pass);
+    const user:string = decrypt(json.user);
+    const pass:string = decrypt(json.pass);
 
-    const password =crypto.MD5(data.password).toString()
+    const password =crypto.MD5(pass).toString()
 
-    if (await validateUser(data.username, password)) {
+    if (await validateUser(user, password)) {
 
         const cookiename = process.env.NEXT_PUBLIC_cookiestr as string
-        let sessionCookie = await readCookie(cookiename)
-        
-        const sessionstr = findSession(decrypt(String(sessionCookie)))
+        const sessionCookie = await readCookie(cookiename)
 
-
-        if (sessionstr) {
-            if (await doesSessionExists(sessionstr, data.username)) {
+        if (sessionCookie) {
+            if (await doesSessionExists(user, sessionCookie)) {
                 return NextResponse.json({'status': 'success', 'msg': 'Session is valid already'})
             } else {
                 return NextResponse.json({'status': false, 'msg': 'We can not login in at this time.  Try clearing your cache and try again.'})
             }
         } else {
-            const testing = await checkUserForActiveSession(data.username);
-
-            if (await checkUserForActiveSession(data.username) == false) {
+            if (await checkUserForActiveSession(user) == false) {
                 let session = uuidv4().trim() + uuidv4().trim();
                 for (let x=0; x<5; x++) {
                     if (session.length < 96) {
@@ -67,7 +61,7 @@ export async function POST(request:NextRequest) {
                 const insquery = {
                     table: 'Logins',
                     fields: ['session_hash', 'user_id', 'LoginDT', 'ExpireDT'],
-                    vals: [session, data.username, convertToMySQLDate(new Date()), setExpireDT()]
+                    vals: [session, user, convertToMySQLDate(new Date()), setExpireDT()]
                 }
 
                 const login = await insert(insquery);
@@ -75,8 +69,7 @@ export async function POST(request:NextRequest) {
                     return NextResponse.json({'status': 'success'})
                 } else {return NextResponse.json({'status': 'error'})}
             } else {
-            //    return NextResponse.json({'testing': 'test'})
-                expireSession(data.username);
+                expireSession(user);
                 return NextResponse.json({'status': false, 'msg': 'Hmmmm we can not login in at this time.  Try clearing your cache and try again.'})
             }
         }
