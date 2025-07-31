@@ -268,16 +268,20 @@ function Dropdown(prop:Props) {
         }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const addItem = async (event:any) => {
-        let target; 
-        if (event.target.nodeName=='svg') {
-            target = event.target.parentNode;
-        } else if (event.target.nodeName=='path') {
-            target = event.target.parentNode.parentNode;    
-        } else if (event.target.nodeName=='span' || event.target.nodeName=='SPAN') {
-            target = event.target;
+    const addItem = async (event: React.MouseEvent<HTMLElement>) => {
+        let target: HTMLElement;
+        const nodeName = (event.target as HTMLElement).nodeName;
+
+        if (nodeName === 'svg') {
+            target = (event.target as HTMLElement).parentNode as HTMLElement;
+        } else if (nodeName === 'path') {
+            target = (event.target as HTMLElement).parentNode?.parentNode as HTMLElement;
+        } else if (nodeName.toLowerCase() === 'span') {
+            target = event.target as HTMLElement;
+        } else {
+            throw new Error('Unsupported element type');
         }
+
 
         if (addData) {
             if (target) {
@@ -286,6 +290,10 @@ function Dropdown(prop:Props) {
                 setSuccessAddDropDown(false);
                 
                 const val = target.getAttribute('data-value'); 
+
+                if (!val) {
+                    throw new Error('Missing data-value attribute');
+                }
 
                 await fetch(prop.api+ '/add', {
                     method: 'POST',
