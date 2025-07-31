@@ -33,7 +33,7 @@ export async function POST(request:NextRequest) {
     if (await validateUser(data.username, password)) {
 
         const cookiename = process.env.NEXT_PUBLIC_cookiestr as string
-        let sessionCookie = await readCookie(cookiename)
+        const sessionCookie = await readCookie(cookiename)
         
         const sessionstr = findSession(decrypt(String(sessionCookie)))
 
@@ -45,7 +45,6 @@ export async function POST(request:NextRequest) {
                 return NextResponse.json({'status': false, 'message': 'We can not login in at this time.  Try clearing your cache and try again.'})
             }
         } else {
-            const testing = await checkUserForActiveSession(data.username);
 
             if (await checkUserForActiveSession(data.username) == false) {
                 let session = uuidv4().trim() + uuidv4().trim();

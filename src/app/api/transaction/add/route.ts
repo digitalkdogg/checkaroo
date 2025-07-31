@@ -5,7 +5,6 @@ import {decrypt} from '@/common/crypt'
 import {v4 as uuidv4} from 'uuid'
 import {writelog} from '@/common/logs'
 import { convertToMySQLDate } from '@/common/common'
-import { OkPacketParams } from 'mysql2'
 
 
 export async function GET(request: NextRequest) {

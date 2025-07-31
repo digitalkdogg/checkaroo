@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
         limit: 1
       }
 
-      let results = await select(query) as Trans[] | String[];
+      let results = await select(query) as Trans[] | string[];
       if (results.length == 0 ) {
         results = ['no results found here']
       }
