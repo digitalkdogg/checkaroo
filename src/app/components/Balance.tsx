@@ -31,8 +31,7 @@ export default function Page({ enable = true, session }: Props) {
       const json: BalanceResponse[] = await response.json();
 
       if (response.ok && json.length > 0) {
-        let newBalance = Number(json[0].balance).toFixed(2);
-
+        const newBalance = Number(json[0].balance).toFixed(2);
 
         if (typeof oldBalance === 'number') {
             if (oldBalance < Number(newBalance)) {
@@ -104,7 +103,7 @@ export default function Page({ enable = true, session }: Props) {
         }
       }
 
-    },200)
+    },100)
 
   }
 
