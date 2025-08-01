@@ -20,7 +20,7 @@ export default function Page({ enable = true, session }: Props) {
   const [isLoading, setIsLoading] = useState(true);
   const [trend, setTrend] = useState<'neg' | 'pos' | ''>('');
 
-  const fetchBalance = async (startBalance?: number) => {
+  const fetchBalance = async (oldBalance?: number) => {
     try {
       const response = await fetch('/api/balance', {
         method: 'POST',
@@ -31,15 +31,15 @@ export default function Page({ enable = true, session }: Props) {
       const json: BalanceResponse[] = await response.json();
 
       if (response.ok && json.length > 0) {
-        const newBalance = json[0].balance;
-        if (typeof startBalance === 'number') {
-            if (startBalance < newBalance) {
-                animateBalance(startBalance, newBalance, 'pos');
+        const newBalance = Number(json[0].balance).toFixed(2);
+        if (typeof oldBalance === 'number') {
+            if (oldBalance < Number(newBalance)) {
+                animateBalance(oldBalance, Number(newBalance), 'pos');
             } else {
-                animateBalance(startBalance, newBalance, 'neg');
+                animateBalance(oldBalance, Number(newBalance), 'neg');
             }
         } else {
-            setBalance(newBalance);
+            setBalance(Number(newBalance));
         }
       } else {
         setBalance(0);
@@ -63,18 +63,22 @@ export default function Page({ enable = true, session }: Props) {
     let step:number = 0;
 
     if (direction === 'pos') {
-      step = 50;
+      step = 30;
     } else {
-      step = -50;
+      step = -30;
     }
 
     const interval = setInterval(() => {
+      console.log('start', start, 'end', end, 'step', step);
+
+
       start = start + step;
       if (step > 0) {
         if (start < end) {
           setBalance(start);
         } else {
           setTrend('');
+          setBalance(end);
           deleteCookie('balance');
           clearInterval(interval)
         }
@@ -83,6 +87,7 @@ export default function Page({ enable = true, session }: Props) {
           setBalance(start);
         } else {
           setTrend('')
+          setBalance(end);
           deleteCookie('balance');
           clearInterval(interval)
         }
