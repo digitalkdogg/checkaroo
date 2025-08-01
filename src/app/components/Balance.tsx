@@ -56,30 +56,40 @@ export default function Page({ enable = true, session }: Props) {
     fetchBalance(cookieBalance ? Number(cookieBalance) : undefined);
   };
 
-  const animateBalance = (
-    start: number,
-    end: number,
-    direction: 'neg' | 'pos'
-  ) => {
-    setTrend(direction);
-    let current = start;
-    setBalance(current);
+  const animateBalance = (start: number,end: number,direction: 'neg' | 'pos') => {
 
-    const step = direction === 'pos' ? 50 : -50;
+    setTrend(direction) 
+    setBalance(start)
+    let step:number = 0;
+
+    if (direction === 'pos') {
+      step = 50;
+    } else {
+      step = -50;
+    }
 
     const interval = setInterval(() => {
-      const next = current + step;
-      if ((step > 0 && next < end) || (step < 0 && next > end)) {
-        current = next;
-        setBalance(current);
+      start = start + step;
+      if (step > 0) {
+        if (start < end) {
+          setBalance(start);
+        } else {
+          setTrend('');
+          deleteCookie('balance');
+          clearInterval(interval)
+        }
       } else {
-        setBalance(end);
-        setTrend('');
-        clearInterval(interval);
-        deleteCookie('balance');
+        if (start > end ) {
+          setBalance(start);
+        } else {
+          setTrend('')
+          deleteCookie('balance');
+          clearInterval(interval)
+        }
       }
-    }, 100);
-  };
+    },200)
+
+  }
 
   useEffect(() => {
     if (session) {

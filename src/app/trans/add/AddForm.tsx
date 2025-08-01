@@ -92,7 +92,7 @@ export default function AddForm(prop:Props) {
         if (response.ok) {
           const json = await response.json();
           if (json.status=='success') {
-              const oldbalance:number = json.newbalance.toFixed(2) - parseFloat(amount)
+              const oldbalance:number = json.oldbalance.toFixed(2)
               writeCookie('balance', oldbalance.toString(), {
                 secure: true,
                   maxAge: 200,

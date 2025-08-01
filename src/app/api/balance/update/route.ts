@@ -48,11 +48,13 @@ export async function POST(request: NextRequest) {
 
 
     const oldbalance:object = await select(query);
+    let oldbalanceval:number = 0;
 
     let newbalance:number = 0
     Object.entries(oldbalance).map(([key, value]) => {
       if(key) {
         newbalance =  parseFloat(value.balance) - parseFloat(data.value)
+        oldbalanceval = parseFloat(value.balance.toFixed(2))
       }
     })
 
@@ -66,7 +68,7 @@ export async function POST(request: NextRequest) {
     try {
      
       const balance = await update(updatequery);
-      return NextResponse.json({status: 'success', balance: balance, newbalance : newbalance})
+      return NextResponse.json({status: 'success', balance: balance, newbalance : newbalance, oldbalance: oldbalanceval})
     } catch (e) {
       return NextResponse.json({status: 'error', error: e})
     }
