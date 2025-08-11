@@ -58,8 +58,8 @@ export async function POST(request: NextRequest) {
 
   const insquery = {
     table: 'Transactions',
-    fields: ['trans_id', 'account_id', 'date', 'amount', 'client_id', 'category_id'],
-    vals: [transid, accountid, convertToMySQLDate(date), amount, clientid, categoryid]
+    fields: ['trans_id', 'account_id', 'date', 'amount', 'client_id', 'category_id', 'lastmodified'],
+    vals: [transid, accountid, convertToMySQLDate(date), amount, clientid, categoryid, convertToMySQLDate(new Date())]
   }
   
   try {

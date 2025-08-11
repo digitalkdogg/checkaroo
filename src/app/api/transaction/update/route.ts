@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
 
       const updateResult = await update({
         table: 'Transactions',
-        fields : 'date="' +  convertToMySQLDate(data.date) + '", amount="' + data.amount + '", client_id="' + clientid + '", category_id="' + categoryid + '"',  
+        fields : 'date="' +  convertToMySQLDate(data.date) + '", amount="' + data.amount + '", client_id="' + clientid + '", category_id="' + categoryid + '", lastmodified="' + convertToMySQLDate(new Date()) + '"',  
         where : 'account_id = "' + accountid + '" and trans_id="' + data.transid + '"'
     });
 

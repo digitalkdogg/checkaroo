@@ -73,9 +73,7 @@ export default function Page({ enable = true, session }: Props) {
     }
 
     const interval = setInterval(() => {
-      console.log('start', start, 'end', end, 'step', step);
-
-
+      
       start = start + step;
       if (step > 0) {
         if (start < end) {
