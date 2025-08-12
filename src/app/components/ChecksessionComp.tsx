@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation'
 import { useState, useEffect } from 'react';
 import Leftside from '@/app/components/Leftside'
 import Loading from '@/app/components/Loading';
-import { readCookie } from '@/common/cookieServer';
+import { readCookie, deleteCookie } from '@/common/cookieServer';
 import Error from '@/app/components/Error'
 import { encrypt, superEcnrypt } from '@/common/crypt';
 
@@ -58,10 +58,11 @@ export default function ChecksessionComp(props:componentsProps) {
                 return redirect('/'); // Redirect to the home page
 
             } else {
-        
+
                 setLoginData(true);
                 setIsLoginLoading(false);
                 if (props.reverseLogic) {
+                    deleteCookie(cookiename);
                     return redirect('/login'); 
                 }
             }
@@ -89,6 +90,7 @@ export default function ChecksessionComp(props:componentsProps) {
                 <div>
                     <main className = "flex">
                         <Leftside enable = {true} session = {props.session} />
+                        <div>testing</div>
                         <div className = "flex-3 bg-white flex items-center justify-center" >
                             <Error value = {loginError.message} /> 
                          </div>
