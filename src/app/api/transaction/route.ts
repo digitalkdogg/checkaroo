@@ -49,6 +49,7 @@ export async function POST(request: NextRequest) {
         select : '*',
         from : 'Transactions',
         where : 'Transactions.account_id = "' + accountid + '" and trans_id = "' + transid + '"' ,
+        sort: 'date desc, lastmodified desc',
         join: joinarr,
         limit: 1
       }

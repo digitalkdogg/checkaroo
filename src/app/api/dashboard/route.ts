@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
       select : '*',
       from : 'Transactions',
       where : 'Transactions.account_id = "' + accountid  + '"',
-      sort: 'date desc',
+      sort: 'date desc, lastmodified desc',
       join: [
         'inner join Clients on Clients.client_id = Transactions.client_id',
         'inner join Category on Category.category_id = Transactions.category_id'
