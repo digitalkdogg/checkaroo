@@ -31,6 +31,8 @@ export default function Page(props: Props) {
   const [data, setData] = useState<Item[] | null>(null)
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Err>();
+  const [sum, setSum] = useState<number>(0);
+  const [avg, setAvg] = useState<number>(0);
 
   const encryptedSession = superEcnrypt(props.session);
   const encryptedId = encrypt(props.id);
@@ -43,13 +45,15 @@ export default function Page(props: Props) {
           body: JSON.stringify({ session: encryptedSession, id: encryptedId }),
       });
 
-      const json = await res.json();
+      const json:Item[] | {err:Err} = await res.json();
       setIsLoading(false)
-      if (!res.ok || json.err) {
-        setError({message: json.err.message})
+      if (!res.ok || "err" in json) {
+        setError({message: (json as {err:Err}).err.message})
       } else {
         if (json.length>0) {
           setData(json)
+          setSum(json.reduce((acc, item) => acc + item.amount, 0));
+          setAvg(json.reduce((acc, item) => acc + item.amount, 0) / json.length);
         }
       }
     } catch(err:unknown) {
@@ -74,7 +78,7 @@ export default function Page(props: Props) {
 
   if (data) {
   return (
-    <div className = "justify-center w-3/4 overflow-y-scroll scrollbar-hidden mt-20 mb-0 bg-[var(--color-light-grey)] h-1/3 absolute bottom-0 left-1/4">
+    <div className = "justify-center w-3/4 overflow-y-scroll scrollbar-hidden mb-10 bg-[var(--color-light-grey)] h-1/3 absolute bottom-0 left-1/4">
       <div className = "flex flex-row p-4 fixed w-full -mt-15 shadow-md shadow-lg shadow-green-light/30">
         <div className = "indent-10 w-1/7"><b>Date</b></div>
         <div className = "indent-5 w-5/17"><b>Company Name</b></div>
@@ -89,6 +93,11 @@ export default function Page(props: Props) {
               <div className = "w-1/5">{trans.category_name}</div>
           </div>
       ))}  
+      <div className="flex flex-row p-2 fixed w-full bottom-0 bg-white font-bold" id = "bottom-sum">
+        <div className="indent-5 w-1/9">Sum: ${sum && <span>{sum.toFixed(2)}</span>}</div>
+        <div className="w-1/8 indent-5">Avg: ${avg && <span>{avg.toFixed(2)}</span>}</div>
+        <div className="w-1/3 indent-5">Total Items: {data.length}</div>
+      </div>
     {error && <div className = "error">{error.message}</div>}
     </div>
   )
