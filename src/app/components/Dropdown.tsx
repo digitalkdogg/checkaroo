@@ -4,6 +4,7 @@ import styles from '@/resources/dropdown.module.css'
 import Svg from '@/app/components/Svg'
 import Loading from '@/app/components/Loading'
 import { superEcnrypt, encrypt } from '@/common/crypt';
+import { decodeHtmlEntities } from '@/common/common';
 
 interface Props {
     val: string,
@@ -39,7 +40,7 @@ function Dropdown(prop:Props) {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [arrow, setArrow] = useState<any>(null);
-   const [hiddenValue, setHiddenValue] = useState(prop.val || 'Select Text');
+   const [hiddenValue, setHiddenValue] = useState<string | null>(prop.val || 'Select Text');
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [dropdownInput, setDropDownInput] = useState<any>(null);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -214,9 +215,11 @@ function Dropdown(prop:Props) {
 
             if (html.length > 0) {
                 if (dropdownInput) {
-                    dropdownInput.placeholder = html;
-                    setHiddenValue(html);
-                    //hidden_input.value = html;
+                    if (html.length >0 ) {
+                        dropdownInput.placeholder = decodeHtmlEntities(html);
+                        setHiddenValue(decodeHtmlEntities(html));
+                    }
+
                     dropdownInput.value = '';
                 }
                 hideResultsBox();
@@ -289,7 +292,7 @@ function Dropdown(prop:Props) {
                 setErrorAddDropDown(null);
                 setSuccessAddDropDown(false);
                 
-                const val = target.getAttribute('data-value'); 
+                const val = decodeHtmlEntities(target.getAttribute('data-value')); 
 
                 if (!val) {
                     throw new Error('Missing data-value attribute');
@@ -376,7 +379,7 @@ function Dropdown(prop:Props) {
                     placeholder={getPlaceholder()}
                     onChange={handleInputChange}
                 />
-                <input type = "hidden" id = {prop.type + '_hidden_input'} name = {prop.type} value={hiddenValue}/>
+                <input type = "hidden" id = {prop.type + '_hidden_input'} name = {prop.type} value={hiddenValue?? 'Select Text'}/>
                 <div className = {'arrow ' + styles.droparrow} id = {prop.type + '_arrow'} onClick={(e) => arrowclick(e)}>
                     <Svg id = {prop.type + '_droparrow'} type = 'downarrow' />
                 </div>

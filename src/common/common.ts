@@ -63,3 +63,9 @@ export const setExpireDT = () => {
   const now = moment()
   return now.add(12, 'hours').format('Y-MM-DD HH:mm:ss')
 }
+
+export const decodeHtmlEntities= (text:string | null):string | null => {
+  if (!text) return '';
+    const doc = new DOMParser().parseFromString(text, 'text/html');
+    return doc.documentElement.textContent;
+}
