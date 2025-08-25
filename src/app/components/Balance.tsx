@@ -60,16 +60,26 @@ export default function Page({ enable = true, session }: Props) {
     fetchBalance(cookieBalance ? Number(cookieBalance) : undefined);
   };
 
+  const calcStep = (start: number,end: number) => {
+    const diff = Math.abs(end - start);
+    if (diff <= 10) return 1;
+    if (diff <= 100) return 10;
+    if (diff <= 500) return 50;
+    if (diff <= 1000) return 100;
+    if (diff <= 5000) return 500;
+    return 30;
+  }
+
   const animateBalance = (start: number,end: number,direction: 'neg' | 'pos') => {
 
     setTrend(direction) 
     setBalance(start)
-    let step:number = 0;
+    let step:number = calcStep(start,end);
 
     if (direction === 'pos') {
-      step = 30;
+      step = step;
     } else {
-      step = -30;
+      step = -step;
     }
 
     const interval = setInterval(() => {
