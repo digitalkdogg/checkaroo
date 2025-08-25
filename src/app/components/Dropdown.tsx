@@ -13,14 +13,17 @@ interface Props {
     session : string
 }
 
+interface ErrorType {
+    message: string
+}
+
 function Dropdown(prop:Props) {
     const [inputValue, setInputValue] = useState('');
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [data, setData] = useState<any>([])
     const [isLoading, setIsLoading] = useState(true);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [errorDropDown, setErrorDropDown] = useState<any>(null);
+    const [errorDropDown, setErrorDropDown] = useState<ErrorType | null>(null);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [addData, setAddData] = useState<any>(false)
@@ -40,7 +43,7 @@ function Dropdown(prop:Props) {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [arrow, setArrow] = useState<any>(null);
-   const [hiddenValue, setHiddenValue] = useState<string | null>(prop.val || 'Select Text');
+    const [hiddenValue, setHiddenValue] = useState<string | null>(prop.val || 'Select Text');
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [dropdownInput, setDropDownInput] = useState<any>(null);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -73,7 +76,7 @@ function Dropdown(prop:Props) {
                 }
             }
         } catch (err) {
-            setErrorDropDown(err);
+            setErrorDropDown(err as ErrorType);
         } finally {
             setIsLoading(false);
         }
