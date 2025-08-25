@@ -3,6 +3,7 @@ import {readCookie} from '@/common/cookieServer'
 import Leftside from '@/app/components/Leftside'
 import Getall from '@/app/categories/Getall'
 import Addbutton from '@/app/components/Addbutton';
+import { redirect } from 'next/navigation'
 
 import { Geist } from 'next/font/google'
 import '@/app/globals.css'
@@ -23,6 +24,8 @@ export default async function page() {
 
     if (sessionCookie) {
         session = sessionCookie
+    } else {
+        redirect('/login');
     }
 
 

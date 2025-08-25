@@ -3,6 +3,7 @@ import Leftside from '@/app/components/Leftside'
 import ChecksessionComp from '@/app/components/ChecksessionComp';
 import AddForm from '@/app/clients/add/addform'
 import { Geist } from 'next/font/google'
+import { redirect } from 'next/navigation'
 
 const geist = Geist({
   subsets: ['latin'],
@@ -15,6 +16,8 @@ export default async function Page() {
 
     if (sessionCookie) {
         session = sessionCookie
+    } else {
+        redirect('/login');
     }
 
     return (

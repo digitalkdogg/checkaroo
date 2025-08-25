@@ -4,6 +4,7 @@ import { Geist } from 'next/font/google'
 import { readCookie } from '@/common/cookieServer'
 import Dashboard from '@/app/components/Dashboard'
 import Addbutton from '@/app/components/Addbutton'
+import { redirect } from 'next/navigation'
 
 
 import ChecksessionComp from '@/app/components/ChecksessionComp'
@@ -18,10 +19,10 @@ export default async function Page() {
 
 
   const cookiename = process.env.NEXT_PUBLIC_cookiestr as string
-  let session = await readCookie(cookiename)
+  const session = await readCookie(cookiename)
 
   if (!session) {
-    session = ''
+    redirect('/login');
   }
 
   return (

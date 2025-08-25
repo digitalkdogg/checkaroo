@@ -18,6 +18,8 @@ export default async function Page() {
   let session = ''
   if (sessionCookie) {
       session = sessionCookie
+  } else {
+    redirect('/login');
   }
 
   return (
