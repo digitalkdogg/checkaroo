@@ -34,20 +34,15 @@ function Dropdown(prop:Props) {
     const [isLoading, setIsLoading] = useState(true);
     const [errorDropDown, setErrorDropDown] = useState<ErrorType | null>(null);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [addData, setAddData] = useState<any>(false)
+    const [addData, setAddData] = useState<boolean>(false)
     const [isAddLoading, setIsAddLoading] = useState(false);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [errorAddDropDown, setErrorAddDropDown] = useState<any>(null);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [successAddDropDown, setSuccessAddDropDown] = useState<any>(null);
+    const [errorAddDropDown, setErrorAddDropDown] = useState<boolean | null | ErrorType>(null);
+    const [successAddDropDown, setSuccessAddDropDown] = useState<boolean | null>(null);
 
 
     const [resultEles, setResultEles] = useState<NodeListOf<HTMLElement> | null>(null);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [addRow, setAddRow] = useState<any>(null);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [results, setResults] = useState<any>(null);
+    const [addRow, setAddRow] = useState<HTMLSpanElement | null>(null);
+    const [results, setResults] = useState<HTMLDivElement | null>(null);
     const [wrapper, setWrapper] = useState<HTMLElement | null>(null);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -96,9 +91,9 @@ function Dropdown(prop:Props) {
     }, []);
 
     const init = () => {
-        setAddRow(document.querySelector('#' + prop.type + ' #addrow'));
+        setAddRow(document.querySelector('#' + prop.type + ' #addrow') as HTMLSpanElement | null);
         setResultEles(document.querySelectorAll('#' + prop.type + '_results div'));
-        setResults(document.querySelector('#' + prop.type + '_results'));
+        setResults(document.querySelector('#' + prop.type + '_results') as HTMLDivElement | null);
         setWrapper(document.getElementById(prop.type));
         setArrow(document.querySelector('#' + prop.type + '_arrow svg'));
         setDropDownInput(document.getElementById(prop.type + '_dropinput'));
