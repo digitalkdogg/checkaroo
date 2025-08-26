@@ -13,6 +13,16 @@ interface Props {
     session : string
 }
 
+interface DropdownItem {
+  company_name?: string;
+  category_name?: string;
+}
+
+type DropdownData = {
+  [key: string]: DropdownItem;
+};
+
+
 interface ErrorType {
     message: string
 }
@@ -20,8 +30,7 @@ interface ErrorType {
 function Dropdown(prop:Props) {
     const [inputValue, setInputValue] = useState('');
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [data, setData] = useState<any>([])
+    const [data, setData] = useState<DropdownData >({})
     const [isLoading, setIsLoading] = useState(true);
     const [errorDropDown, setErrorDropDown] = useState<ErrorType | null>(null);
 
@@ -392,7 +401,7 @@ function Dropdown(prop:Props) {
                
                 {Object.entries(data).map(([key]) => (
                     <div key ={key} 
-                        id = {'k' + makeWebFriendly(data[key][getValue()])} 
+                        id = {'k' + makeWebFriendly(data[key][getValue()] ?? '')} 
                         onClick={selectResult}
                         className = {styles.results_div}
                     >
