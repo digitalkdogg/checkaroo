@@ -45,13 +45,12 @@ function Dropdown(prop:Props) {
     const [results, setResults] = useState<HTMLDivElement | null>(null);
     const [wrapper, setWrapper] = useState<HTMLElement | null>(null);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [arrow, setArrow] = useState<HTMLDivElement | null>(null);
     const [hiddenValue, setHiddenValue] = useState<string | null>(prop.val || 'Select Text');
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [dropdownInput, setDropDownInput] = useState<any>(null);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [otherArrow, setOtherArrow] = useState<any>(null);
+    const [otherArrow, setOtherArrow] = useState<HTMLDivElement | null>(null);
 
     const fetchData = async () => {
 
@@ -103,10 +102,10 @@ function Dropdown(prop:Props) {
 
     const getOtherArrow= () => {
         if (prop.type == 'clients') {
-            setOtherArrow(document.querySelector('#categories #categories_arrow'));
+            setOtherArrow(document.querySelector('#categories #categories_arrow') as HTMLDivElement);
             return document.querySelector('#categories #categories_arrow')
         } else {
-            setOtherArrow(document.querySelector('#clients #clients_arrow'));
+            setOtherArrow(document.querySelector('#clients #clients_arrow') as HTMLDivElement);
             return document.querySelector('#clients #clients_arrow')
         }
     }
@@ -153,7 +152,9 @@ function Dropdown(prop:Props) {
         });
 
         if (results && arrow) {
-            otherArrow.classList.remove('sendtoback');
+            if (otherArrow) {
+                otherArrow.classList.remove('sendtoback');
+            }
             results?.classList.add('hide');
             if (arrow.classList.contains('rotate-270')) {
                 arrow.classList.remove('rotate-270')    
@@ -247,7 +248,9 @@ function Dropdown(prop:Props) {
         if (ele.classList.contains('rotate-270')) {
             setTimeout(() => {
                 ele.classList.remove('rotate-270');
+                if (otherArrow) {
                 otherArrow.classList.remove('sendtoback');
+                }
                 if (results) {
                     results.classList.add('hide');
                 }
