@@ -46,7 +46,7 @@ function Dropdown(prop:Props) {
     const [wrapper, setWrapper] = useState<HTMLElement | null>(null);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [arrow, setArrow] = useState<any>(null);
+    const [arrow, setArrow] = useState<HTMLDivElement | null>(null);
     const [hiddenValue, setHiddenValue] = useState<string | null>(prop.val || 'Select Text');
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [dropdownInput, setDropDownInput] = useState<any>(null);
@@ -95,7 +95,7 @@ function Dropdown(prop:Props) {
         setResultEles(document.querySelectorAll('#' + prop.type + '_results div'));
         setResults(document.querySelector('#' + prop.type + '_results') as HTMLDivElement | null);
         setWrapper(document.getElementById(prop.type));
-        setArrow(document.querySelector('#' + prop.type + '_arrow svg'));
+        setArrow(document.querySelector('#' + prop.type + '_arrow svg') as HTMLDivElement | null);
         setDropDownInput(document.getElementById(prop.type + '_dropinput'));
         getOtherArrow()
       
@@ -184,18 +184,19 @@ function Dropdown(prop:Props) {
             el.classList.remove('hide');
         });
 
-        if (results) {
-            if (results.classList.contains('hide')) {
-                if (arrow.classList.contains('rotate-270')) {
-                    arrow.classList.remove('rotate-270')    
-                }
-            } else {
-                if (arrow.classList.contains('rotate-270') == false) {
-                    if (otherArrow) {
-                        otherArrow.classList.add('sendtoback');
-                    }    
-                    arrow.classList.add('rotate-270')
-                    
+        if (arrow) {
+            if (results) {
+                if (results.classList.contains('hide')) {
+                    if (arrow.classList.contains('rotate-270')) {
+                        arrow.classList.remove('rotate-270')    
+                    }
+                } else {
+                    if (arrow.classList.contains('rotate-270') == false) {
+                        if (otherArrow) {
+                            otherArrow.classList.add('sendtoback');
+                        }    
+                        arrow.classList.add('rotate-270')
+                    }
                 }
             }
         }
