@@ -339,8 +339,7 @@ function Dropdown(prop:Props) {
                         const err = await res.json();
                         throw new Error(err.error);
                     }
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                }).catch((err:any) => {
+                }).catch((err:ErrorType) => {
                     setIsAddLoading(false);
                     setAddData(false);
                     setErrorAddDropDown({message: err.message});
