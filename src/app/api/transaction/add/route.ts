@@ -40,6 +40,10 @@ export async function POST(request: NextRequest) {
     categories:string
   }
 
+  interface Error {
+    message: string
+  }
+
   const datastr:string = decrypt(json.data) ;
   const data:Data = JSON.parse(datastr);
 
@@ -71,8 +75,7 @@ export async function POST(request: NextRequest) {
           return {status: 'completed'};
         
       } else return {status: 'failed'}
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    }).catch((err:any) => {
+    }).catch((err:Error) => {
       writelog('Error inserting transaction: ' + err, 'Transaction');
       return NextResponse.json({ error: 'Error inserting transaction', msg:err.toString() }, { status: 500 });
     })

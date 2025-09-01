@@ -49,7 +49,6 @@ function Dropdown(prop:Props) {
     const [hiddenValue, setHiddenValue] = useState<string | null>(prop.val || 'Select Text');
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [dropdownInput, setDropDownInput] = useState<any>(null);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [otherArrow, setOtherArrow] = useState<HTMLDivElement | null>(null);
 
     const fetchData = async () => {
