@@ -111,7 +111,7 @@ export default function Page({ enable = true, session }: Props) {
         }
       }
 
-    },100)
+    },300)
 
   }
 
