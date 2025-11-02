@@ -63,18 +63,32 @@ export default function Page({ enable = true, session }: Props) {
   const calcStep = (start: number,end: number) => {
     const diff = Math.abs(end - start);
     if (diff <= 10) return 1;
-    if (diff <= 100) return 10;
+    if (diff <= 100) return 20;
+    if (diff <= 300) return 35;
     if (diff <= 500) return 50;
+    if (diff <= 750) return 75;
     if (diff <= 1000) return 100;
-    if (diff <= 5000) return 500;
+    if (diff <= 3000) return 500;
+    if (diff <= 5000) return 700;
     return 30;
+  }
+
+  const calcTiming = (start: number, end:number) => {
+    const diff = Math.abs(end - start);
+    if (diff <= 500) return 600;
+    if (diff <= 1000) return 400;
+    if (diff <= 1500) return 300;
+    return 100;
   }
 
   const animateBalance = (start: number,end: number,direction: 'neg' | 'pos') => {
 
     setTrend(direction) 
     setBalance(start)
-    let step:number = calcStep(start,end);
+    let step:number = calcStep(start, end);
+    let timing:number = calcTiming(start, end);
+
+    console.log(timing);
 
     if (direction === 'pos') {
       step = step;
@@ -91,7 +105,7 @@ export default function Page({ enable = true, session }: Props) {
         } else {
           setTrend('');
           setBalance(end);
-          deleteCookie('balance');
+        //  deleteCookie('balance');
           if (end < 0) {
             setTrend('neg');
           }
@@ -103,15 +117,15 @@ export default function Page({ enable = true, session }: Props) {
         } else {
           setTrend('')
           setBalance(end);
-          deleteCookie('balance');
+         // deleteCookie('balance');
           if (end < 0) {
             setTrend('neg');
           }
           clearInterval(interval)
         }
       }
-
-    },300)
+      deleteCookie('balance');
+    },timing)
 
   }
 
