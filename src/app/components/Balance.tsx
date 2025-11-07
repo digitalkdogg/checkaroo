@@ -105,7 +105,6 @@ export default function Page({ enable = true, session }: Props) {
         } else {
           setTrend('');
           setBalance(end);
-        //  deleteCookie('balance');
           if (end < 0) {
             setTrend('neg');
           }
@@ -117,7 +116,6 @@ export default function Page({ enable = true, session }: Props) {
         } else {
           setTrend('')
           setBalance(end);
-         // deleteCookie('balance');
           if (end < 0) {
             setTrend('neg');
           }
