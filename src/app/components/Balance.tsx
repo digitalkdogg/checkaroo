@@ -86,9 +86,7 @@ export default function Page({ enable = true, session }: Props) {
     setTrend(direction) 
     setBalance(start)
     let step:number = calcStep(start, end);
-    let timing:number = calcTiming(start, end);
-
-    console.log(timing);
+    const timing:number = calcTiming(start, end);
 
     if (direction === 'pos') {
       step = step;
