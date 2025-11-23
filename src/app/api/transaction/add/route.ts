@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
 
   const date = data.date;
   const clients = data.clients;
-  const amount = data.amount;
+  const amount = data.amount.replace(/,/g, '');
   const categories = data.categories; 
   const transid = uuidv4().trim().substring(0, 20).replace(/-/g, '');
 

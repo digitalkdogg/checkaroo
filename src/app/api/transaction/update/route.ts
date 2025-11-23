@@ -40,7 +40,6 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  writelog(data, 'trans update is here')
   if (!data || !data.transid || !data.date || !data.amount || !data.clients || !data.categories) {
     return NextResponse.json({ error: 'Invalid trans data' }, { status: 400 })
   }
@@ -51,7 +50,7 @@ export async function POST(request: NextRequest) {
 
       const updateResult = await update({
         table: 'Transactions',
-        fields : 'date="' +  convertToMySQLDate(data.date) + '", amount="' + data.amount + '", client_id="' + clientid + '", category_id="' + categoryid + '", lastmodified="' + convertToMySQLDate(new Date()) + '"',  
+        fields : 'date="' +  convertToMySQLDate(data.date) + '", amount="' + data.amount.replace(/,/g, '') + '", client_id="' + clientid + '", category_id="' + categoryid + '", lastmodified="' + convertToMySQLDate(new Date()) + '"',  
         where : 'account_id = "' + accountid + '" and trans_id="' + data.transid + '"'
     });
 
