@@ -44,7 +44,7 @@ export default function Datepicker(props:Props) {
       }
 
       const arrows = document.querySelectorAll('.arrow:has(svg)')
-      arrows.forEach(function (arrow, index) {
+      arrows.forEach(function (arrow) {
         if (arrow.classList.contains('sendtoback')) {
           arrow.classList.remove('sendtoback')
         }
@@ -56,7 +56,7 @@ export default function Datepicker(props:Props) {
       const id = document.getElementById(props.id);
       (event.target as HTMLElement).classList.add('hide');
       const arrows = document.querySelectorAll('.arrow:has(svg)')
-      arrows.forEach(function (arrow, index) {
+      arrows.forEach(function (arrow) {
         arrow.classList.add('sendtoback')
       })
 
