@@ -164,3 +164,15 @@ export const deleteRec = async (query: DeleteQeury): Promise<boolean> => {
         if (connection) connection.release();
     }
 };
+
+export const canConnect = async () => {
+  let connection;
+  try {
+    connection = await pool.getConnection();
+    return true;
+  } catch (e) {
+    return false;
+  } finally {
+    if (connection) connection.release();
+  }
+};

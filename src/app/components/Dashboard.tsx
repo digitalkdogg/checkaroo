@@ -34,11 +34,16 @@ export default async function Page(prop: Props) {
     });
 
   const trans = await data.json();
-  const transdata: Transaction[] = trans.results
-
-  if (trans.results.err) {
+  
+  if (trans.results && trans.results.err) {
     return <div id = "dash-error"><Error value = {trans.results.err.message} /> </div>
   }
+
+  if (!trans.results || !Array.isArray(trans.results)) {
+    return <div id="dash-error"><Error value="Received invalid data from server." /></div>;
+  }
+
+  const transdata: Transaction[] = trans.results
 
   return (
     <div className = "bg-[var(--color-light-grey)] h-dvh overflow-y-scroll">

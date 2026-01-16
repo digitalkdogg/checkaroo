@@ -29,6 +29,6 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ valid: true })
         }
     } catch(err) {
-        return NextResponse.json({'error': err   })
+        return NextResponse.json({'error': err, valid: false   })
     }
 }

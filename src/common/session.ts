@@ -34,12 +34,14 @@ export const checkValidSession = async (session: string): Promise<boolean> => {
 
   const rows = await select(query) as LoginRow[];
 
-  for (const row of rows) {
-    const expireDT = moment(row.ExpireDT);
-    const now = moment();
-    if (expireDT > now) {
-      writelog(`session for ${session} is true`);
-      return true;
+  if (rows && Array.isArray(rows)) {
+    for (const row of rows) {
+      const expireDT = moment(row.ExpireDT);
+      const now = moment();
+      if (expireDT > now) {
+        writelog(`session for ${session} is true`);
+        return true;
+      }
     }
   }
 
@@ -85,7 +87,7 @@ export const getAccountIDSession = async (session:string) => {
       const rows = await select(query) as LoginRow[];
 
 
-      if (rows.length == 1) {
+      if (rows && Array.isArray(rows) && rows.length == 1) {
         const account = rows[0].account_id
         return account;
       }
@@ -107,7 +109,7 @@ export const checkUserForActiveSession = async (user:string)=> {
 
     const sessions = await select(sessionQuery) as LoginRow[];
 
-    if (sessions.length>0) {
+    if (sessions && Array.isArray(sessions) && sessions.length>0) {
       for (let x =0; x< sessions.length; x++) {
         const expireDT = moment(sessions[x].ExpireDT);
         const now = moment();
@@ -132,7 +134,7 @@ export const doesSessionExists = async (session:string, user:string) => {
 
     const sessions = await select(sessionQuery) as LoginRow[];
 
-    if (sessions.length>0) {
+    if (sessions && Array.isArray(sessions) && sessions.length>0) {
       for (let x =0; x<sessions.length; x++) {
         const expireDT = moment(sessions[x].ExpireDT)
         const now = moment();
@@ -158,13 +160,17 @@ export const validateUser = async (user:string, word:string) => {
         where: 'user_id = "' + user + '" and password_hash = "' + word + '"' 
     }
   
-      try {
-          const rows = await select(query) as LoginRow[]
-          if (rows.length > 0) {
-            return true;
-          } else {return false;}
-      } catch (err) {NextResponse.json({'error':err})}
-      return false;
+    const rows = await select(query);
+
+    if (rows && 'err' in rows) {
+        throw new Error('Database error: ' + (rows.err as Error).message);
+    }
+    
+    if (rows && Array.isArray(rows) && rows.length > 0) {
+        return true;
+    }
+
+    return false;
 }
 
 export const expireSession = async (user:string) => {
