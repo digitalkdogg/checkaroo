@@ -60,7 +60,7 @@ export async function POST(request:NextRequest) {
                     sessionencrypted = encrypt(sessionencrypted)
 
                     await writeCookie(cookiename, sessionencrypted, {
-                        secure: true,
+                        secure: false,
                         maxAge: 25200 // 7 hours});
                     });
 

@@ -94,7 +94,7 @@ export default function AddForm(prop:Props) {
           if (json.status=='success') {
               const oldbalance:number = json.oldbalance.toFixed(2)
               writeCookie('balance', oldbalance.toString(), {
-                secure: true,
+                secure: false,
                   maxAge: 200,
               });
 
