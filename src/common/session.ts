@@ -27,7 +27,8 @@ export const checkValidSession = async (session: string): Promise<boolean> => {
   const query = {
     select: '*',
     from: 'Logins',
-    where: 'Logins.session_hash = "' + session + '"',
+    where: 'Logins.session_hash = ?',
+    whereVals: [session],
     sort: 'Logins.loginDT desc',
     limit: 1,
   };
@@ -79,7 +80,8 @@ export const getAccountIDSession = async (session:string) => {
         const query = {
           select: '*',
           from: 'Logins',
-          where: 'Logins.session_hash = "' + sessionhash + '"',
+          where: 'Logins.session_hash = ?',
+          whereVals: [sessionhash],
           join : ['inner join Account on Account.user_id = Logins.user_id'],
           limit: 1
       }
@@ -102,7 +104,8 @@ export const checkUserForActiveSession = async (user:string)=> {
    const sessionQuery = {
         select: '*',
         from : 'Logins',
-        where : 'Logins.user_id = "' + user + '"' ,
+        where: 'Logins.user_id = ?',
+        whereVals: [user],
         sort: 'LoginDT desc',
         limit : 10,
     }
@@ -129,7 +132,8 @@ export const doesSessionExists = async (session:string, user:string) => {
    const sessionQuery = {
         select: '*',
         from : 'Logins',
-        where : 'Logins.session_hash = "' + session + '" and user_id = "' + user + '"' 
+        where: 'Logins.session_hash = ? and user_id = ?',
+        whereVals: [session, user]
     }
 
     const sessions = await select(sessionQuery) as LoginRow[];
@@ -157,9 +161,10 @@ export const validateUser = async (user:string, word:string) => {
     const query = {
         select: '*',
         from: 'User',
-        where: 'user_id = "' + user + '" and password_hash = "' + word + '"' 
+        where: 'user_id = ? and password_hash = ?',
+        whereVals: [user, word]
     }
-  
+
     const rows = await select(query);
 
     if (rows && 'err' in rows) {
@@ -176,8 +181,10 @@ export const validateUser = async (user:string, word:string) => {
 export const expireSession = async (user:string) => {
   const query = {
     table : 'Logins',
-    fields : 'ExpireDT = "' + moment('1/1/2025').format('yyyy-MM-DD hh:mm:ss') + '"',
-    where : 'user_id = "' + user + '"',
+    fields : 'ExpireDT = ?',
+    fieldVals: [moment('1/1/2025').format('YYYY-MM-DD HH:mm:ss')],
+    where : 'user_id = ?',
+    whereVals: [user],
     sort : 'ExpireDT desc',
     limit : 10
   }

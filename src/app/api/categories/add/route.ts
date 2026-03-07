@@ -98,8 +98,9 @@ async function validateCategory(value: string, accountid: string): Promise<boole
   const validateQuery = {
     select: '*',
     from: 'Category',
-    where: `category_name = "${value}" AND account_id = "${accountid}"`
-  } 
+    where: 'category_name = ? AND account_id = ?',
+    whereVals: [value, accountid]
+  }
 
   const validateRows = await select(validateQuery) as CategoryRow[];
   return validateRows.length>0;

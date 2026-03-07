@@ -50,8 +50,10 @@ export async function POST(request: NextRequest) {
 
       const updateResult = await update({
         table: 'Transactions',
-        fields : 'date="' +  convertToMySQLDate(data.date) + '", amount="' + data.amount.replace(/,/g, '') + '", client_id="' + clientid + '", category_id="' + categoryid + '", lastmodified="' + convertToMySQLDate(new Date()) + '"',  
-        where : 'account_id = "' + accountid + '" and trans_id="' + data.transid + '"'
+        fields : 'date = ?, amount = ?, client_id = ?, category_id = ?, lastmodified = ?',
+        fieldVals: [convertToMySQLDate(data.date), data.amount.replace(/,/g, ''), clientid, categoryid, convertToMySQLDate(new Date())],
+        where : 'account_id = ? and trans_id = ?',
+        whereVals: [accountid, data.transid]
     });
 
     const success = !!updateResult
@@ -71,7 +73,8 @@ export async function POST(request: NextRequest) {
     const query = {
       select: 'client_id',
       from: 'Clients',
-      where: `company_name = "${clientName}"`
+      where: 'company_name = ?',
+      whereVals: [clientName]
     }
 
     const rows = await select(query);
@@ -91,7 +94,8 @@ export async function POST(request: NextRequest) {
     const query = {
       select: 'category_id',
       from: 'Category',
-      where: `category_name = "${catName}"`
+      where: 'category_name = ?',
+      whereVals: [catName]
     }
 
     const rows = await select(query);

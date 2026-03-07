@@ -34,7 +34,8 @@ export async function POST(request: NextRequest) {
     const query = {
       select : '*',
       from : 'Transactions',
-      where : 'Transactions.account_id = "' + accountid  + '"',
+      where : 'Transactions.account_id = ?',
+      whereVals: [accountid],
       sort: 'date desc, lastmodified desc',
       join: [
         'inner join Clients on Clients.client_id = Transactions.client_id',

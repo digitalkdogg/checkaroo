@@ -102,8 +102,9 @@ async function validateTransaction(transid: string, accountid: string) {
   const validateQuery = {
     select: '*',
     from: 'Transactions',
-    where: `trans_id = "${transid}" AND account_id = "${accountid}"`
-  } 
+    where: 'trans_id = ? AND account_id = ?',
+    whereVals: [transid, accountid]
+  }
 
    const validateRows = await select(validateQuery) as Trans[];
       writelog('validateRowsArr is ' + JSON.stringify(validateRows), '------------Transaction-------');
@@ -121,7 +122,8 @@ async function getClientID(clientName: string) {
   const query = {
     select: 'client_id',
     from: 'Clients',
-    where: `company_name = "${clientName}"`
+    where: 'company_name = ?',
+    whereVals: [clientName]
   }
 
   const rows = await select(query) as Clients[];
@@ -138,7 +140,8 @@ async function getCatID(catName: string) {
   const query = {
     select: 'category_id',
     from: 'Category',
-    where: `category_name = "${catName}"`
+    where: 'category_name = ?',
+    whereVals: [catName]
   }
 
   const catrows = await select(query);

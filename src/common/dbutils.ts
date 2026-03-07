@@ -1,11 +1,16 @@
 import pool from '@/common/db'
 import {writelog} from '@/common/logs';
 import { ResultSetHeader, FieldPacket } from 'mysql2/promise';
+import type { QueryValue } from 'mysql2/promise';
+
+type QueryParams = QueryValue[];
 
 interface UpdateQuery {
     table?: string,
-    fields?: string, 
+    fields?: string,
+    fieldVals: QueryParams, 
     where? : string,
+    whereVals?: QueryParams,
     sort? : string,
     limit?:number | string
 }
@@ -13,8 +18,9 @@ interface UpdateQuery {
 interface SelectQuery {
     select?: string,
     from?: string,
-    join?: string[] | [],
+    join?: string[]|[],
     where?: string,
+    whereVals?: QueryParams, 
     sort?: string,
     limit?: number | string
 }
@@ -23,84 +29,70 @@ interface SelectQuery {
 interface InsertQuery {
     table?: string,
     fields: string[]|[],
-    vals: string[]|[]
+    vals: QueryParams
 }
 
 interface DeleteQeury {
     from: string,
     where: string,
+    whereVals: QueryParams, 
     limit?: number | string
 }
 
 export const select = async (query:SelectQuery) => {
-    let querystr = ''
-    querystr = querystr + 'select ' + query.select
-    querystr = querystr + ' from ' + query.from
+    const params: QueryParams = [];
+
+    let querystr = `select ${query.select} from ${query.from}`;
 
     
     if (query.join) {
-        for (let x = 0; x<query.join.length; x++) {
-            querystr = querystr + ' ' + query.join[x]
-        }
+         querystr += ' ' + query.join.join(' ');
     }
 
     if (query.where) {
-        querystr = querystr + ' where ' + query.where
+        querystr += ' where ' + query.where;
+        if (query.whereVals && query.whereVals.length > 0) {
+            params.push(...query.whereVals);
+        }
     }
 
     if (query.sort) {
-        querystr = querystr + ' order by ' + query.sort
+         querystr += ' order by ' + query.sort;
     }
 
-    if (query.limit) {
-        querystr = querystr + ' limit ' + query.limit
+    if (query.limit !== undefined) {
+        querystr += ' limit ' + query.limit;
     }
     
     let connection;
     try {
         connection = await pool.getConnection();
         writelog(querystr)
+        writelog('PARAMS: ' + JSON.stringify(params))
 
-        const [rows] = await connection.query(querystr);
+        const [rows] = await connection.execute(querystr, params);
         return rows;
     } catch(err:unknown) {
         writelog(String(err), '==============database select error ====================')
-        return {'err': err}
+        return {err}
     } finally {
         if (connection) connection.release()
     }
 }
 
 export const insert = async (query:InsertQuery) => {
-    let querystr = ''
-    querystr = querystr + 'insert into '
-    querystr = querystr + query.table + '('
-    
-    for (let x =0; x<query.fields.length; x++) {
-        querystr = querystr + query.fields[x]
-        if (x<query.fields.length-1) {
-            querystr = querystr + ','
-        }
-    }
-
-    querystr = querystr + ')values('
-
-    for (let x=0; x<query.vals.length; x++) {
-        querystr = querystr + '?'
-        if (x<query.vals.length-1) {
-            querystr = querystr + ','
-        } else {
-            querystr = querystr + ')'
-        }
-    }
+    const fieldList = query.fields.join(', ');
+    const placeholders = query.fields.map(() => '?').join(', ');
+    const querystr = `insert into ${query.table} (${fieldList}) values (${placeholders})`;
 
     let connection
-    try { 
+    try {
         connection = await pool.getConnection();
         writelog(querystr + ':::' + query.vals.toString())
-        
-        const data = await connection.execute(querystr, query.vals);
-        return {data} 
+        writelog('INSERT PARAMS: ' + JSON.stringify(query.vals))
+
+        const [result]: [ResultSetHeader, FieldPacket[]] = await connection.execute(querystr, query.vals);
+        return { data: result };
             
     } catch(e:unknown) {
         writelog(String(e), '==============database insert error ====================')
@@ -111,9 +103,12 @@ export const insert = async (query:InsertQuery) => {
 }
 
 export const update = async (query: UpdateQuery) => {
-    let querystr = '';
-    querystr += 'update ' + query.table;
-    querystr += ' set ' + query.fields;
+    const params: QueryParams = [...query.fieldVals];
+    if (query.whereVals && query.whereVals.length > 0) {
+        params.push(...query.whereVals);
+    }
+
+    let querystr = `update ${query.table} set ${query.fields}`;
 
     if (query.where) {
         querystr += ' where ' + query.where;
@@ -123,7 +118,7 @@ export const update = async (query: UpdateQuery) => {
         querystr += ' order by ' + query.sort;
     }
 
-    if (query.limit) {
+    if (query.limit !== undefined) {
         querystr += ' limit ' + query.limit;
     }
 
@@ -131,8 +126,9 @@ export const update = async (query: UpdateQuery) => {
     try {
         connection = await pool.getConnection();
         writelog(querystr);
+        writelog('UPDATE PARAMS: ' + JSON.stringify(params));
 
-        const [result]: [ResultSetHeader, FieldPacket[]] = await connection.execute(querystr);
+        const [result]: [ResultSetHeader, FieldPacket[]] = await connection.execute(querystr, params);
         return { data: result };
     } catch (e: unknown) {
         writelog(String(e), '---------------database update error ----------------------');
@@ -143,17 +139,18 @@ export const update = async (query: UpdateQuery) => {
 }
 
 export const deleteRec = async (query: DeleteQeury): Promise<boolean> => {
-    let querystr = 'DELETE FROM ' + query.from;
-    querystr += ' where ' + query.where;
+    const params: QueryParams = [...(query.whereVals || [])];
 
-    if (query.limit) {
+    let querystr = `DELETE FROM ${query.from} where ${query.where}`;
+
+    if (query.limit !== undefined) {
         querystr += ' limit ' + query.limit;
     }
 
     let connection;
     try {
         connection = await pool.getConnection();
-        const [result]: [ResultSetHeader, FieldPacket[]] = await connection.execute(querystr);
+        const [result]: [ResultSetHeader, FieldPacket[]] = await connection.execute(querystr, params);
         
         // You can check affectedRows to confirm delete
         return result.affectedRows > 0;

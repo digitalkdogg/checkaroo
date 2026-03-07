@@ -31,7 +31,8 @@ export async function POST(request: NextRequest) {
     const query = {
       select : '*',
       from : 'Clients',
-      where : 'account_id = "' + accountid  + '"' ,
+      where : 'account_id = ?',
+      whereVals: [accountid],
       sort: 'company_name asc'
     }
 

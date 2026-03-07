@@ -53,7 +53,8 @@ export async function POST(request: NextRequest) {
     const existing:CategoryRow[] = await select({
       select: '*',
       from: 'Category',
-      where: `account_id = "${accountid}" AND category_name = "${data.catname}"`
+      where: 'account_id = ? AND category_name = ?',
+      whereVals: [accountid, data.catname]
     }) as CategoryRow[]
 
     const matchcheck = (match:string, data:string) => {
@@ -70,8 +71,10 @@ export async function POST(request: NextRequest) {
 
     const updateResult = await update({
       table: 'Category',
-      fields: `category_name="${data.catname}"`,
-      where: `account_id = "${accountid}" AND category_id = "${data.catid}"`,
+      fields: 'category_name = ?',
+      fieldVals: [data.catname],
+      where: 'account_id = ? AND category_id = ?',
+      whereVals: [accountid, data.catid],
       limit: 1
     })
 

@@ -98,8 +98,9 @@ async function validateClient(value: string, accountid: string): Promise<boolean
   const validateQuery = {
     select: '*',
     from: 'Clients',
-    where: `company_name = "${value}" AND account_id = "${accountid}"`
-  } 
+    where: 'company_name = ? AND account_id = ?',
+    whereVals: [value, accountid]
+  }
 
   const validateRows = await select(validateQuery) as ClientRow[];
   return validateRows.length>0;

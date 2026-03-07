@@ -44,7 +44,8 @@ export async function POST(request: NextRequest) {
         const transactions = await select({
             select: '*',
             from: 'Transactions',
-            where: `account_id = "${accountid}" AND client_id = "${id}"`
+            where: 'account_id = ? AND client_id = ?',
+            whereVals: [accountid, id]
         }) as Trans[]
 
         const clientHasTransactions = transactions.length > 0
@@ -58,7 +59,8 @@ export async function POST(request: NextRequest) {
 
         const deleted = await deleteRec({
             from: 'Clients',
-            where: `account_id = "${accountid}" AND client_id = "${id}"`,
+            where: 'account_id = ? AND client_id = ?',
+            whereVals: [accountid, id],
             limit: 1
         })
 

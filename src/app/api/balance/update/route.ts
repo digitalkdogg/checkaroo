@@ -42,8 +42,9 @@ export async function POST(request: NextRequest) {
     const query = {
       select: 'balance',
       from : 'Account',
-      where : 'account_id = "' + accountid + '"',
-      limit: '1'
+      where : 'account_id = ?',
+      whereVals: [accountid],
+      limit: 1
     }
 
 
@@ -60,9 +61,11 @@ export async function POST(request: NextRequest) {
 
     const updatequery = {
         table : 'Account',
-        fields : 'balance = "' +newbalance + '"',
-        where : 'account_id = "' + accountid + '"',
-        limit: '1'
+        fields : 'balance = ?',
+        fieldVals: [newbalance],
+        where : 'account_id = ?',
+        whereVals: [accountid],
+        limit: 1
       }
 
     try {

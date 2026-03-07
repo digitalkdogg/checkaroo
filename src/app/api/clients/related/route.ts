@@ -32,7 +32,8 @@ export async function POST(request: NextRequest) {
     const query = {
       select : '*',
       from : 'Transactions',
-      where : 'Transactions.account_id = "' + accountid  + '" and Transactions.client_id = "' + decrypt(json.id) + '"' ,
+      where : 'Transactions.account_id = ? and Transactions.client_id = ?',
+      whereVals: [accountid, decrypt(json.id)],
       join : [
         'inner join Clients on Clients.client_id = Transactions.client_id',
         'inner join Category on Category.category_id = Transactions.category_id'

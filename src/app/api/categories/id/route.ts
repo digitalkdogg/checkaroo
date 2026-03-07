@@ -37,7 +37,8 @@ export async function POST(request: NextRequest) {
         const query = {
           select : '*',
           from : 'Category',
-          where : 'account_id = "' + accountid  + '" and category_id = "' + decrypt(json.id) + '"',
+          where : 'account_id = ? and category_id = ?',
+          whereVals: [accountid, decrypt(json.id)]
         }
 
         const results = await select(query);

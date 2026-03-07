@@ -48,7 +48,8 @@ export async function POST(request: NextRequest) {
       const query = {
         select : '*',
         from : 'Transactions',
-        where : 'Transactions.account_id = "' + accountid + '" and trans_id = "' + transid + '"' ,
+        where : 'Transactions.account_id = ? and trans_id = ?',
+        whereVals: [accountid, transid],
         sort: 'date desc, lastmodified desc',
         join: joinarr,
         limit: 1
