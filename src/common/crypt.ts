@@ -5,19 +5,35 @@ import moment from 'moment'
 const cipherKey = process.env.NEXT_PUBLIC_APP_crypt  as string;
 
 export const encrypt = (data:string) => {
-  const encrypted = CryptoJS.AES.encrypt(data, cipherKey).toString();
-  writelog('\n' +'before enc val ' + data + '::: after enc val: ' + encrypted.toString() + '\n' )
-   return encodeURIComponent(encrypted);
+  try {
+    const encrypted = CryptoJS.AES.encrypt(data, cipherKey).toString();
+    return encodeURIComponent(encrypted);
+  } catch {
+    writelog('CRYPTO_ENCRYPT_FAILED', 'encrypt', 'error');
+    throw new Error('CRYPTO_ENCRYPT_FAILED');
+    return data as string;
+  }
 };
 
 export const decrypt = (encryptedData:string) => {
- const decoded = decodeURIComponent(encryptedData);
-  const bytes = CryptoJS.AES.decrypt(decoded, cipherKey);
-  writelog('\n' +'after decrypt val now: ' + bytes.toString(CryptoJS.enc.Utf8) + '\n')
-  return bytes.toString(CryptoJS.enc.Utf8);
+ try {
+    const decoded = decodeURIComponent(encryptedData);
+    const bytes = CryptoJS.AES.decrypt(decoded, cipherKey);
+    return bytes.toString(CryptoJS.enc.Utf8);
+  } catch {
+    writelog('CRYPTO_DECRYPT_FAILED', 'decrypt', 'error');
+    throw new Error('CRYPTO_DECRYPT_FAILED');
+    return encryptedData as string;
+  }
 };
 
 export const superEcnrypt = (session:string) => {
-  const decrypted = decrypt(session);
-  return encrypt(moment().format('SSSS') + '|||' + decrypted + '|||' + moment().format('SSSS'));
+  try {
+    const decrypted = decrypt(session);
+    return encrypt(moment().format('SSSS') + '|||' + decrypted + '|||' + moment().format('SSSS'));
+  } catch {
+      writelog('superEncrypt', 'decrypt', 'error');
+      throw new Error('super_encrypt_error');
+      return session as string;
+  }
 };

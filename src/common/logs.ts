@@ -1,4 +1,19 @@
-export const writelog = (msg:string | object, premsg?:string) => {
+    type LogLevel = 'debug' | 'info' | 'warn' | 'error';
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    const shouldWriteLog = (level: LogLevel) => {
+        if (!isProduction) {
+            return true;
+        }
+
+        return level === 'warn' || level === 'error';
+    };
+
+    export const writelog = (msg:string | object, premsg?:string, level: LogLevel = 'info') => {
+
+    if (!shouldWriteLog(level)) {
+        return;
+    }
 
     try {
         if (typeof msg == 'object') {
