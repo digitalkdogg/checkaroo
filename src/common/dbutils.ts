@@ -1,9 +1,8 @@
 import pool from '@/common/db'
 import {writelog} from '@/common/logs';
 import { ResultSetHeader, FieldPacket } from 'mysql2/promise';
-import type { QueryValue } from 'mysql2/promise';
 
-type QueryParams = QueryValue[];
+type QueryParams = any[];
 
 interface UpdateQuery {
     table?: string,
