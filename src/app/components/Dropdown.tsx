@@ -352,7 +352,7 @@ function Dropdown(prop:Props) {
 
     if (isLoading) {
         return (
-            <div className = "flex-3 bg-white flex px-20 flex-col items-center">
+            <div className = "flex-3 bg-white flex md:px-20 flex-col items-center">
                 <Loading size={6} />
             </div>
         );

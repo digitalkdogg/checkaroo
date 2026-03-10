@@ -34,7 +34,7 @@ export default async function page() {
     return (
             <div className = {geist.className}>
             <ChecksessionComp reverseLogic = {true} session = {session} />
-            <main className = "flex">
+            <main className = "flex flex-col md:flex-row">
                 <Leftside enable = {true} session = {session} />
                 <div className = "flex-3">
                     <Getall session = {session} />

@@ -88,7 +88,7 @@ export default function ChecksessionComp(props:componentsProps) {
     if (loginError) {
         return (
                 <div>
-                    <main className = "flex">
+                    <main className = "flex flex-col md:flex-row">
                         <Leftside enable = {true} session = {props.session} />
                         <div>testing</div>
                         <div className = "flex-3 bg-white flex items-center justify-center" >
@@ -102,7 +102,7 @@ export default function ChecksessionComp(props:componentsProps) {
     if (isLoginLoading) {
         return (
             <div>
-                <main className = "flex" id = "sessioncheck">
+                <main className = "flex flex-col md:flex-row" id = "sessioncheck">
                     <Leftside enable = {true} session = {props.session} />
                     <div className = "flex-3 bg-white flex items-center justify-center" >
                         <Loading size={24} />

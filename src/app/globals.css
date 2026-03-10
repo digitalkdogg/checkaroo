@@ -54,6 +54,9 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+  .flex-3 {
+    flex: 3;
+  }
 }
 
 body {

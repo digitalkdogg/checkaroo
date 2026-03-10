@@ -25,7 +25,7 @@ export default async function Page ({searchParams}: {searchParams: Promise<{ id:
     return (
         <div className = {geist.className}>
             <ChecksessionComp reverseLogic = {true} session ={session} />
-            <main className = "flex">
+            <main className = "flex flex-col md:flex-row">
                 <Leftside enable = {true} session={session} />
                 <div className = "flex-3 bg-white flex flex-col max-h-full overflow-y-hidden" >
                     <Dets session = {session} catid={id} />

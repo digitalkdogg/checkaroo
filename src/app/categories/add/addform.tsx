@@ -43,22 +43,22 @@ export default function AddForm(prop:Props) {
     }
 
   return (
-        <div>
-            <form className="lex flex-col my-10 max-w-180 justify-left min-h-[250px]" onSubmit={formSubmit}> 
-                <div className = "flex flex-col md:flex-row justify-left py-5 items-center">
-                    <span className="md:basis-40 mr-3">Category Name :</span>
+        <div className="flex justify-center w-full md:w-1/3 p-4 md:p-0">
+            <form className="bg-white flex flex-col my-4 md:my-10 max-w-full md:max-w-180 w-full justify-left min-h-[250px] px-6 md:px-12" onSubmit={formSubmit}> 
+                <div className = "flex flex-col md:flex-row justify-left py-3 md:py-5">
+                    <span className="md:basis-40 mr-3 font-semibold md:font-normal">Category Name :</span>
                     <Input val = '' id = 'CategoryName' name = 'CategoryName' disabled = {false} />
                 </div>
-                <div className= "flex flex-col sm:flex-row justify-center mb-10 mt-10 border-t-1 border-green-900/50 pt-10 w-[130%] -ml-[50px]">
+                <div className= "flex flex-col sm:flex-row justify-center mb-10 mt-6 md:mt-10 border-t-1 border-green-900/50 pt-10 w-full">
                     <Button 
                         id = "addCat"
-                        className = "mr-5"
+                        className = "mb-4 sm:mb-0 sm:mr-5 w-full sm:w-auto"
                         text = "Add Category" 
                         session={prop.session} 
                         url="/api/categories/add" 
                         payload = {['CategoryName']}
                         callBack= {handleClick} />
-                        <button className="sm:ml-5" type="reset" >Reset</button>
+                        <button className="w-full sm:w-auto sm:ml-5 btn" type="reset" >Reset</button>
                 </div>
                 {successEvent && <span className="success">{successEvent}</span>}
                 {errorEvent && <span className="error">{errorEvent}</span>}

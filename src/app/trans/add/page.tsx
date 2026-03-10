@@ -25,9 +25,9 @@ export default async function page() {
     return (
             <div className = {geist.className}>
             <ChecksessionComp reverseLogic = {true} session = {session} />
-            <main className = "flex">
+            <main className = "flex flex-col md:flex-row">
                 <Leftside enable = {true} session = {session} />
-                <div className = "flex-3 bg-white flex px-20 py-50 flex-col items-center" >
+                <div className = "flex-3 bg-white flex md:px-20 md:py-50 flex-col items-center" >
                    <AddForm session = {session} />
                 </div>
             </main>

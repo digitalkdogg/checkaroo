@@ -108,7 +108,7 @@ export default function Dets({ clientid, session }: Props) {
 
     if (errorClient) {
         return (
-            <div className = "flex-3 bg-white flex flex-col my-50 max-w-130 justify-center" >
+            <div className = "flex-3 bg-white flex flex-col md:my-50 max-w-130 justify-center" >
                 <Error value = {errorClient.message} />
             </div>
         )
@@ -117,23 +117,23 @@ export default function Dets({ clientid, session }: Props) {
     if (!data) return null;
 
     return (
-        <div className="flex flex-col items-center w-full">
-            <div className = "top-container flex justify-center w-full bg-white h-1/2">
+        <div className="flex flex-col items-center w-full px-4 md:px-0">
+            <div className = "top-container flex justify-center w-full bg-white h-auto md:h-1/2">
                 <form 
                     id = "clientForm"  
-                    className = "flex-3 bg-white flex flex-col my-10 max-w-180 justify-left min-h-[380px]" >
-                    <div className = "flex flex-col md:flex-row justify-center py-5">
-                        <span className = "md:basis-32">ClientID :</span>
+                    className = "flex-3 bg-white flex flex-col my-4 md:my-10 max-w-full md:max-w-180 w-full justify-left min-h-[300px] md:min-h-[380px] px-6 md:px-12" >
+                    <div className = "flex flex-col md:flex-row justify-center py-3 md:py-5">
+                        <span className = "md:basis-32 font-semibold md:font-normal">ClientID :</span>
                             <Input name = "clientid" id = "clientid" val = {data.client_id} disabled = {true} />
                     </div>
-                    <div className = "flex flex-col md:flex-row justify-center py-5">
-                        <span className = "md:basis-32">Client Name :</span>
+                    <div className = "flex flex-col md:flex-row justify-center py-3 md:py-5">
+                        <span className = "md:basis-32 font-semibold md:font-normal">Client Name :</span>
                             <Input name = "clientname" id = "clientname" val = {data.company_name} disabled = {false} />
                     </div>
-                    <div className= "flex flex-col sm:flex-row justify-center mb-5 mt-15 border-t-1 border-green-900/50 pt-10 w-[118%] -ml-[50px]">
+                    <div className= "flex flex-col sm:flex-row justify-center mb-5 mt-6 md:mt-15 border-t-1 border-green-900/50 pt-10 w-full">
                         <Button 
                             id = "updateClient"
-                            className = "mr-5"
+                            className = "mb-4 sm:mb-0 sm:mr-5 w-full sm:w-auto"
                             text = "Update" 
                             session={session} 
                             url="/api/clients/update" 
@@ -142,14 +142,14 @@ export default function Dets({ clientid, session }: Props) {
 
                         <Button 
                             id = "delClient"
-                            className = "danger mr-5"
+                            className = "danger mb-4 sm:mb-0 sm:mr-5 w-full sm:w-auto"
                             text = "Delete" 
                             session={session} 
                             url="/api/clients/delete" 
                             payload = {['clientid']}
                             callBack= {handleCallBack} />
 
-                        <button type = "reset" onClick={handleResetCallBack}>Reset</button>
+                        <button className="w-full sm:w-auto sm:ml-5 btn" type = "reset" onClick={handleResetCallBack}>Reset</button>
 
                     </div>
 

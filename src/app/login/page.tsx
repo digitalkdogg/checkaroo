@@ -38,7 +38,7 @@ export default async function Page() {
             <div className = {geist.className}>
                 {session && <ChecksessionComp session = {session} /> }
 
-                <main className = "flex" id = "login-main">
+                <main className = "flex flex-col md:flex-row" id = "login-main">
                     <Leftside enable = {false} session="" />
                     <div className = "flex-3 bg-white block">
                         <h2 className = "text-center my-20 -translate-y-0">Please login to use the Checkaroo Web Application and hop into your banking</h2>

@@ -107,44 +107,43 @@ export default function AddForm(prop:Props) {
     }
 
   return (
-  <div >
-
-      <form  className="max-w-130"> 
-        <div className = "flex flex-col md:flex-row justify-left py-5">
-            <span className="md:basis-32">Date :</span>
+  <div className="flex justify-center w-full md:w-1/3 p-4 md:p-0">
+      <form  className="bg-white flex flex-col my-4 md:my-10 max-w-full md:max-w-130 w-full justify-left px-6 md:px-12"> 
+        <div className = "flex flex-col md:flex-row justify-left py-3 md:py-5">
+            <span className="md:basis-32 font-semibold md:font-normal">Date :</span>
             <Datepicker id = "date" name = "date" />
         </div>
 
-        <div className = {'flex flex-col md:flex-row py-5'}>
-            <span className = "md:basis-32">Company : </span>
+        <div className = {'flex flex-col md:flex-row py-3 md:py-5'}>
+            <span className = "md:basis-32 font-semibold md:font-normal">Company : </span>
             <div className="flex">
               <Dropdown val = '' api = "../api/clients" type = 'clients' session = {prop.session} />
             </div>
         </div>
 
-        <div className = "flex flex-col md:flex-row py-5">
-            <span className = "md:basis-32">Amount :</span>
+        <div className = "flex flex-col md:flex-row py-3 md:py-5">
+            <span className = "md:basis-32 font-semibold md:font-normal">Amount :</span>
             <Input id = "amount" name = "amount" val = '' disabled = {false} />
         </div>
 
-        <div className = {'flex flex-col md:flex-row py-5 '}>
-            <span className = "md:basis-32">Category : </span>
+        <div className = {'flex flex-col md:flex-row py-3 md:py-5 '}>
+            <span className = "md:basis-32 font-semibold md:font-normal">Category : </span>
             <div className="flex">
               <Dropdown val = '' api = "../api/categories" type = 'categories' session = {prop.session} />
             </div>
         </div>
 
-        <div className= "flex flex-col sm:flex-row justify-center-safe mb-10 mt-10"> 
+        <div className= "flex flex-col sm:flex-row justify-center-safe mb-10 mt-6 md:mt-10 border-t-1 border-green-900/50 pt-10 w-full"> 
           <CustomButton 
               id = "addTrans"
-              className = "mr-5"
+              className = "mb-4 sm:mb-0 sm:mr-5 w-full sm:w-auto"
               text = "Add Trans" 
               session={prop.session} 
               url="/api/transaction/add" 
               payload = {['date','clients', 'amount', 'categories']}
               callBack= {handleCallBack} />
             
-            <button className="sm:ml-5" type="reset" onClick={handleResetCallBack}>Reset</button>
+            <button className="w-full sm:w-auto sm:ml-5 btn" type="reset" onClick={handleResetCallBack}>Reset</button>
         </div>
         {error && <div className="error mt-5">{error.message}</div>}
         {data && <div className="success mt-5">{data}</div>}
