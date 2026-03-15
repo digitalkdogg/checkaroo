@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
   const transaction = {
     select: 'category_id',
     from: 'Transactions',
-    where: 'company_id = ? AND account_id = ?',
+    where: 'client_id = ? AND account_id = ?',
     whereVals: [company, accountid],
     limit:1
   }

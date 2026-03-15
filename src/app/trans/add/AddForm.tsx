@@ -3,7 +3,7 @@
 import Input from "@/app/components/Input";
 import Dropdown from '@/app/components/Dropdown'
 import Datepicker from '@/app/components/Datepicker'
-import { superEcnrypt } from "@/common/crypt";
+import { superEcnrypt, encrypt } from "@/common/crypt";
 import { useState } from 'react';
 import { redirect } from 'next/navigation'
 import CustomButton from "@/app/components/Button";
@@ -106,6 +106,38 @@ export default function AddForm(prop:Props) {
       }
     }
 
+    const onCompanySelect = async (id: string) => {
+        try {
+            const response = await fetch('/api/transaction/suggested-category', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    session: superEcnrypt(prop.session),
+                    data: encrypt(JSON.stringify({ company: id }))
+                })
+            })
+
+            if (response.ok) {
+                const json = await response.json();
+                if (json.status === 'success' && json.category_id && json.category_id.length > 0) {
+                    const categoryId = json.category_id[0].category_id;
+                    const catResult = document.querySelector(`#categories_results div[data-id="${categoryId}"]`) as HTMLElement | null;
+                    if (catResult) {
+                        const catName = catResult.innerHTML;
+                        const catInput = document.getElementById('categories_dropinput') as HTMLInputElement | null;
+                        const catHidden = document.getElementById('categories_hidden_input') as HTMLInputElement | null;
+                        if (catInput && catHidden) {
+                            catInput.placeholder = catName;
+                            catHidden.value = catName;
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            // Silently fail as requested
+        }
+    }
+
   return (
   <div className="flex justify-center w-full md:w-1/3 p-4 md:p-0">
       <form  className="bg-white flex flex-col my-4 md:my-10 max-w-full md:max-w-130 w-full justify-left px-6 md:px-12"> 
@@ -117,7 +149,7 @@ export default function AddForm(prop:Props) {
         <div className = {'flex flex-col md:flex-row py-3 md:py-5'}>
             <span className = "md:basis-32 font-semibold md:font-normal">Company : </span>
             <div className="flex">
-              <Dropdown val = '' api = "../api/clients" type = 'clients' session = {prop.session} />
+              <Dropdown val = '' api = "../api/clients" type = 'clients' session = {prop.session} onSelect={onCompanySelect} />
             </div>
         </div>
 

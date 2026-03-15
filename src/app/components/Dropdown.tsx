@@ -10,12 +10,15 @@ interface Props {
     val: string,
     api: string, 
     type: string,
-    session : string
+    session : string,
+    onSelect?: (id: string, name: string) => void
 }
 
 interface DropdownItem {
   company_name?: string;
   category_name?: string;
+  client_id?: string;
+  category_id?: string;
 }
 
 type DropdownData = {
@@ -214,18 +217,30 @@ function Dropdown(prop:Props) {
         }
     }
 
+    const getID = () => {
+        if (prop.type == 'clients') {
+            return 'client_id'
+        } else {
+            return 'category_id'
+        }
+    }
+
     const selectResult = (event: React.MouseEvent<HTMLDivElement>) => {
         wrapper?.classList.remove('expand');
 
         const target = event.target;
         if (target instanceof HTMLElement) {
             const html = target.innerHTML;
+            const id = target.getAttribute('data-id');
 
             if (html.length > 0) {
                 if (dropdownInput) {
                     if (html.length >0 ) {
                         dropdownInput.placeholder = decodeHtmlEntities(html);
                         setHiddenValue(decodeHtmlEntities(html));
+                        if (prop.onSelect && id) {
+                            prop.onSelect(id, decodeHtmlEntities(html));
+                        }
                     }
 
                     dropdownInput.value = '';
@@ -401,6 +416,7 @@ function Dropdown(prop:Props) {
                         id = {'k' + makeWebFriendly(data[key][getValue()] ?? '')} 
                         onClick={selectResult}
                         className = {styles.results_div}
+                        data-id = {data[key][getID()]}
                     >
                         {data[key][getValue()]}
                     </div>
