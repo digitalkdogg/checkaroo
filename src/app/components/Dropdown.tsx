@@ -236,10 +236,11 @@ function Dropdown(prop:Props) {
             if (html.length > 0) {
                 if (dropdownInput) {
                     if (html.length >0 ) {
-                        dropdownInput.placeholder = decodeHtmlEntities(html);
-                        setHiddenValue(decodeHtmlEntities(html));
+                        const decoded = decodeHtmlEntities(html) ?? '';
+                        dropdownInput.placeholder = decoded;
+                        setHiddenValue(decoded);
                         if (prop.onSelect && id) {
-                            prop.onSelect(id, decodeHtmlEntities(html));
+                            prop.onSelect(id, decoded);
                         }
                     }
 

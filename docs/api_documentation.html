@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkaroo API Documentation</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f7f6;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+            border-bottom: 2px solid #27ae60;
+            padding-bottom: 10px;
+        }
+        .api-group {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .endpoint {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 6px;
+        }
+        .method {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-right: 10px;
+            text-transform: uppercase;
+            font-size: 0.9em;
+        }
+        .post { background-color: #27ae60; color: white; } /* Changed to Green */
+        .get { background-color: #3498db; color: white; }
+        .path {
+            font-family: monospace;
+            font-weight: bold;
+            color: #219150; /* Changed to Green */
+        }
+        .file-info {
+            font-size: 0.85em;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .security-tag {
+            background-color: #95a5a6;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 0.75em;
+            margin-left: 5px;
+        }
+        pre {
+            background: #2d3436;
+            color: #dfe6e9;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+        .label {
+            font-weight: bold;
+            font-size: 0.9em;
+            color: #2c3e50;
+            margin-top: 10px;
+            display: block;
+        }
+        .description { margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Checkaroo API Documentation</h1>
+    <p>Comprehensive guide to the Checkaroo internal API endpoints.</p>
+
+    <!-- Balance APIs -->
+    <div class="api-group">
+        <h2>Balance Management</h2>
+        
+        <div class="endpoint">
+            <div><span class="method post">POST</span> <span class="path">/api/balance</span> <span class="security-tag">Session Required</span></div>
+            <span class="file-info">Source: <code>src/app/api/balance/route.ts</code></span>
+            <p class="description">Retrieves the current account balance.</p>
+            <span class="label">Success Response:</span>
+            <pre>[{ "balance": 1250.50 }]</pre>
+        </div>
+
+        <div class="endpoint">
+            <div><span class="method post">POST</span> <span class="path">/api/balance/update</span> <span class="security-tag">Session Required</span></div>
+            <span class="file-info">Source: <code>src/app/api/balance/update/route.ts</code></span>
+            <p class="description">Updates balance by a specific value.</p>
+            <span class="label">Request Data:</span>
+            <pre>{ "value": "50.00" }</pre>
+            <span class="label">Success Response:</span>
+            <pre>{
+  "status": "success",
+  "balance": 1,
+  "newbalance": 1200.50,
+  "oldbalance": 1250.50
+}</pre>
+        </div>
+    </div>
+
+    <!-- Category APIs -->
+    <div class="api-group">
+        <h2>Category Management</h2>
+
+        <div class="endpoint">
+            <div><span class="method post">POST</span> <span class="path">/api/categories</span> <span class="security-tag">Session Required</span></div>
+            <span class="file-info">Source: <code>src/app/api/categories/route.ts</code></span>
+            <p class="description">Lists all categories.</p>
+            <span class="label">Success Response:</span>
+            <pre>[
+  { "category_id": 1, "category_name": "Food", "account_id": 10 },
+  { "category_id": 2, "category_name": "Rent", "account_id": 10 }
+]</pre>
+        </div>
+
+        <div class="endpoint">
+            <div><span class="method post">POST</span> <span class="path">/api/categories/add</span> <span class="security-tag">Session Required</span></div>
+            <span class="file-info">Source: <code>src/app/api/categories/add/route.ts</code></span>
+            <p class="description">Creates a new category.</p>
+            <span class="label">Success Response:</span>
+            <pre>{ "status": "success", "message": "category added successfully" }</pre>
+        </div>
+
+        <div class="endpoint">
+            <div><span class="method post">POST</span> <span class="path">/api/categories/delete</span> <span class="security-tag">Session Required</span></div>
+            <span class="file-info">Source: <code>src/app/api/categories/delete/route.ts</code></span>
+            <p class="description">Removes a category (if not linked to transactions).</p>
+            <span class="label">Success Response:</span>
+            <pre>{ "message": "Category Removed Successfully", "status": "success" }</pre>
+            <span class="label">Error Response:</span>
+            <pre>{ "message": "Category is tied to one or more transactions", "status": "error" }</pre>
+        </div>
+    </div>
+
+    <!-- Transaction APIs -->
+    <div class="api-group">
+        <h2>Transactions</h2>
+
+        <div class="endpoint">
+            <div><span class="method post">POST</span> <span class="path">/api/transaction/add</span> <span class="security-tag">Session Required</span></div>
+            <span class="file-info">Source: <code>src/app/api/transaction/add/route.ts</code></span>
+            <p class="description">Records a new transaction.</p>
+            <span class="label">Success Response:</span>
+            <pre>{
+  "status": "success",
+  "transid": "8f2a...",
+  "amount": "50.00",
+  "message": "Transaction added successfully"
+}</pre>
+        </div>
+
+        <div class="endpoint">
+            <div><span class="method post">POST</span> <span class="path">/api/transaction/suggested-category</span> <span class="security-tag">Session Required</span></div>
+            <span class="file-info">Source: <code>src/app/api/transaction/suggested-category/route.ts</code></span>
+            <p class="description">Suggests a category based on company history.</p>
+            <span class="label">Success Response:</span>
+            <pre>{
+  "status": "success",
+  "category_id": [{ "category_id": 5 }]
+}</pre>
+        </div>
+
+        <div class="endpoint">
+            <div><span class="method post">POST</span> <span class="path">/api/dashboard</span> <span class="security-tag">Session Required</span></div>
+            <span class="file-info">Source: <code>src/app/api/dashboard/route.ts</code></span>
+            <p class="description">Retrieves transaction list for the dashboard.</p>
+            <span class="label">Success Response:</span>
+            <pre>{
+  "results": [
+    { "trans_id": "...", "date": "...", "amount": "...", "company_name": "...", "category_name": "..." }
+  ]
+}</pre>
+        </div>
+    </div>
+
+    <!-- Auth APIs -->
+    <div class="api-group">
+        <h2>Authentication</h2>
+
+        <div class="endpoint">
+            <div><span class="method post">POST</span> <span class="path">/api/login/auth</span> <span class="security-tag">Public</span></div>
+            <span class="file-info">Source: <code>src/app/api/login/auth/route.ts</code></span>
+            <p class="description">Authenticates user and creates session.</p>
+            <span class="label">Success Response:</span>
+            <pre>{ "status": "success", "message": "Login Success! Redirecting now" }</pre>
+            <span class="label">Error Response:</span>
+            <pre>{ "status": false, "message": "Bad username and password..." }</pre>
+        </div>
+    </div>
+
+    <footer style="margin-top: 50px; border-top: 1px solid #ccc; padding-top: 20px; font-size: 0.8em; color: #7f8c8d;">
+        Documentation updated on March 15, 2026.
+    </footer>
+</body>
+</html>

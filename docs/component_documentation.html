@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkaroo Component Documentation</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f7f6;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+            border-bottom: 2px solid #27ae60;
+            padding-bottom: 10px;
+        }
+        .comp-group {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .component {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 6px;
+        }
+        .comp-name {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .file-info {
+            font-size: 0.85em;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .label {
+            font-weight: bold;
+            font-size: 0.9em;
+            color: #2c3e50;
+            margin-top: 10px;
+            display: block;
+        }
+        pre {
+            background: #2d3436;
+            color: #dfe6e9;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+        .description { margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Checkaroo Component Documentation</h1>
+    <p>Comprehensive guide to the reusable UI components used in the Checkaroo application.</p>
+
+    <!-- Navigation Components -->
+    <div class="api-group">
+        <h2>Navigation & Layout</h2>
+        
+        <div class="component">
+            <span class="comp-name">Leftside</span>
+            <span class="file-info">Source: <code>src/app/components/Leftside.tsx</code></span>
+            <p class="description">The primary navigation sidebar. It handles responsive layouts (sidebar on desktop, hamburger menu on mobile).</p>
+            <span class="label">Props:</span>
+            <pre>interface Props {
+  enable: boolean; // Enables Balance and Menu links
+  session: string;
+}</pre>
+        </div>
+
+        <div class="component">
+            <span class="comp-name">Menu</span>
+            <span class="file-info">Source: <code>src/app/components/Menu.tsx</code></span>
+            <p class="description">A standard navigation link item used within the Leftside component.</p>
+            <span class="label">Props:</span>
+            <pre>interface Props {
+    enable: boolean;
+    link: string;
+    text: string;
+}</pre>
+        </div>
+
+        <div class="component">
+            <span class="comp-name">Addbutton</span>
+            <span class="file-info">Source: <code>src/app/components/Addbutton.tsx</code></span>
+            <p class="description">A floating-style action button that redirects the user to a specific URL.</p>
+            <span class="label">Props:</span>
+            <pre>interface Props {
+  url: string;
+}</pre>
+        </div>
+    </div>
+
+    <!-- Data Display Components -->
+    <div class="api-group">
+        <h2>Data Display</h2>
+
+        <div class="component">
+            <span class="comp-name">Balance</span>
+            <span class="file-info">Source: <code>src/app/components/Balance.tsx</code></span>
+            <p class="description">Displays and animates the account balance.</p>
+            <span class="label">Props:</span>
+            <pre>interface Props {
+  enable?: boolean;
+  session: string;
+}</pre>
+        </div>
+
+        <div class="component">
+            <span class="comp-name">Dashboard</span>
+            <span class="file-info">Source: <code>src/app/components/Dashboard.tsx</code></span>
+            <p class="description">Server-side component that orchestrates the main transaction list.</p>
+            <span class="label">Props:</span>
+            <pre>interface Props {
+  session: string;
+}</pre>
+        </div>
+
+        <div class="component">
+            <span class="comp-name">RelatedItems</span>
+            <span class="file-info">Source: <code>src/app/components/RelatedItems.tsx</code></span>
+            <p class="description">Displays a summary of transactions related to a specific ID.</p>
+            <span class="label">Props:</span>
+            <pre>interface Props {
+  session: string;
+  id: string;
+  api: string;
+}</pre>
+        </div>
+
+        <div class="component">
+            <span class="comp-name">Transrow</span>
+            <span class="file-info">Source: <code>src/app/components/Transrow.tsx</code></span>
+            <p class="description">Renders a single clickable transaction row.</p>
+            <span class="label">Props:</span>
+            <pre>interface Props {
+    transId: string;
+    date: string;
+    companyName: string;
+    amount: number;
+    categoryName: string;
+}</pre>
+        </div>
+    </div>
+
+    <!-- Form & Input Components -->
+    <div class="api-group">
+        <h2>Forms & Inputs</h2>
+
+        <div class="component">
+            <span class="comp-name">Dropdown</span>
+            <span class="file-info">Source: <code>src/app/components/Dropdown.tsx</code></span>
+            <p class="description">Advanced searchable dropdown with in-line "Add" capability.</p>
+            <span class="label">Props:</span>
+            <pre>interface Props {
+    val: string;
+    api: string;
+    type: string;
+    session : string;
+    onSelect?: (id: string, name: string) => void;
+}</pre>
+        </div>
+
+        <div class="component">
+            <span class="comp-name">Datepicker</span>
+            <span class="file-info">Source: <code>src/app/components/Datepicker.tsx</code></span>
+            <p class="description">Checkaroo-styled date selection component.</p>
+            <span class="label">Props:</span>
+            <pre>interface Props {
+    id : string;
+    name: string;
+    val?: string; // Initial date value
+}</pre>
+        </div>
+
+        <div class="component">
+            <span class="comp-name">CustomButton</span>
+            <span class="file-info">Source: <code>src/app/components/Button.tsx</code></span>
+            <p class="description">Form submission button with automatic payload gathering.</p>
+            <span class="label">Props:</span>
+            <pre>interface props {
+    id: string;
+    className?: string;
+    text: string;
+    session: string;
+    url: string;
+    payload: Array<string>; // IDs of form fields to include
+    callBack: (data: {msg:string, status: string}) => void;
+}</pre>
+        </div>
+
+        <div class="component">
+            <span class="comp-name">Input</span>
+            <span class="file-info">Source: <code>src/app/components/Input.tsx</code></span>
+            <p class="description">Standardized text input.</p>
+            <span class="label">Props:</span>
+            <pre>interface Props {
+    val: string;
+    id: string;
+    name: string;
+    disabled: boolean;
+}</pre>
+        </div>
+    </div>
+
+    <!-- Feedback & UI Components -->
+    <div class="api-group">
+        <h2>Utilities & Icons</h2>
+
+        <div class="component">
+            <span class="comp-name">ChecksessionComp</span>
+            <span class="file-info">Source: <code>src/app/components/ChecksessionComp.tsx</code></span>
+            <p class="description">Session validation logic component.</p>
+            <span class="label">Props:</span>
+            <pre>interface componentsProps {
+    reverseLogic?: boolean; // Flip redirect behavior
+    session : string;
+}</pre>
+        </div>
+
+        <div class="component">
+            <span class="comp-name">Loading</span>
+            <span class="file-info">Source: <code>src/app/components/Loading.tsx</code></span>
+            <p class="description">Application spinner.</p>
+            <span class="label">Props:</span>
+            <pre>interface LoadingProps {
+  size?: number;
+  className? : string;
+}</pre>
+        </div>
+
+        <div class="component">
+            <span class="comp-name">Error</span>
+            <span class="file-info">Source: <code>src/app/components/Error.tsx</code></span>
+            <p class="description">Error state display.</p>
+            <span class="label">Props:</span>
+            <pre>interface Props {
+  value: string; // The error message
+}</pre>
+        </div>
+
+        <div class="component">
+            <span class="comp-name">Svg</span>
+            <span class="file-info">Source: <code>src/app/components/Svg.tsx</code></span>
+            <p class="description">Central icon component.</p>
+            <span class="label">Props:</span>
+            <pre>interface Props {
+    type: string; // 'downarrow', 'save', 'add', etc.
+    id : string;
+    class?: string;
+}</pre>
+        </div>
+    </div>
+
+    <footer style="margin-top: 50px; border-top: 1px solid #ccc; padding-top: 20px; font-size: 0.8em; color: #7f8c8d;">
+        Documentation updated on March 15, 2026.
+    </footer>
+</body>
+</html>

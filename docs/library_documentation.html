@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkaroo Library Documentation</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f7f6;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+            border-bottom: 2px solid #27ae60;
+            padding-bottom: 10px;
+        }
+        .lib-group {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .library {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 6px;
+        }
+        .lib-name {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .file-info {
+            font-size: 0.85em;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .function {
+            margin-top: 15px;
+            padding-left: 10px;
+            border-left: 3px solid #27ae60;
+        }
+        .func-name {
+            font-family: monospace;
+            font-weight: bold;
+            color: #219150;
+        }
+        .label {
+            font-weight: bold;
+            font-size: 0.9em;
+            color: #2c3e50;
+            margin-top: 10px;
+            display: block;
+        }
+        pre {
+            background: #2d3436;
+            color: #dfe6e9;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+        .description { margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Checkaroo Library Documentation</h1>
+    <p>Documentation for the core shared logic and utility libraries in <code>@/common/*</code>.</p>
+
+    <!-- Database Utilities -->
+    <div class="lib-group">
+        <h2>Database & Storage</h2>
+        
+        <div class="library">
+            <span class="lib-name">dbutils</span>
+            <span class="file-info">Source: <code>src/common/dbutils.ts</code></span>
+            <p class="description">Abstracted database operations using <code>mysql2</code> connection pooling.</p>
+            
+            <div class="function">
+                <span class="func-name">select(query: SelectQuery)</span>
+                <p>Standardized SELECT queries with support for joins, where clauses, sorting, and limits.</p>
+            </div>
+            <div class="function">
+                <span class="func-name">insert(query: InsertQuery)</span>
+                <p>Handles data insertion into specific tables.</p>
+            </div>
+            <div class="function">
+                <span class="func-name">update(query: UpdateQuery)</span>
+                <p>Handles partial or full record updates.</p>
+            </div>
+            <div class="function">
+                <span class="func-name">deleteRec(query: DeleteQuery)</span>
+                <p>Removes records from the database.</p>
+            </div>
+        </div>
+
+        <div class="library">
+            <span class="lib-name">cookieServer</span>
+            <span class="file-info">Source: <code>src/common/cookieServer.ts</code></span>
+            <p class="description">Server-side cookie management using Next.js <code>headers/cookies</code>.</p>
+            <div class="function">
+                <span class="func-name">writeCookie(name, data, options)</span>
+                <p>Sets a cookie (defaults to 7-hour expiration).</p>
+            </div>
+            <div class="function">
+                <span class="func-name">readCookie(name)</span>
+                <p>Retrieves a cookie value on the server.</p>
+            </div>
+            <div class="function">
+                <span class="func-name">deleteCookie(name)</span>
+                <p>Clears a cookie by setting an immediate expiration.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Security & Auth -->
+    <div class="lib-group">
+        <h2>Security & Auth</h2>
+
+        <div class="library">
+            <span class="lib-name">session</span>
+            <span class="file-info">Source: <code>src/common/session.ts</code></span>
+            <p class="description">Business logic for session validation and user authentication.</p>
+            <div class="function">
+                <span class="func-name">checkValidSession(hash)</span>
+                <p>Validates a session hash against the database and expiration time.</p>
+            </div>
+            <div class="function">
+                <span class="func-name">headersLegit(request, routes)</span>
+                <p>Security middleware checking <code>referer</code> and <code>larva</code> integrity headers.</p>
+            </div>
+            <div class="function">
+                <span class="func-name">validateUser(user, passHash)</span>
+                <p>Checks credentials against the <code>User</code> table.</p>
+            </div>
+        </div>
+
+        <div class="library">
+            <span class="lib-name">crypt</span>
+            <span class="file-info">Source: <code>src/common/crypt.ts</code></span>
+            <p class="description">AES Encryption services using <code>crypto-js</code>.</p>
+            <div class="function">
+                <span class="func-name">encrypt(data)</span> / <span class="func-name">decrypt(data)</span>
+                <p>Base AES encryption with URI encoding for safe transmission.</p>
+            </div>
+            <div class="function">
+                <span class="func-name">superEncrypt(session)</span>
+                <p>A specialized layered encryption used for secure session identifiers.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- General Utilities -->
+    <div class="lib-group">
+        <h2>General Utilities</h2>
+
+        <div class="library">
+            <span class="lib-name">common</span>
+            <span class="file-info">Source: <code>src/common/common.ts</code></span>
+            <p class="description">Shared helper functions used across the frontend and backend.</p>
+            <div class="function">
+                <span class="func-name">formatDouble(amount)</span>
+                <p>Standardizes currency formatting (fixed to 2 decimals).</p>
+            </div>
+            <div class="function">
+                <span class="func-name">convertToMySQLDate(date)</span> / <span class="func-name">convertToNiceDate(date)</span>
+                <p>Date conversion helpers using <code>moment.js</code>.</p>
+            </div>
+            <div class="function">
+                <span class="func-name">decodeHtmlEntities(text)</span>
+                <p>Parses HTML strings to retrieve raw text content.</p>
+            </div>
+        </div>
+
+        <div class="library">
+            <span class="lib-name">logs</span>
+            <span class="file-info">Source: <code>src/common/logs.ts</code></span>
+            <p class="description">Standardized logging utility that writes to <code>stdout</code>.</p>
+            <div class="function">
+                <span class="func-name">writelog(msg, premsg, level)</span>
+                <p>Outputs formatted logs based on environment and severity levels.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer style="margin-top: 50px; border-top: 1px solid #ccc; padding-top: 20px; font-size: 0.8em; color: #7f8c8d;">
+        Documentation generated on March 15, 2026.
+    </footer>
+</body>
+</html>

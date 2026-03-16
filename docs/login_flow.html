@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkaroo Login Flow Documentation</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f7f6;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        .step {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 5px solid #27ae60;
+        }
+        .step-number {
+            font-weight: bold;
+            color: #27ae60;
+            margin-right: 10px;
+        }
+        code {
+            background: #eee;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+        }
+        pre {
+            background: #2d3436;
+            color: #dfe6e9;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        .file-path {
+            font-style: italic;
+            color: #7f8c8d;
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Checkaroo Login Flow Documentation</h1>
+    <p>This document outlines the technical flow of the authentication process in the Checkaroo application, starting from the login page.</p>
+
+    <div class="step">
+        <h2><span class="step-number">1.</span> Initial Access</h2>
+        <span class="file-path">Location: <code>src/app/login/page.tsx</code></span>
+        <p>When a user navigates to <code>/login</code>, the server-side page component checks for an existing session cookie.</p>
+        <ul>
+            <li>If a valid session cookie exists, the user is redirected to the home page (<code>/</code>).</li>
+            <li>If no session exists, the <code>LoginPage</code> (Client Component) is rendered within the layout.</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <h2><span class="step-number">2.</span> User Input</h2>
+        <span class="file-path">Location: <code>src/app/login/Loginform.tsx</code></span>
+        <p>The login form captures the <code>username</code> and <code>password</code>. It includes:</p>
+        <ul>
+            <li>State management for success and error messages.</li>
+            <li>Keyboard listener for the "Enter" key to trigger submission.</li>
+            <li>A custom <code>Button</code> component configured to hit the authentication API.</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <h2><span class="step-number">3.</span> Data Submission</h2>
+        <span class="file-path">Location: <code>src/app/components/Button.tsx</code></span>
+        <p>Upon clicking "Submit", the <code>CustomButton</code> component performs the following:</p>
+        <ol>
+            <li>Prevents default form submission.</li>
+            <li>Gathers data from the form fields (<code>username</code>, <code>password</code>).</li>
+            <li>Encrypts the payload using <code>AES</code> encryption (via <code>common/crypt.ts</code>).</li>
+            <li>Sends a <code>POST</code> request to <code>/api/login/auth</code> with the encrypted data and a "super-encrypted" session identifier (empty for initial login).</li>
+        </ol>
+    </div>
+
+    <div class="step">
+        <h2><span class="step-number">4.</span> Server-Side Authentication</h2>
+        <span class="file-path">Location: <code>src/app/api/login/auth/route.ts</code></span>
+        <p>The authentication route processes the request:</p>
+        <ol>
+            <li>Verifies request headers (referer, content-type, etc.).</li>
+            <li>Decrypts the incoming data.</li>
+            <li>Hashes the password using <code>MD5</code>.</li>
+            <li>Calls <code>validateUser(username, passwordHash)</code> to check the <code>User</code> table.</li>
+        </ol>
+    </div>
+
+    <div class="step">
+        <h2><span class="step-number">5.</span> Session Creation</h2>
+        <span class="file-path">Location: <code>src/common/session.ts</code> & <code>src/app/api/login/auth/route.ts</code></span>
+        <p>If credentials are valid:</p>
+        <ol>
+            <li>Checks if the user already has an active session.</li>
+            <li>If not, generates a new unique <code>session_hash</code> (concatenated UUIDs).</li>
+            <li>Encrypts the session hash with timestamp padding.</li>
+            <li>Writes the encrypted session to a cookie (7-hour expiration).</li>
+            <li>Inserts a new record into the <code>Logins</code> table with the hash, user ID, and expiration date.</li>
+            <li>Returns a success response.</li>
+        </ol>
+    </div>
+
+    <div class="step">
+        <h2><span class="step-number">6.</span> Final Redirection</h2>
+        <span class="file-path">Location: <code>src/app/login/Loginform.tsx</code></span>
+        <p>The <code>handleCallBack</code> function in the login form receives the success status:</p>
+        <ul>
+            <li>Displays a success message to the user.</li>
+            <li>After a 1-second delay, redirects the user to the home page (<code>/</code>).</li>
+        </ul>
+    </div>
+
+    <footer style="margin-top: 50px; border-top: 1px solid #ccc; padding-top: 20px; font-size: 0.8em; color: #7f8c8d;">
+        Documentation generated on March 15, 2026.
+    </footer>
+</body>
+</html>
